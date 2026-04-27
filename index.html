@@ -644,6 +644,238 @@
     .qr-section canvas { border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     .qr-section p { font-size: 10px; color: #64748b; margin-top: 4px; }
 
+    /* ===== 自定义备注 ===== */
+    .user-note-area {
+      margin-top: 8px;
+      border-top: 1px dashed #d0ddd7;
+      padding-top: 6px;
+    }
+    .user-note-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: #64748b;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      padding: 2px 0;
+    }
+    .user-note-toggle:hover { color: var(--accent); }
+    .user-note-input {
+      width: 100%;
+      min-height: 48px;
+      max-height: 120px;
+      margin-top: 4px;
+      padding: 8px 10px;
+      border: 1.5px solid #a7f3d0;
+      border-radius: 8px;
+      font-size: 11px;
+      font-family: inherit;
+      line-height: 1.5;
+      resize: vertical;
+      background: #f8faf9;
+      color: #1e293b;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .user-note-input:focus { border-color: var(--accent); background: #fff; }
+    .user-note-input::placeholder { color: #94a3b8; }
+    .user-note-saved {
+      font-size: 9px;
+      color: #059669;
+      margin-top: 2px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .user-note-saved.show { opacity: 1; }
+    body.dark-mode .user-note-input {
+      background: #1e293b;
+      border-color: #334155;
+      color: #e2e8f0;
+    }
+    body.dark-mode .user-note-input:focus { border-color: #6ee7b7; background: #16213e; }
+    body.dark-mode .user-note-toggle { color: #94a3b8; }
+    body.dark-mode .user-note-toggle:hover { color: #6ee7b7; }
+    body.dark-mode .user-note-area { border-color: #334155; }
+
+    /* ===== 记账单模块 ===== */
+    .expense-section { margin-top: 12px; }
+    .expense-section h4 {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .expense-summary {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .expense-stat {
+      flex: 1;
+      min-width: 80px;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border: 1px solid #a7f3d0;
+      border-radius: 10px;
+      padding: 8px 10px;
+      text-align: center;
+    }
+    .expense-stat .es-num {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1.2;
+    }
+    .expense-stat .es-label {
+      font-size: 9px;
+      color: #065f46;
+      margin-top: 2px;
+    }
+    .expense-add-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .expense-add-row select,
+    .expense-add-row input {
+      font-size: 11px;
+      font-family: inherit;
+      padding: 6px 8px;
+      border: 1.5px solid #d0ddd7;
+      border-radius: 8px;
+      outline: none;
+      background: #fff;
+      color: #1e293b;
+      transition: border-color 0.2s;
+    }
+    .expense-add-row select:focus,
+    .expense-add-row input:focus { border-color: var(--accent); }
+    .expense-add-row select { width: 64px; flex-shrink: 0; }
+    .expense-add-row .exp-cat { width: 64px; flex-shrink: 0; }
+    .expense-add-row .exp-desc { flex: 1; min-width: 80px; }
+    .expense-add-row .exp-amt { width: 72px; flex-shrink: 0; }
+    .expense-add-btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #0d3d32, #14725e);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.2s;
+    }
+    .expense-add-btn:active { opacity: 0.8; }
+    .expense-list {
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    .expense-list::-webkit-scrollbar { width: 4px; }
+    .expense-list::-webkit-scrollbar-thumb { background: #b0c4bb; border-radius: 3px; }
+    .expense-day-group {
+      margin-bottom: 6px;
+    }
+    .expense-day-header {
+      font-size: 10px;
+      font-weight: 700;
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .expense-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      background: #fff;
+      border-radius: 6px;
+      margin-bottom: 3px;
+      font-size: 11px;
+      border: 1px solid #f0f5f3;
+    }
+    .expense-item .ei-cat {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: #f0f5f3;
+      color: #475569;
+      flex-shrink: 0;
+    }
+    .expense-item .ei-desc { flex: 1; color: #334155; }
+    .expense-item .ei-amt { font-weight: 700; color: var(--accent); flex-shrink: 0; }
+    .expense-item .ei-del {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: none;
+      background: #fef2f2;
+      color: #dc2626;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.2s;
+    }
+    .expense-item .ei-del:hover { background: #fecaca; }
+    .expense-empty {
+      text-align: center;
+      padding: 16px;
+      color: #94a3b8;
+      font-size: 11px;
+    }
+    .expense-export-btn {
+      display: block;
+      width: 100%;
+      margin-top: 8px;
+      padding: 8px;
+      border: 1.5px dashed #a7f3d0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.2s;
+    }
+    .expense-export-btn:hover { background: #ecfdf5; }
+    body.dark-mode .expense-stat {
+      background: linear-gradient(135deg, #1e293b 0%, #16213e 100%);
+      border-color: #334155;
+    }
+    body.dark-mode .expense-stat .es-num { color: #6ee7b7; }
+    body.dark-mode .expense-stat .es-label { color: #94a3b8; }
+    body.dark-mode .expense-add-row select,
+    body.dark-mode .expense-add-row input {
+      background: #1e293b; border-color: #334155; color: #e2e8f0;
+    }
+    body.dark-mode .expense-add-btn {
+      background: linear-gradient(135deg, #065f46, #059669);
+    }
+    body.dark-mode .expense-item {
+      background: #16213e; border-color: #334155;
+    }
+    body.dark-mode .expense-item .ei-cat { background: #1e293b; color: #94a3b8; }
+    body.dark-mode .expense-item .ei-desc { color: #e2e8f0; }
+    body.dark-mode .expense-item .ei-amt { color: #6ee7b7; }
+    body.dark-mode .expense-item .ei-del { background: #1e293b; color: #f87171; }
+    body.dark-mode .expense-export-btn { border-color: #334155; color: #6ee7b7; }
+    body.dark-mode .expense-export-btn:hover { background: #1e293b; }
+
     /* ===== 桌面端隐藏移动端组件 ===== */
     .drawer-handle { display: none; }
     .day-nav { display: none; }
@@ -725,6 +957,11 @@
             </ul>
             <div class="food-tip">🍽️ 推荐：大盘鸡、烤包子、新疆拌面、酸奶、手抓饭 | 大巴扎夜市美食街</div>
             <div class="photo-tip">📸 红山公园俯瞰全城日落 | 大巴扎建筑+夜景灯光 | 博物馆楼兰美女</div>
+            <div class="user-note-area" data-note-day="1">
+              <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
+              <textarea class="user-note-input" style="display:none" placeholder="写点什么…航班信息、酒店地址、待办事项等" oninput="saveNote(this,1)"></textarea>
+              <div class="user-note-saved">✅ 已自动保存</div>
+            </div>
           </div>
 
           <div class="day-block" id="d2" data-day="2">
@@ -740,6 +977,11 @@
             <div class="food-tip">🍽️ 精河服务区简餐 | 景区烤全羊/羊肉汤 | 奶茶、馕坑肉</div>
             <div class="photo-tip">📸 果子沟大桥（网红打卡·车上拍）| 赛湖湖畔倒影·日落金光 | 蓝冰（如有）</div>
             <div class="signal-tip">📶 果子沟隧道群路段信号弱，提前下载离线地图/音乐</div>
+            <div class="user-note-area" data-note-day="2">
+              <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
+              <textarea class="user-note-input" style="display:none" placeholder="写点什么…景区门票、集合时间等" oninput="saveNote(this,2)"></textarea>
+              <div class="user-note-saved">✅ 已自动保存</div>
+            </div>
           </div>
 
           <div class="day-block" id="d3" data-day="3">
@@ -754,6 +996,11 @@
             </ul>
             <div class="food-tip">🍽️ 六星街：冰淇淋·手工酸奶·烤肉 | 伊宁夜市：面肺子、烤羊排、石榴汁</div>
             <div class="photo-tip">📸 赛湖环湖·点将台日出 | 六星街蓝色小巷·民族风旅拍 | 喀赞其彩色民居</div>
+            <div class="user-note-area" data-note-day="3">
+              <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
+              <textarea class="user-note-input" style="display:none" placeholder="写点什么…旅拍时间、想吃的美食等" oninput="saveNote(this,3)"></textarea>
+              <div class="user-note-saved">✅ 已自动保存</div>
+            </div>
           </div>
 
           <div class="day-block" id="d4" data-day="4">
@@ -767,6 +1014,11 @@
             </ul>
             <div class="food-tip">🍽️ 巩留/新源：大盘鸡、椒麻鸡、纳仁（手抓肉配面片）、酥油奶茶</div>
             <div class="photo-tip">📸 十里画廊云杉雪山 | 喀峰大本营震撼雪峰 | 齐梦德栈道森林光影</div>
+            <div class="user-note-area" data-note-day="4">
+              <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
+              <textarea class="user-note-input" style="display:none" placeholder="写点什么…电瓶车费用、徒步提醒等" oninput="saveNote(this,4)"></textarea>
+              <div class="user-note-saved">✅ 已自动保存</div>
+            </div>
           </div>
 
           <div class="day-block" id="d5" data-day="5">
@@ -782,6 +1034,11 @@
             <div class="food-tip">🍽️ 那拉提：烤全羊、熏马肉马肠、奶疙瘩、酥油茶 | 草原上的哈萨克美食</div>
             <div class="photo-tip">📸 杏花沟（如开）漫山粉白 | 空中草原雪山+绿毯+牛羊 | 日落黄金草原</div>
             <div class="signal-tip">📶 那拉提山区部分区域信号弱，建议提前缓存好地图和联系方式</div>
+            <div class="user-note-area" data-note-day="5">
+              <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
+              <textarea class="user-note-input" style="display:none" placeholder="写点什么…区间车路线、草原注意事项等" oninput="saveNote(this,5)"></textarea>
+              <div class="user-note-saved">✅ 已自动保存</div>
+            </div>
           </div>
 
           <div class="day-block" id="d6" data-day="6">
@@ -794,6 +1051,11 @@
             </ul>
             <div class="food-tip">🍽️ 到乌市后犒劳自己：红柳烤肉、丸子汤、卡瓦斯、新疆炒米粉</div>
             <div class="signal-tip">📶 天山胜利隧道（约22km）内手机信号极弱甚至无信号，提前通知家人</div>
+            <div class="user-note-area" data-note-day="6">
+              <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
+              <textarea class="user-note-input" style="display:none" placeholder="写点什么…返程注意、要买的特产等" oninput="saveNote(this,6)"></textarea>
+              <div class="user-note-saved">✅ 已自动保存</div>
+            </div>
           </div>
 
           <div class="day-block" id="d7" data-day="7">
@@ -804,6 +1066,11 @@
               <li>🌡️ <strong>穿衣</strong>：当天有雨，最高 24℃ / 最低 14℃，<strong>带伞</strong>；西北风 3-4 级。注意预留充足时间前往机场/车站，雨天路况可能影响交通。</li>
             </ul>
             <div class="food-tip">🍽️ 最后一顿：机场附近新疆特产店可买馕、巴旦木、葡萄干带回去</div>
+            <div class="user-note-area" data-note-day="7">
+              <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
+              <textarea class="user-note-input" style="display:none" placeholder="写点什么…航班信息、送机时间等" oninput="saveNote(this,7)"></textarea>
+              <div class="user-note-saved">✅ 已自动保存</div>
+            </div>
           </div>
 
           <div class="note">
@@ -856,6 +1123,36 @@
               <li>⚠️ 高反症状（头痛、恶心、气短）及时告知司机，严重时立即就医</li>
               <li>📱 新疆与内地有约 <strong>2 小时时差</strong>，日落约 21:00-22:00</li>
             </ul>
+          </div>
+
+          <!-- 记账单 -->
+          <div class="info-section expense-section" id="expense-section">
+            <h4>💳 旅行记账单</h4>
+            <div class="expense-summary">
+              <div class="expense-stat"><div class="es-num" id="exp-total">¥0</div><div class="es-label">总支出</div></div>
+              <div class="expense-stat"><div class="es-num" id="exp-count">0</div><div class="es-label">笔数</div></div>
+              <div class="expense-stat"><div class="es-num" id="exp-avg">¥0</div><div class="es-label">日均</div></div>
+            </div>
+            <div class="expense-add-row">
+              <select id="exp-day" title="天数">
+                <option value="D1">D1</option><option value="D2">D2</option><option value="D3">D3</option>
+                <option value="D4">D4</option><option value="D5">D5</option><option value="D6">D6</option><option value="D7">D7</option>
+              </select>
+              <select class="exp-cat" id="exp-cat" title="类别">
+                <option value="🍽️餐饮">🍽️餐饮</option>
+                <option value="🎫门票">🎫门票</option>
+                <option value="🚌交通">🚌交通</option>
+                <option value="🏨住宿">🏨住宿</option>
+                <option value="🛍️购物">🛍️购物</option>
+                <option value="🎭娱乐">🎭娱乐</option>
+                <option value="📦其他">📦其他</option>
+              </select>
+              <input class="exp-desc" id="exp-desc" type="text" placeholder="花在哪了" maxlength="30" />
+              <input class="exp-amt" id="exp-amt" type="number" placeholder="¥金额" min="0" step="0.01" />
+              <button class="expense-add-btn" id="exp-add-btn">+ 记一笔</button>
+            </div>
+            <div class="expense-list" id="expense-list"></div>
+            <button class="expense-export-btn" id="exp-export-btn">📋 导出账单文本（复制到剪贴板）</button>
           </div>
 
           <!-- 二维码分享 -->
@@ -1448,6 +1745,211 @@
         map.invalidateSize();
       }, 200);
     });
+
+    /* ===== 自定义备注功能 ===== */
+    function toggleNote(el) {
+      var area = el.parentElement;
+      var input = area.querySelector('.user-note-input');
+      if (input.style.display === 'none') {
+        input.style.display = '';
+        input.focus();
+        el.textContent = '✏️ 收起备注';
+      } else {
+        input.style.display = 'none';
+        el.textContent = input.value.trim() ? '✏️ 查看备注 (' + input.value.trim().substring(0, 8) + '…)' : '✏️ 写备注…';
+      }
+    }
+
+    var noteSaveTimers = {};
+    function saveNote(textarea, dayNum) {
+      var savedEl = textarea.parentElement.querySelector('.user-note-saved');
+      clearTimeout(noteSaveTimers[dayNum]);
+      noteSaveTimers[dayNum] = setTimeout(function() {
+        localStorage.setItem('yili-note-d' + dayNum, textarea.value);
+        savedEl.classList.add('show');
+        setTimeout(function() { savedEl.classList.remove('show'); }, 1500);
+      }, 500);
+    }
+
+    // 页面加载时恢复已保存的备注
+    (function() {
+      for (var d = 1; d <= 7; d++) {
+        var saved = localStorage.getItem('yili-note-d' + d);
+        if (saved) {
+          var area = document.querySelector('[data-note-day="' + d + '"]');
+          if (area) {
+            var input = area.querySelector('.user-note-input');
+            var toggle = area.querySelector('.user-note-toggle');
+            input.value = saved;
+            toggle.textContent = '✏️ 查看备注 (' + saved.substring(0, 8) + '…)';
+          }
+        }
+      }
+    })();
+
+    /* ===== 记账单功能 ===== */
+    (function() {
+      var STORAGE_KEY = 'yili-expenses';
+      var dayBgColors = {
+        D1: 'var(--c-d1)', D2: 'var(--c-d2)', D3: 'var(--c-d3)',
+        D4: 'var(--c-d4)', D5: 'var(--c-d5)', D6: 'var(--c-d6)', D7: 'var(--c-d7)'
+      };
+
+      function loadExpenses() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+        catch(e) { return []; }
+      }
+      function saveExpenses(list) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      }
+
+      function renderExpenses() {
+        var list = loadExpenses();
+        var container = document.getElementById('expense-list');
+        var totalEl = document.getElementById('exp-total');
+        var countEl = document.getElementById('exp-count');
+        var avgEl = document.getElementById('exp-avg');
+
+        // 计算统计
+        var total = 0;
+        list.forEach(function(e) { total += e.amount; });
+        var daysWithExpense = {};
+        list.forEach(function(e) { daysWithExpense[e.day] = true; });
+        var dayCount = Object.keys(daysWithExpense).length || 1;
+
+        totalEl.textContent = '¥' + total.toFixed(total % 1 === 0 ? 0 : 2);
+        countEl.textContent = list.length;
+        avgEl.textContent = '¥' + (total / dayCount).toFixed(0);
+
+        // 按天分组
+        var groups = {};
+        var dayOrder = ['D1','D2','D3','D4','D5','D6','D7'];
+        list.forEach(function(e, idx) {
+          if (!groups[e.day]) groups[e.day] = [];
+          groups[e.day].push({ idx: idx, cat: e.cat, desc: e.desc, amount: e.amount });
+        });
+
+        if (list.length === 0) {
+          container.innerHTML = '<div class="expense-empty">🧾 还没有记录，开始记一笔吧</div>';
+          return;
+        }
+
+        var html = '';
+        dayOrder.forEach(function(day) {
+          if (!groups[day]) return;
+          var dayTotal = 0;
+          groups[day].forEach(function(e) { dayTotal += e.amount; });
+          html += '<div class="expense-day-group">';
+          html += '<div class="expense-day-header" style="background:' + dayBgColors[day] + '">';
+          html += '<span>' + day + '</span>';
+          html += '<span>小计 ¥' + dayTotal.toFixed(dayTotal % 1 === 0 ? 0 : 2) + '</span>';
+          html += '</div>';
+          groups[day].forEach(function(e) {
+            html += '<div class="expense-item">';
+            html += '<span class="ei-cat">' + e.cat + '</span>';
+            html += '<span class="ei-desc">' + escHtml(e.desc || '未命名') + '</span>';
+            html += '<span class="ei-amt">¥' + e.amount.toFixed(e.amount % 1 === 0 ? 0 : 2) + '</span>';
+            html += '<button class="ei-del" title="删除" data-idx="' + e.idx + '">×</button>';
+            html += '</div>';
+          });
+          html += '</div>';
+        });
+        container.innerHTML = html;
+
+        // 绑定删除
+        container.querySelectorAll('.ei-del').forEach(function(btn) {
+          btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var idx = parseInt(this.getAttribute('data-idx'));
+            var expenses = loadExpenses();
+            expenses.splice(idx, 1);
+            saveExpenses(expenses);
+            renderExpenses();
+          });
+        });
+      }
+
+      function escHtml(s) {
+        var d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+      }
+
+      // 添加记录
+      document.getElementById('exp-add-btn').addEventListener('click', function() {
+        var day = document.getElementById('exp-day').value;
+        var cat = document.getElementById('exp-cat').value;
+        var desc = document.getElementById('exp-desc').value.trim();
+        var amt = parseFloat(document.getElementById('exp-amt').value);
+        if (!amt || amt <= 0) {
+          document.getElementById('exp-amt').focus();
+          return;
+        }
+        var expenses = loadExpenses();
+        expenses.push({ day: day, cat: cat, desc: desc || cat, amount: amt, time: Date.now() });
+        saveExpenses(expenses);
+        document.getElementById('exp-desc').value = '';
+        document.getElementById('exp-amt').value = '';
+        renderExpenses();
+      });
+
+      // 回车添加
+      ['exp-desc', 'exp-amt'].forEach(function(id) {
+        document.getElementById(id).addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('exp-add-btn').click();
+          }
+        });
+      });
+
+      // 导出文本
+      document.getElementById('exp-export-btn').addEventListener('click', function() {
+        var list = loadExpenses();
+        if (list.length === 0) { alert('暂无记录可导出'); return; }
+        var text = '🏔️ 伊犁7日旅行账单\n' + '═'.repeat(24) + '\n\n';
+        var dayOrder = ['D1','D2','D3','D4','D5','D6','D7'];
+        var dayNames = { D1:'4/29 乌鲁木齐', D2:'4/30 赛里木湖', D3:'5/1 伊宁',
+                         D4:'5/2 库尔德宁', D5:'5/3 那拉提', D6:'5/4 返程', D7:'5/5 送机' };
+        var total = 0;
+        var groups = {};
+        list.forEach(function(e) {
+          if (!groups[e.day]) groups[e.day] = [];
+          groups[e.day].push(e);
+          total += e.amount;
+        });
+        dayOrder.forEach(function(day) {
+          if (!groups[day]) return;
+          var dayTotal = 0;
+          text += '📅 ' + day + ' ' + (dayNames[day] || '') + '\n';
+          groups[day].forEach(function(e) {
+            dayTotal += e.amount;
+            text += '  ' + e.cat + ' ' + e.desc + '  ¥' + e.amount.toFixed(e.amount % 1 === 0 ? 0 : 2) + '\n';
+          });
+          text += '  ── 小计 ¥' + dayTotal.toFixed(dayTotal % 1 === 0 ? 0 : 2) + '\n\n';
+        });
+        text += '═'.repeat(24) + '\n';
+        text += '💰 总计：¥' + total.toFixed(total % 1 === 0 ? 0 : 2) + '（共 ' + list.length + ' 笔）\n';
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function() {
+            alert('✅ 账单已复制到剪贴板！\n可粘贴到微信/备忘录');
+          });
+        } else {
+          // fallback
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          alert('✅ 账单已复制到剪贴板！');
+        }
+      });
+
+      // 初始渲染
+      renderExpenses();
+    })();
   </script>
 </body>
 </html>
