@@ -1,0 +1,2094 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>伊犁7日 · 路线图</title>
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+  <style>
+    :root {
+      --c-d1: #64748b;
+      --c-d2: #2563eb;
+      --c-d3: #7c3aed;
+      --c-d4: #059669;
+      --c-d5: #d97706;
+      --c-d6: #dc2626;
+      --c-d7: #64748b;
+      --sidebar-bg: #f0f5f3;
+      --accent: #0d3d32;
+      --card-shadow: 0 2px 8px rgba(15,60,50,0.06);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; overflow: hidden; -webkit-tap-highlight-color: transparent; }
+
+    /* ===== 布局 ===== */
+    #layout { display: flex; flex-direction: column; height: 100%; }
+
+    /* ===== 顶部标题栏 ===== */
+    #header {
+      background: linear-gradient(135deg, #0d3d32 0%, #14725e 50%, #1a9e7a 100%);
+      color: #fff;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      z-index: 10;
+      flex-shrink: 0;
+    }
+    #header .logo { font-size: 24px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2)); }
+    #header h1 { font-size: 16px; font-weight: 700; letter-spacing: 0.5px; }
+    #header .subtitle { font-size: 10.5px; opacity: 0.8; margin-top: 1px; font-weight: 400; }
+
+    /* ===== 桌面端布局 ===== */
+    #main { display: flex; flex: 1; min-height: 0; }
+
+    /* ===== 侧栏（桌面端） ===== */
+    #details {
+      width: min(380px, 42vw);
+      min-width: 260px;
+      overflow-y: auto;
+      background: var(--sidebar-bg);
+      border-right: 1px solid #d0ddd7;
+      flex-shrink: 0;
+      padding: 14px 14px 18px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #1e293b;
+    }
+    #details::-webkit-scrollbar { width: 5px; }
+    #details::-webkit-scrollbar-thumb { background: #b0c4bb; border-radius: 3px; }
+    #details::-webkit-scrollbar-track { background: transparent; }
+
+    #details h2 {
+      font-size: 0.88rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #a7f3d0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .day-block {
+      margin-bottom: 10px;
+      padding: 12px 12px 10px;
+      background: #fff;
+      border-radius: 10px;
+      border: 1px solid #e2ebe6;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+    }
+    .day-block:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(15,60,50,0.1);
+    }
+    .day-block:active {
+      transform: scale(0.985);
+    }
+    .day-block h3 {
+      margin: 0 0 6px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+      line-height: 1.6;
+    }
+    .day-title-text {
+      flex-shrink: 1;
+      min-width: 0;
+      white-space: nowrap;
+    }
+    .day-tag {
+      display: inline-block;
+      padding: 1px 7px;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+    .day-badges {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .day-block p { margin: 0 0 6px; }
+    .day-block ul { margin: 0; padding-left: 1.15em; }
+    .day-block li { margin-bottom: 4px; }
+
+    .note {
+      margin-top: 12px;
+      padding: 10px 12px;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border-radius: 8px;
+      font-size: 11px;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    /* ===== 天气信息栏 ===== */
+    #weather-bar {
+      background: linear-gradient(90deg, #e0f2fe 0%, #f0f9ff 50%, #ecfdf5 100%);
+      border-bottom: 1px solid #bae6fd;
+      padding: 6px 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      overflow-x: auto;
+      flex-shrink: 0;
+      font-size: 11px;
+      color: #1e3a5f;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    #weather-bar::-webkit-scrollbar { display: none; }
+    .weather-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .weather-item .wi-icon { font-size: 14px; }
+    .weather-item .wi-place { font-weight: 600; color: #0c4a6e; }
+    .weather-item .wi-temp { font-weight: 700; color: #0369a1; }
+    .weather-item .wi-desc { color: #64748b; font-size: 10px; }
+    .weather-sep { width: 1px; height: 14px; background: #93c5fd; flex-shrink: 0; opacity: 0.5; }
+    .weather-updated { font-size: 9px; color: #94a3b8; margin-left: auto; white-space: nowrap; flex-shrink: 0; }
+
+    /* Day 卡片内天气徽章 */
+    .day-weather {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 1px 8px;
+      font-size: 9.5px;
+      color: #0369a1;
+      font-weight: 500;
+      margin-left: auto;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .day-weather .dw-icon { font-size: 12px; }
+
+    #map-wrap { flex: 1; position: relative; min-width: 0; }
+    #map { position: absolute; inset: 0; }
+
+    /* ===== 图例面板 ===== */
+    .legend-panel {
+      position: absolute;
+      bottom: 24px;
+      left: 12px;
+      z-index: 800;
+      background: rgba(255,255,255,0.96);
+      border-radius: 10px;
+      padding: 12px 14px 10px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.14);
+      font-size: 11px;
+      line-height: 1.6;
+      min-width: 140px;
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .legend-panel h4 {
+      margin: 0 0 6px;
+      font-size: 12px;
+      color: #0f172a;
+      font-weight: 700;
+    }
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 3px;
+    }
+    .legend-line {
+      width: 24px; height: 3px; border-radius: 2px; flex-shrink: 0;
+    }
+    .legend-dot {
+      width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid #fff;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+    .legend-text { color: #334155; }
+
+    /* ===== 弹窗 ===== */
+    .leaflet-popup-content { margin: 10px 12px; font-size: 12px; line-height: 1.6; max-height: 70vh; overflow-y: auto; }
+    .leaflet-popup-content h3 { margin: 0 0 6px; font-size: 13px; color: var(--accent); font-weight: 700; }
+    .leaflet-popup-content .pop-sub { font-size: 11px; color: #64748b; margin-bottom: 6px; }
+    .leaflet-popup-content ul { margin: 0; padding-left: 1.1em; }
+    .leaflet-popup-content li { margin-bottom: 3px; }
+
+    /* ===== 路段标签 ===== */
+    .drive-label-holder { background: transparent !important; border: none !important; }
+    .drive-label {
+      font-size: 10px; line-height: 1.3; text-align: center;
+      padding: 4px 9px;
+      background: rgba(255,255,255,0.97);
+      border: 1.5px solid #475569;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      pointer-events: none; white-space: nowrap;
+    }
+    .drive-label strong { color: #0f172a; font-weight: 700; }
+    .drive-label .dl-sub { font-size: 9px; color: #64748b; font-weight: normal; }
+
+    /* ===== 城镇标注 ===== */
+    .town-label-holder { background: transparent !important; border: none !important; }
+    .town-label {
+      font-size: 10px;
+      color: #475569;
+      font-weight: 500;
+      text-shadow: 1px 1px 2px #fff, -1px -1px 2px #fff, 1px -1px 2px #fff, -1px 1px 2px #fff;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    /* ================================================================
+       ===== 移动端深度优化（<= 720px） =====
+       ================================================================ */
+    @media (max-width: 720px) {
+      html, body { overflow: hidden; }
+
+      #header {
+        padding: 8px 12px;
+        gap: 8px;
+      }
+      #header .logo { font-size: 20px; }
+      #header h1 { font-size: 14px; }
+      #header .subtitle { font-size: 9.5px; }
+
+      /* 天气栏移动端 */
+      #weather-bar {
+        padding: 5px 10px;
+        gap: 10px;
+        font-size: 10px;
+      }
+      .weather-item .wi-icon { font-size: 12px; }
+      .weather-updated { font-size: 8px; }
+
+      /* 主体竖排：地图占满，侧栏变底部抽屉 */
+      #main {
+        flex-direction: column;
+        position: relative;
+      }
+
+      /* 地图全屏 */
+      #map-wrap {
+        flex: 1;
+        order: 1;
+      }
+
+      /* ===== 底部抽屉面板 ===== */
+      #details {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        width: 100%;
+        min-width: 0;
+        max-height: 60vh;
+        height: auto;
+        border-right: none;
+        border-top: none;
+        border-radius: 16px 16px 0 0;
+        box-shadow: 0 -4px 24px rgba(0,0,0,0.15);
+        padding: 0 0 0 0;
+        overflow: hidden;
+        transform: translateY(calc(100% - 56px));
+        transition: transform 0.35s cubic-bezier(0.33, 1, 0.68, 1);
+        will-change: transform;
+        order: 2;
+      }
+      #details.drawer-open {
+        transform: translateY(0);
+        overflow-y: auto;
+      }
+
+      /* 抽屉把手区域 */
+      .drawer-handle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 16px 6px;
+        cursor: pointer;
+        background: var(--sidebar-bg);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      .drawer-handle-bar {
+        width: 36px;
+        height: 4px;
+        background: #b0c4bb;
+        border-radius: 2px;
+        margin-bottom: 6px;
+      }
+      .drawer-handle-text {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--accent);
+      }
+      .drawer-content {
+        padding: 0 14px 18px;
+        padding-bottom: calc(18px + var(--safe-bottom));
+      }
+
+      /* 图例面板移动端：缩小 + 右下角避让底部抽屉 */
+      .legend-panel {
+        bottom: 66px;
+        left: 8px;
+        padding: 8px 10px 6px;
+        font-size: 10px;
+        min-width: 110px;
+        border-radius: 8px;
+        max-width: 45vw;
+      }
+      .legend-panel h4 { font-size: 11px; margin-bottom: 4px; }
+      .legend-line { width: 18px; }
+      .legend-dot { width: 8px; height: 8px; }
+      .legend-row { gap: 5px; margin-bottom: 2px; }
+
+      /* 弹窗适配 */
+      .leaflet-popup-content { font-size: 13px; max-height: 45vh; }
+      .leaflet-popup-content h3 { font-size: 14px; }
+
+      /* 路段标签移动端：稍大字号 */
+      .drive-label { font-size: 10px; padding: 3px 7px; }
+      .drive-label .dl-sub { font-size: 8.5px; }
+
+      /* Day 卡片移动端：更大触摸目标 */
+      .day-block {
+        padding: 14px 14px 12px;
+        margin-bottom: 10px;
+        min-height: 44px;
+      }
+      .day-block h3 { font-size: 0.9rem; }
+      .day-tag { padding: 2px 9px; font-size: 11px; }
+      .day-badges { margin-left: 0; width: 100%; }
+      .day-weather { font-size: 9px; }
+      .altitude-badge { font-size: 9px; }
+
+      /* Day 快速导航条 */
+      .day-nav {
+        display: flex;
+        gap: 0;
+        padding: 0;
+        position: absolute;
+        bottom: 130px;
+        right: 8px;
+        z-index: 900;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .day-nav-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        color: #fff;
+        font-size: 10px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        transition: transform 0.15s;
+      }
+      .day-nav-btn:active { transform: scale(0.9); }
+
+      /* 城镇标注移动端隐藏低缩放时 */
+      .town-label { font-size: 9px; }
+    }
+
+    /* ===== 更小屏幕（<= 380px） ===== */
+    @media (max-width: 380px) {
+      #header h1 { font-size: 13px; }
+      #header .subtitle { font-size: 8.5px; }
+      .legend-panel { display: none; }
+      .day-nav-btn { width: 32px; height: 32px; font-size: 9px; }
+    }
+
+    /* ===== 新增模块通用样式 ===== */
+    .info-section {
+      margin-top: 12px;
+      padding: 12px;
+      background: #fff;
+      border-radius: 10px;
+      border: 1px solid #e2ebe6;
+      box-shadow: var(--card-shadow);
+    }
+    .info-section h4 {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .info-section table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    .info-section th {
+      background: #ecfdf5;
+      color: var(--accent);
+      font-weight: 600;
+      padding: 5px 8px;
+      text-align: left;
+      border-bottom: 2px solid #a7f3d0;
+    }
+    .info-section td {
+      padding: 4px 8px;
+      border-bottom: 1px solid #f0f5f3;
+    }
+    .info-section ul { margin: 0; padding-left: 1.15em; font-size: 11.5px; }
+    .info-section li { margin-bottom: 4px; }
+    .tag-free { color: #059669; font-weight: 600; }
+    .tag-self { color: #dc2626; font-weight: 600; }
+
+    /* 海拔徽章 */
+    .altitude-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 1px solid #f59e0b;
+      border-radius: 12px;
+      padding: 1px 8px;
+      font-size: 9.5px;
+      color: #92400e;
+      font-weight: 600;
+      margin-left: 6px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* 时间节点 */
+    .timeline-mini {
+      font-size: 10.5px;
+      color: #64748b;
+      margin: 4px 0 6px;
+      padding: 4px 8px;
+      background: #f8fafc;
+      border-radius: 6px;
+      border-left: 3px solid #a7f3d0;
+    }
+    .timeline-mini span { font-weight: 600; color: var(--accent); }
+
+    /* 美食标签 */
+    .food-tip {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: linear-gradient(135deg, #fff7ed, #fed7aa);
+      border: 1px solid #fb923c;
+      border-radius: 8px;
+      padding: 2px 8px;
+      font-size: 10px;
+      color: #9a3412;
+      margin-top: 4px;
+    }
+
+    /* 拍照提示 */
+    .photo-tip {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+      border: 1px solid #a78bfa;
+      border-radius: 8px;
+      padding: 2px 8px;
+      font-size: 10px;
+      color: #5b21b6;
+      margin-top: 3px;
+    }
+
+    /* 信号提示 */
+    .signal-tip {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: linear-gradient(135deg, #fef2f2, #fecaca);
+      border: 1px solid #f87171;
+      border-radius: 8px;
+      padding: 2px 8px;
+      font-size: 10px;
+      color: #991b1b;
+      margin-top: 3px;
+    }
+
+    /* 行程进度条 */
+    #progress-bar {
+      background: #fff;
+      border-bottom: 1px solid #e2ebe6;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-shrink: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    #progress-bar::-webkit-scrollbar { display: none; }
+    .prog-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .prog-dot {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 8px; font-weight: 700;
+      border: 2px solid #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      transition: transform 0.15s;
+    }
+    .prog-node:active .prog-dot { transform: scale(0.9); }
+    .prog-place {
+      font-size: 8px; color: #64748b; margin-top: 2px;
+      white-space: nowrap; max-width: 52px; overflow: hidden; text-overflow: ellipsis;
+    }
+    .prog-line {
+      flex: 1; height: 3px; min-width: 16px; border-radius: 2px; margin: 0 -1px;
+      align-self: center; margin-top: -12px;
+    }
+
+    /* 深色模式切换按钮 */
+    .theme-toggle {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 9999;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      background: rgba(0,0,0,0.2);
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.2s;
+    }
+    .theme-toggle:hover { background: rgba(0,0,0,0.35); }
+
+    /* 深色模式 */
+    body.dark-mode {
+      --sidebar-bg: #1a1a2e;
+      --accent: #6ee7b7;
+      --card-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    body.dark-mode #header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    }
+    body.dark-mode #weather-bar {
+      background: linear-gradient(90deg, #1e293b 0%, #0f172a 50%, #1e293b 100%);
+      border-color: #334155;
+      color: #94a3b8;
+    }
+    body.dark-mode .weather-item .wi-place { color: #7dd3fc; }
+    body.dark-mode .weather-item .wi-temp { color: #38bdf8; }
+    body.dark-mode #progress-bar {
+      background: #1e293b;
+      border-color: #334155;
+    }
+    body.dark-mode .prog-place { color: #94a3b8; }
+    body.dark-mode #details {
+      background: #1a1a2e;
+      border-color: #334155;
+    }
+    body.dark-mode .drawer-handle { background: #1a1a2e; }
+    body.dark-mode .drawer-handle-text { color: #6ee7b7; }
+    body.dark-mode .day-block {
+      background: #16213e;
+      border-color: #334155;
+      color: #e2e8f0;
+    }
+    body.dark-mode .day-block:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+    body.dark-mode .info-section {
+      background: #16213e;
+      border-color: #334155;
+      color: #e2e8f0;
+    }
+    body.dark-mode .info-section th {
+      background: #1e293b;
+      color: #6ee7b7;
+      border-color: #334155;
+    }
+    body.dark-mode .info-section td { border-color: #1e293b; }
+    body.dark-mode .note {
+      background: linear-gradient(135deg, #1e293b 0%, #16213e 100%);
+      border-color: #334155;
+      color: #6ee7b7;
+    }
+    body.dark-mode .timeline-mini { background: #1e293b; border-color: #334155; color: #94a3b8; }
+    body.dark-mode .timeline-mini span { color: #6ee7b7; }
+    body.dark-mode .legend-panel { background: rgba(30,41,59,0.96); border-color: #475569; }
+    body.dark-mode .legend-panel h4 { color: #e2e8f0; }
+    body.dark-mode .legend-text { color: #94a3b8; }
+    body.dark-mode .theme-toggle { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); }
+
+    /* 二维码浮层 */
+    .qr-section { text-align: center; margin-top: 12px; }
+    .qr-section canvas { border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .qr-section p { font-size: 10px; color: #64748b; margin-top: 4px; }
+
+    /* ===== 行程贴士区块 ===== */
+    .day-tips {
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1.5px solid;
+      font-size: 11px;
+      line-height: 1.65;
+    }
+    .day-tips.tips-easy {
+      background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+      border-color: #6ee7b7;
+      color: #065f46;
+    }
+    .day-tips.tips-medium {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border-color: #fbbf24;
+      color: #92400e;
+    }
+    .day-tips.tips-hard {
+      background: linear-gradient(135deg, #fef2f2, #fecaca);
+      border-color: #f87171;
+      color: #991b1b;
+    }
+    .day-tips .tips-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      font-weight: 700;
+      font-size: 11.5px;
+    }
+    .day-tips .tips-stars {
+      letter-spacing: 1px;
+    }
+    .day-tips ul {
+      margin: 0;
+      padding-left: 1.15em;
+    }
+    .day-tips li {
+      margin-bottom: 3px;
+    }
+    body.dark-mode .day-tips.tips-easy {
+      background: linear-gradient(135deg, #064e3b33, #065f4622);
+      border-color: #065f46;
+      color: #6ee7b7;
+    }
+    body.dark-mode .day-tips.tips-medium {
+      background: linear-gradient(135deg, #78350f33, #92400e22);
+      border-color: #92400e;
+      color: #fbbf24;
+    }
+    body.dark-mode .day-tips.tips-hard {
+      background: linear-gradient(135deg, #7f1d1d33, #991b1b22);
+      border-color: #991b1b;
+      color: #fca5a5;
+    }
+
+    /* ===== 自定义备注 ===== */
+    .user-note-area {
+      margin-top: 8px;
+      border-top: 1px dashed #d0ddd7;
+      padding-top: 6px;
+    }
+    .user-note-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      color: #64748b;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      padding: 2px 0;
+    }
+    .user-note-toggle:hover { color: var(--accent); }
+    .user-note-input {
+      width: 100%;
+      min-height: 48px;
+      max-height: 120px;
+      margin-top: 4px;
+      padding: 8px 10px;
+      border: 1.5px solid #a7f3d0;
+      border-radius: 8px;
+      font-size: 11px;
+      font-family: inherit;
+      line-height: 1.5;
+      resize: vertical;
+      background: #f8faf9;
+      color: #1e293b;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .user-note-input:focus { border-color: var(--accent); background: #fff; }
+    .user-note-input::placeholder { color: #94a3b8; }
+    .user-note-saved {
+      font-size: 9px;
+      color: #059669;
+      margin-top: 2px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .user-note-saved.show { opacity: 1; }
+    body.dark-mode .user-note-input {
+      background: #1e293b;
+      border-color: #334155;
+      color: #e2e8f0;
+    }
+    body.dark-mode .user-note-input:focus { border-color: #6ee7b7; background: #16213e; }
+    body.dark-mode .user-note-toggle { color: #94a3b8; }
+    body.dark-mode .user-note-toggle:hover { color: #6ee7b7; }
+    body.dark-mode .user-note-area { border-color: #334155; }
+
+    /* ===== 记账单模块 ===== */
+    .expense-section { margin-top: 12px; }
+    .expense-section h4 {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .expense-summary {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .expense-stat {
+      flex: 1;
+      min-width: 80px;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border: 1px solid #a7f3d0;
+      border-radius: 10px;
+      padding: 8px 10px;
+      text-align: center;
+    }
+    .expense-stat .es-num {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1.2;
+    }
+    .expense-stat .es-label {
+      font-size: 9px;
+      color: #065f46;
+      margin-top: 2px;
+    }
+    .expense-add-row {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .expense-add-row select,
+    .expense-add-row input {
+      font-size: 11px;
+      font-family: inherit;
+      padding: 6px 8px;
+      border: 1.5px solid #d0ddd7;
+      border-radius: 8px;
+      outline: none;
+      background: #fff;
+      color: #1e293b;
+      transition: border-color 0.2s;
+    }
+    .expense-add-row select:focus,
+    .expense-add-row input:focus { border-color: var(--accent); }
+    .expense-add-row select { width: 64px; flex-shrink: 0; }
+    .expense-add-row .exp-cat { width: 64px; flex-shrink: 0; }
+    .expense-add-row .exp-desc { flex: 1; min-width: 80px; }
+    .expense-add-row .exp-amt { width: 72px; flex-shrink: 0; }
+    .expense-add-btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #0d3d32, #14725e);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 0.2s;
+    }
+    .expense-add-btn:active { opacity: 0.8; }
+    .expense-list {
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    .expense-list::-webkit-scrollbar { width: 4px; }
+    .expense-list::-webkit-scrollbar-thumb { background: #b0c4bb; border-radius: 3px; }
+    .expense-day-group {
+      margin-bottom: 6px;
+    }
+    .expense-day-header {
+      font-size: 10px;
+      font-weight: 700;
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .expense-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      background: #fff;
+      border-radius: 6px;
+      margin-bottom: 3px;
+      font-size: 11px;
+      border: 1px solid #f0f5f3;
+    }
+    .expense-item .ei-cat {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: #f0f5f3;
+      color: #475569;
+      flex-shrink: 0;
+    }
+    .expense-item .ei-desc { flex: 1; color: #334155; }
+    .expense-item .ei-amt { font-weight: 700; color: var(--accent); flex-shrink: 0; }
+    .expense-item .ei-del {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      border: none;
+      background: #fef2f2;
+      color: #dc2626;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.2s;
+    }
+    .expense-item .ei-del:hover { background: #fecaca; }
+    .expense-empty {
+      text-align: center;
+      padding: 16px;
+      color: #94a3b8;
+      font-size: 11px;
+    }
+    .expense-export-btn {
+      display: block;
+      width: 100%;
+      margin-top: 8px;
+      padding: 8px;
+      border: 1.5px dashed #a7f3d0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.2s;
+    }
+    .expense-export-btn:hover { background: #ecfdf5; }
+    body.dark-mode .expense-stat {
+      background: linear-gradient(135deg, #1e293b 0%, #16213e 100%);
+      border-color: #334155;
+    }
+    body.dark-mode .expense-stat .es-num { color: #6ee7b7; }
+    body.dark-mode .expense-stat .es-label { color: #94a3b8; }
+    body.dark-mode .expense-add-row select,
+    body.dark-mode .expense-add-row input {
+      background: #1e293b; border-color: #334155; color: #e2e8f0;
+    }
+    body.dark-mode .expense-add-btn {
+      background: linear-gradient(135deg, #065f46, #059669);
+    }
+    body.dark-mode .expense-item {
+      background: #16213e; border-color: #334155;
+    }
+    body.dark-mode .expense-item .ei-cat { background: #1e293b; color: #94a3b8; }
+    body.dark-mode .expense-item .ei-desc { color: #e2e8f0; }
+    body.dark-mode .expense-item .ei-amt { color: #6ee7b7; }
+    body.dark-mode .expense-item .ei-del { background: #1e293b; color: #f87171; }
+    body.dark-mode .expense-export-btn { border-color: #334155; color: #6ee7b7; }
+    body.dark-mode .expense-export-btn:hover { background: #1e293b; }
+
+    /* ===== 桌面端隐藏移动端组件 ===== */
+    .drawer-handle { display: none; }
+    .day-nav { display: none; }
+    @media (max-width: 720px) {
+      .drawer-handle { display: flex; }
+      .day-nav { display: flex; }
+      #details h2 { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="layout">
+    <div id="header">
+      <div class="logo">🏔️</div>
+      <div>
+        <h1>新疆伊犁 · 7日拼车路线图</h1>
+        <div class="subtitle">全程约 1,860 km ｜ 赛里木湖 · 伊宁 · 库尔德宁 · 那拉提 · 天山胜利隧道</div>
+      </div>
+    </div>
+
+    <!-- 沿途天气概览（数据来源：中国天气网 2026.4.27 18:00更新） -->
+    <div id="weather-bar">
+      <div class="weather-item"><span class="wi-icon">🌦️</span><span class="wi-place">乌鲁木齐 4/29</span><span class="wi-temp">☀ 27℃ / 🌙 9℃</span><span class="wi-desc">小雨转多云·风大</span></div>
+      <div class="weather-sep"></div>
+      <div class="weather-item"><span class="wi-icon">☀️</span><span class="wi-place">赛里木湖 4/30</span><span class="wi-temp">☀ 8℃ / 🌙 0℃</span><span class="wi-desc">晴·风大体感冷</span></div>
+      <div class="weather-sep"></div>
+      <div class="weather-item"><span class="wi-icon">☀️</span><span class="wi-place">伊宁 5/1</span><span class="wi-temp">☀ 31℃ / 🌙 10℃</span><span class="wi-desc">晴·温差大</span></div>
+      <div class="weather-sep"></div>
+      <div class="weather-item"><span class="wi-icon">⛅</span><span class="wi-place">新源 5/2</span><span class="wi-temp">☀ 29℃ / 🌙 13℃</span><span class="wi-desc">晴转多云</span></div>
+      <div class="weather-sep"></div>
+      <div class="weather-item"><span class="wi-icon">🌧️</span><span class="wi-place">那拉提 5/3</span><span class="wi-temp">☀ 30℃ / 🌙 12℃</span><span class="wi-desc">阴转小雨</span></div>
+      <div class="weather-sep"></div>
+      <div class="weather-item"><span class="wi-icon">🏔️</span><span class="wi-place">天山隧道 5/4</span><span class="wi-temp">隧道≈10℃ → 乌市29℃</span><span class="wi-desc">多云转阴</span></div>
+      <div class="weather-sep"></div>
+      <div class="weather-item"><span class="wi-icon">🌧️</span><span class="wi-place">乌鲁木齐 5/5</span><span class="wi-temp">☀ 24℃ / 🌙 14℃</span><span class="wi-desc">雨</span></div>
+      <span class="weather-updated">📡 中国天气网 2026.4.27 18:00更新</span>
+    </div>
+
+    <!-- 深色模式切换 -->
+    <button class="theme-toggle" id="theme-toggle" title="切换深色模式">🌙</button>
+
+    <!-- 行程进度条 -->
+    <div id="progress-bar">
+      <div class="prog-node" data-pday="1"><div class="prog-dot" style="background:var(--c-d1)">D1</div><div class="prog-place">乌鲁木齐</div></div>
+      <div class="prog-line" style="background:var(--c-d2)"></div>
+      <div class="prog-node" data-pday="2"><div class="prog-dot" style="background:var(--c-d2)">D2</div><div class="prog-place">赛里木湖</div></div>
+      <div class="prog-line" style="background:var(--c-d3)"></div>
+      <div class="prog-node" data-pday="3"><div class="prog-dot" style="background:var(--c-d3)">D3</div><div class="prog-place">伊宁</div></div>
+      <div class="prog-line" style="background:var(--c-d4)"></div>
+      <div class="prog-node" data-pday="4"><div class="prog-dot" style="background:var(--c-d4)">D4</div><div class="prog-place">库尔德宁</div></div>
+      <div class="prog-line" style="background:var(--c-d5)"></div>
+      <div class="prog-node" data-pday="5"><div class="prog-dot" style="background:var(--c-d5)">D5</div><div class="prog-place">那拉提</div></div>
+      <div class="prog-line" style="background:var(--c-d6)"></div>
+      <div class="prog-node" data-pday="6"><div class="prog-dot" style="background:var(--c-d6)">D6</div><div class="prog-place">天山隧道</div></div>
+      <div class="prog-line" style="background:var(--c-d7)"></div>
+      <div class="prog-node" data-pday="7"><div class="prog-dot" style="background:var(--c-d7)">D7</div><div class="prog-place">乌鲁木齐</div></div>
+    </div>
+
+    <div id="main">
+      <aside id="details">
+        <!-- 移动端抽屉把手 -->
+        <div class="drawer-handle" id="drawer-handle">
+          <div class="drawer-handle-bar"></div>
+          <span class="drawer-handle-text">📋 上滑查看逐日说明</span>
+        </div>
+
+        <div class="drawer-content">
+          <h2>📖 逐日说明</h2>
+
+          <div class="day-block" id="d1" data-day="1">
+            <h3><span class="day-tag" style="background:var(--c-d1)">D1</span><span class="day-title-text">4/29 乌鲁木齐集合</span><span class="day-badges"><span class="day-weather"><span class="dw-icon">🌦️</span>☀ 27℃ · 🌙 9℃ · 小雨转多云</span></span></h3>
+            <div class="timeline-mini">⏰ <span>全天</span> 自由到达 → <span>14:00后</span> 酒店入住 → <span>傍晚</span> 市区自由活动</div>
+            <p>全国各地抵达，<strong>接机/站</strong>后送酒店；当日为<strong>集合日</strong>，无统一景点行程。出发前将航班或车次告知报名方以便接机。</p>
+            <ul>
+              <li>工作人员一般于<strong>出发前一天晚上或当天</strong>电话/短信通知接机事宜，请保持手机畅通。</li>
+              <li>新疆酒店入住时间多在<strong>北京时间 14:00 以后</strong>；早到可寄存行李后市区自由活动。</li>
+              <li>行程单推荐（自理）：国际大巴扎、红山公园、新疆博物馆（需预约，周一闭馆）等。</li>
+              <li>🌡️ <strong>穿衣</strong>：白天最高 27℃ 但上午有小雨，<strong>带伞</strong>；午后转多云回暖，薄T+薄外套；夜间降至 9℃，注意保暖。风力 4-5 级转小，注意防风。</li>
+            </ul>
+            <div class="food-tip">🍽️ 推荐：大盘鸡、烤包子、新疆拌面、酸奶、手抓饭 | 大巴扎夜市美食街</div>
+            <div class="photo-tip">📸 红山公园俯瞰全城日落 | 大巴扎建筑+夜景灯光 | 博物馆楼兰美女</div>
+            <div class="day-tips tips-easy">
+              <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐ 轻松</span></div>
+              <ul>
+                <li>当天无统一行程，放心睡到自然醒，倒时差、养精蓄锐</li>
+                <li>建议下午逛<strong>大巴扎+红山公园日落</strong>，晚上吃顿正宗新疆菜开胃</li>
+                <li>早点回酒店休息——<strong>明天 8:00 出发、7 小时车程</strong>，是全程最早起床日之一</li>
+              </ul>
+            </div>
+            <div class="user-note-area" data-note-day="1">
+              <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
+              <textarea class="user-note-input" style="display:none" placeholder="写点什么…航班信息、酒店地址、待办事项等" oninput="saveNote(this,1)"></textarea>
+              <div class="user-note-saved">✅ 已自动保存</div>
+            </div>
+          </div>
+
+          <div class="day-block" id="d2" data-day="2">
+            <h3><span class="day-tag" style="background:var(--c-d2)">D2</span><span class="day-title-text">4/30 乌鲁木齐 → 赛里木湖</span><span class="day-badges"><span class="altitude-badge">⛰️ 海拔 2,070m</span><span class="day-weather"><span class="dw-icon">☀️</span>☀ 8℃ · 🌙 0℃ · 晴·风大</span></span></h3>
+            <div class="timeline-mini">⏰ <span>08:00</span> 出发 → <span>12:00</span> 精河午餐 → <span>15:00</span> 抵赛湖景区 → <span>17:00</span> 下午茶 → <span>19:00</span> 入住</div>
+            <p>行车约 <strong>580 km / 约 7 小时</strong>（未含游览、用餐、休息、堵车）。早 08:00–09:00 酒店早餐，司机按约定时间依次接人（拼车需准时集合）。</p>
+            <ul>
+              <li>上午赴<strong>赛里木湖</strong>；中午沿途简餐（如精河服务区或景区门口）。</li>
+              <li>下午进入景区，湖边打卡；安排<strong>赛里木湖下午茶</strong>及民俗酒吧体验（行程单写明赠送，个人不参加不退费）。</li>
+              <li>当日行程公里数有限，<strong>一般不环湖</strong>；环湖安排在次日。</li>
+              <li>🌡️ <strong>穿衣</strong>：赛湖当天晴天但白天仅 8℃、夜间 0℃！3-4 级风体感更冷！<strong>冲锋衣+抓绒/羽绒</strong>必备，手套围巾建议带；墨镜、帽子、防晒霜标配。</li>
+            </ul>
+            <div class="food-tip">🍽️ 精河服务区简餐 | 景区烤全羊/羊肉汤 | 奶茶、馕坑肉</div>
+            <div class="photo-tip">📸 果子沟大桥（网红打卡·车上拍）| 赛湖湖畔倒影·日落金光 | 蓝冰（如有）</div>
+            <div class="signal-tip">📶 果子沟隧道群路段信号弱，提前下载离线地图/音乐</div>
+            <div class="day-tips tips-hard">
+              <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐ 很赶</span></div>
+              <ul>
+                <li><strong>务必 8:00 准时出发</strong>，每耽误 30 分钟到赛湖就少 30 分钟游览时间</li>
+                <li>午饭建议<strong>在精河快速解决</strong>（30min 内），打包馕+烤包子车上吃更省时间</li>
+                <li>下午茶和酒吧如果不感兴趣，<strong>果断跳过</strong>，把时间留给湖边拍照</li>
+                <li>赛湖约 20:30 日落，<strong>抓住日落黄金时段</strong>是这天的最大收获</li>
+              </ul>
+            </div>
+            <div class="user-note-area" data-note-day="2">
+              <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
+              <textarea class="user-note-input" style="display:none" placeholder="写点什么…景区门票、集合时间等" oninput="saveNote(this,2)"></textarea>
+              <div class="user-note-saved">✅ 已自动保存</div>
+            </div>
+          </div>
+
+          <div class="day-block" id="d3" data-day="3">
+            <h3><span class="day-tag" style="background:var(--c-d3)">D3</span><span class="day-title-text">5/1 赛里木湖环湖 → 伊宁</span><span class="day-badges"><span class="day-weather"><span class="dw-icon">☀️</span>☀ 31℃ · 🌙 10℃ · 晴</span></span></h3>
+            <div class="timeline-mini">⏰ <span>08:00</span> 二次进湖 → <span>12:00</span> 环湖结束 → <span>14:00</span> 赴伊宁 → <span>17:00</span> 入住 → <span>18:00</span> 六星街旅拍</div>
+            <p>行车约 <strong>260 km / 约 5 小时</strong>（未含游览等）。早饭后再次进入赛湖，<strong>自驾环湖</strong>，建议游玩约 4 小时。</p>
+            <ul>
+              <li>常见打卡点（以现场为准）：风帆溪、点将台、克勒涌珠（观天鹅等）、金花紫卉灯塔等。</li>
+              <li>赠送<strong>跟车视频</strong>（行程单写二进环湖时；部分团期 3/7–4/19 等，以订单为准），不参加不退。</li>
+              <li>下午抵<strong>伊宁</strong>入住酒店，可游<strong>六星街</strong>；赠送<strong>旅拍</strong>（简妆 3 选 1、指定民族服装、9 张精修等），旺季可能排队，不去不退。</li>
+              <li>🌡️ <strong>穿衣</strong>：伊宁白天高达 31℃ 较热！短袖+防晒+遮阳帽+墨镜；昼夜温差超 20℃，夜间仅 10℃，<strong>务必备薄外套</strong>。五一假期阳光强烈，注意防晒补水。</li>
+            </ul>
+            <div class="food-tip">🍽️ 六星街：冰淇淋·手工酸奶·烤肉 | 伊宁夜市：面肺子、烤羊排、石榴汁</div>
+            <div class="photo-tip">📸 赛湖环湖·点将台日出 | 六星街蓝色小巷·民族风旅拍 | 喀赞其彩色民居</div>
+            <div class="day-tips tips-medium">
+              <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 中等偏赶</span></div>
+              <ul>
+                <li>环湖<strong>不要贪多</strong>，挑 2-3 个核心点打卡（推荐：点将台 > 克勒涌珠 > 金花灯塔）</li>
+                <li>环湖控制在<strong> 3h 以内</strong>，12:00 前离湖，给路上留够时间</li>
+                <li>旅拍旺季五一<strong>几乎必排长队</strong>，排队超 40min 建议放弃</li>
+                <li><strong>六星街逛 1-1.5h 就够</strong>，更推荐省下时间去喀赞其（更有原生感）</li>
+              </ul>
+            </div>
+            <div class="user-note-area" data-note-day="3">
+              <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
+              <textarea class="user-note-input" style="display:none" placeholder="写点什么…旅拍时间、想吃的美食等" oninput="saveNote(this,3)"></textarea>
+              <div class="user-note-saved">✅ 已自动保存</div>
+            </div>
+          </div>
+
+          <div class="day-block" id="d4" data-day="4">
+            <h3><span class="day-tag" style="background:var(--c-d4)">D4</span><span class="day-title-text">5/2 伊宁 → 库尔德宁 → 新源</span><span class="day-badges"><span class="altitude-badge">⛰️ 海拔 1,400~2,600m</span><span class="day-weather"><span class="dw-icon">⛅</span>☀ 29℃ · 🌙 13℃ · 晴转多云</span></span></h3>
+            <div class="timeline-mini">⏰ <span>08:00</span> 出发 → <span>11:00</span> 抵库尔德宁 → <span>15:00</span> 游览结束 → <span>17:00</span> 入住新源</div>
+            <p>行车约 <strong>320 km / 约 6 小时</strong>。早饭后赴<strong>库尔德宁</strong>，<strong>自驾进入</strong>保护区，建议游玩约 4 小时（电瓶车等费用自理）。</p>
+            <ul>
+              <li>行程单建议停靠：十里画廊、喀峰大本营、齐梦德观景平台（木栈道上下约 2–3 小时；车至齐梦德需电瓶车自理）等。</li>
+              <li>晚宿<strong>新源县</strong>。</li>
+              <li>🌡️ <strong>穿衣</strong>：白天 29℃ 较热，山区可穿短袖+防晒；傍晚转多云，山区夜间 13℃ 需薄外套；栈道步行穿防水运动鞋。</li>
+            </ul>
+            <div class="food-tip">🍽️ 巩留/新源：大盘鸡、椒麻鸡、纳仁（手抓肉配面片）、酥油奶茶</div>
+            <div class="photo-tip">📸 十里画廊云杉雪山 | 喀峰大本营震撼雪峰 | 齐梦德栈道森林光影</div>
+            <div class="day-tips tips-hard">
+              <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐ 很赶</span></div>
+              <ul>
+                <li><strong>二选一策略</strong>：深度走齐梦德栈道（放弃十里画廊细逛），或快速游十里画廊+喀峰大本营（放弃栈道登顶）</li>
+                <li>全部都去 = 走马观花 + 累到崩溃，推荐选<strong>喀峰大本营拍雪山 + 十里画廊车游</strong>，省 1.5h 体力</li>
+                <li>电瓶车<strong>能坐就坐</strong>，别省这个钱——体力留给明天那拉提</li>
+              </ul>
+            </div>
+            <div class="user-note-area" data-note-day="4">
+              <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
+              <textarea class="user-note-input" style="display:none" placeholder="写点什么…电瓶车费用、徒步提醒等" oninput="saveNote(this,4)"></textarea>
+              <div class="user-note-saved">✅ 已自动保存</div>
+            </div>
+          </div>
+
+          <div class="day-block" id="d5" data-day="5">
+            <h3><span class="day-tag" style="background:var(--c-d5)">D5</span><span class="day-title-text">5/3 新源 → 吐尔根杏花 → 那拉提</span><span class="day-badges"><span class="altitude-badge">⛰️ 草原 2,000m+</span><span class="day-weather"><span class="dw-icon">🌧️</span>☀ 30℃ · 🌙 12℃ · 阴转小雨</span></span></h3>
+            <div class="timeline-mini">⏰ <span>08:00</span> 出发 → <span>09:30</span> 吐尔根（花期）→ <span>12:00</span> 午餐 → <span>14:00</span> 那拉提空中草原 → <span>18:00</span> 入住</div>
+            <p>行车约 <strong>250 km / 约 4 小时</strong>。早饭后前往<strong>吐尔根杏花沟</strong>（行程单写 3/28–4/7 等团期安排；2026 年花期受气候影响，若花谢则<strong>取消该点</strong>直接去那拉提）。</p>
+            <ul>
+              <li>下午那拉提乘<strong>区间车</strong>游览<strong>空中草原</strong>，建议约 4 小时；区间车路线以景区当日公布为准。</li>
+              <li>若空中草原因天气未开放，可改<strong>河谷草原</strong>，退区间车差价（行程单写 16 元/人，以景区执行为准）。</li>
+              <li>当晚宿<strong>那拉提</strong>。</li>
+              <li>🌡️ <strong>穿衣</strong>：白天最高 30℃ 但午后转阴有小雨！<strong>带雨伞/雨衣</strong>；山区草原温差大，夜间降至 12℃，备外套；鞋要防水防滑。</li>
+            </ul>
+            <div class="food-tip">🍽️ 那拉提：烤全羊、熏马肉马肠、奶疙瘩、酥油茶 | 草原上的哈萨克美食</div>
+            <div class="photo-tip">📸 杏花沟（如开）漫山粉白 | 空中草原雪山+绿毯+牛羊 | 日落黄金草原</div>
+            <div class="signal-tip">📶 那拉提山区部分区域信号弱，建议提前缓存好地图和联系方式</div>
+            <div class="day-tips tips-medium">
+              <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 中等</span></div>
+              <ul>
+                <li>吐尔根 5/3 花期大概率已结束，<strong>做好直奔那拉提的准备</strong>，反而多出 1-2h</li>
+                <li>那拉提空中草原是<strong>全程含金量最高的景点</strong>，一定要去！</li>
+                <li>区间车五一可能排队 30-60min，<strong>提前做好心理准备</strong></li>
+                <li>下午有小雨，<strong>带雨衣比雨伞好</strong>（草原风大，伞扛不住）</li>
+                <li>回住宿后好好休息——<strong>D6 是魔鬼赶路日</strong></li>
+              </ul>
+            </div>
+            <div class="user-note-area" data-note-day="5">
+              <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
+              <textarea class="user-note-input" style="display:none" placeholder="写点什么…区间车路线、草原注意事项等" oninput="saveNote(this,5)"></textarea>
+              <div class="user-note-saved">✅ 已自动保存</div>
+            </div>
+          </div>
+
+          <div class="day-block" id="d6" data-day="6">
+            <h3><span class="day-tag" style="background:var(--c-d6)">D6</span><span class="day-title-text">5/4 那拉提 → 乌鲁木齐</span><span class="day-badges"><span class="altitude-badge">⛰️ 隧道 ~3,000m</span><span class="day-weather"><span class="dw-icon">🏔️</span>隧道 10℃ → 乌市 ☀ 29℃ · 多云转阴</span></span></h3>
+            <div class="timeline-mini">⏰ <span>07:30</span> 出发 → <span>12:00</span> 午餐 → <span>14:00</span> 天山胜利隧道 → <span>17:00</span> 抵乌市</div>
+            <p>行车约 <strong>450 km / 约 8 小时</strong>。沿 <strong>G218</strong> 等路段，经巴伦台方向，走<strong>乌尉高速</strong>，穿越<strong>天山胜利隧道</strong>（行程单强调为长隧道、恒温约 10℃ 等），返回乌鲁木齐。</p>
+            <ul>
+              <li><strong>不建议</strong>购买<strong>当天离开乌鲁木齐</strong>的机票/火车，以免路上延误误机。</li>
+              <li>🌡️ <strong>穿衣</strong>：天山隧道内恒温 ≈10℃，车内备外套；出隧道后乌市白天高达 29℃、夜间 15℃，多云转阴。东南风 3-4 级。</li>
+            </ul>
+            <div class="food-tip">🍽️ 到乌市后犒劳自己：红柳烤肉、丸子汤、卡瓦斯、新疆炒米粉</div>
+            <div class="signal-tip">📶 天山胜利隧道（约22km）内手机信号极弱甚至无信号，提前通知家人</div>
+            <div class="day-tips tips-hard">
+              <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐⭐ 最赶（纯赶路日）</span></div>
+              <ul>
+                <li>心态调整：<strong>这天就是在赶路</strong>，8 小时车程、零景点，不要抱有游览幻想</li>
+                <li><strong>7:30 一定要出发</strong>，路上任何延误都可能导致到乌市超晚</li>
+                <li>多准备零食和水，车上就是吃吃睡睡</li>
+                <li><strong>绝对不要买当天离疆的票</strong>——这不是建议，是底线</li>
+                <li>隧道 22km 无信号，<strong>提前通知家人</strong></li>
+              </ul>
+            </div>
+            <div class="user-note-area" data-note-day="6">
+              <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
+              <textarea class="user-note-input" style="display:none" placeholder="写点什么…返程注意、要买的特产等" oninput="saveNote(this,6)"></textarea>
+              <div class="user-note-saved">✅ 已自动保存</div>
+            </div>
+          </div>
+
+          <div class="day-block" id="d7" data-day="7">
+            <h3><span class="day-tag" style="background:var(--c-d7)">D7</span><span class="day-title-text">5/5 乌鲁木齐送机/站</span><span class="day-badges"><span class="day-weather"><span class="dw-icon">🌧️</span>☀ 24℃ · 🌙 14℃ · 雨</span></span></h3>
+            <div class="timeline-mini">⏰ 根据航班/车次安排送机 · 建议<span>提前2.5h</span>到机场 · 雨天预留额外时间</div>
+            <p>根据航班/车次<strong>送机或送站</strong>。请提前将返程交通信息告知报名方；送机人员一般于<strong>返程前一天 22:00 前</strong>联系确认。</p>
+            <ul>
+              <li>🌡️ <strong>穿衣</strong>：当天有雨，最高 24℃ / 最低 14℃，<strong>带伞</strong>；西北风 3-4 级。注意预留充足时间前往机场/车站，雨天路况可能影响交通。</li>
+            </ul>
+            <div class="food-tip">🍽️ 最后一顿：机场附近新疆特产店可买馕、巴旦木、葡萄干带回去</div>
+            <div class="day-tips tips-easy">
+              <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐ 轻松</span></div>
+              <ul>
+                <li>当天有雨，<strong>预留充足时间前往机场/车站</strong>，雨天路况可能影响交通</li>
+                <li>建议<strong>提前 2.5 小时</strong>到机场（新疆安检比内地严格）</li>
+                <li>机场附近可最后买一波特产：馕、巴旦木、葡萄干、薰衣草精油</li>
+              </ul>
+            </div>
+            <div class="user-note-area" data-note-day="7">
+              <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
+              <textarea class="user-note-input" style="display:none" placeholder="写点什么…航班信息、送机时间等" oninput="saveNote(this,7)"></textarea>
+              <div class="user-note-saved">✅ 已自动保存</div>
+            </div>
+          </div>
+
+          <div class="note">
+            <strong>💡 地图使用说明</strong>：点击圆点可查看当日摘要；乌市首尾两天共用一个标记。底图 © 高德地图。若与实际路书、平台交易快照不一致，以<strong>书面合同及订单快照</strong>为准。
+          </div>
+
+          <!-- 费用清单 -->
+          <div class="info-section">
+            <h4>💰 费用一览</h4>
+            <table>
+              <tr><th>项目</th><th>状态</th><th>说明</th></tr>
+              <tr><td>全程用车+司机</td><td class="tag-free">✅ 包含</td><td>拼车费用内</td></tr>
+              <tr><td>6晚住宿</td><td class="tag-free">✅ 包含</td><td>以订单约定标准</td></tr>
+              <tr><td>接机/送机</td><td class="tag-free">✅ 包含</td><td>首尾两天</td></tr>
+              <tr><td>赛湖下午茶+酒吧</td><td class="tag-free">✅ 赠送</td><td>不参加不退</td></tr>
+              <tr><td>六星街旅拍</td><td class="tag-free">✅ 赠送</td><td>简妆3选1·9张精修</td></tr>
+              <tr><td>跟车视频</td><td class="tag-free">✅ 赠送</td><td>按团期，不参加不退</td></tr>
+              <tr><td>景区大门票</td><td class="tag-self">💳 自理</td><td>赛湖·库尔德宁·那拉提等</td></tr>
+              <tr><td>景区区间车/电瓶车</td><td class="tag-self">💳 自理</td><td>那拉提区间车·库尔德宁电瓶车</td></tr>
+              <tr><td>全程餐饮</td><td class="tag-self">💳 自理</td><td>丰俭由人，参考美食推荐</td></tr>
+              <tr><td>旅游保险</td><td class="tag-self">💳 自理</td><td>强烈建议购买</td></tr>
+            </table>
+          </div>
+
+          <!-- 必备物品清单 -->
+          <div class="info-section">
+            <h4>🎒 必备物品清单</h4>
+            <table>
+              <tr><th>类别</th><th>物品</th></tr>
+              <tr><td>📄 证件</td><td>身份证（必须！新疆安检多）、驾照（如有）、学生证（景区打折）</td></tr>
+              <tr><td>👕 衣物</td><td>冲锋衣/羽绒（赛湖0℃）、短袖（伊宁31℃）、薄外套、防水鞋、手套围巾</td></tr>
+              <tr><td>☀️ 防晒</td><td>SPF50+防晒霜、墨镜、遮阳帽、润唇膏（紫外线极强）</td></tr>
+              <tr><td>🌧️ 防雨</td><td>雨伞/雨衣（D5/D7有雨）</td></tr>
+              <tr><td>💊 药品</td><td>晕车药、感冒药、肠胃药、创可贴、高反药（赛湖/那拉提2000m+）</td></tr>
+              <tr><td>🔌 电子</td><td>充电宝（必带！长途车程）、数据线、相机、耳机</td></tr>
+              <tr><td>🧴 洗漱</td><td>牙刷牙膏、毛巾（部分酒店不提供）、保湿面膜（新疆极干）</td></tr>
+              <tr><td>🍫 零食</td><td>水、巧克力、坚果（长途车程补给）</td></tr>
+            </table>
+          </div>
+
+          <!-- 紧急联系 -->
+          <div class="info-section">
+            <h4>🆘 紧急联系</h4>
+            <ul>
+              <li>🚔 报警：<strong>110</strong> ｜ 🚑 急救：<strong>120</strong> ｜ 🚒 火警：<strong>119</strong></li>
+              <li>🛣️ 道路救援：<strong>12122</strong></li>
+              <li>📞 新疆旅游投诉：<strong>0991-12345</strong></li>
+              <li>🏥 赛里木湖最近医院：博乐市人民医院（景区出发约1.5h）</li>
+              <li>🏥 那拉提最近医院：新源县人民医院（约30min）</li>
+              <li>⚠️ 高反症状（头痛、恶心、气短）及时告知司机，严重时立即就医</li>
+              <li>📱 新疆与内地有约 <strong>2 小时时差</strong>，日落约 21:00-22:00</li>
+            </ul>
+          </div>
+
+          <!-- 记账单 -->
+          <div class="info-section expense-section" id="expense-section">
+            <h4>💳 旅行记账单</h4>
+            <div class="expense-summary">
+              <div class="expense-stat"><div class="es-num" id="exp-total">¥0</div><div class="es-label">总支出</div></div>
+              <div class="expense-stat"><div class="es-num" id="exp-count">0</div><div class="es-label">笔数</div></div>
+              <div class="expense-stat"><div class="es-num" id="exp-avg">¥0</div><div class="es-label">日均</div></div>
+            </div>
+            <div class="expense-add-row">
+              <select id="exp-day" title="天数">
+                <option value="D1">D1</option><option value="D2">D2</option><option value="D3">D3</option>
+                <option value="D4">D4</option><option value="D5">D5</option><option value="D6">D6</option><option value="D7">D7</option>
+              </select>
+              <select class="exp-cat" id="exp-cat" title="类别">
+                <option value="🍽️餐饮">🍽️餐饮</option>
+                <option value="🎫门票">🎫门票</option>
+                <option value="🚌交通">🚌交通</option>
+                <option value="🏨住宿">🏨住宿</option>
+                <option value="🛍️购物">🛍️购物</option>
+                <option value="🎭娱乐">🎭娱乐</option>
+                <option value="📦其他">📦其他</option>
+              </select>
+              <input class="exp-desc" id="exp-desc" type="text" placeholder="花在哪了" maxlength="30" />
+              <input class="exp-amt" id="exp-amt" type="number" placeholder="¥金额" min="0" step="0.01" />
+              <button class="expense-add-btn" id="exp-add-btn">+ 记一笔</button>
+            </div>
+            <div class="expense-list" id="expense-list"></div>
+            <button class="expense-export-btn" id="exp-export-btn">📋 导出账单文本（复制到剪贴板）</button>
+          </div>
+
+          <!-- 二维码分享 -->
+          <div class="info-section qr-section" id="qr-section">
+            <h4>📱 扫码分享给同行</h4>
+            <canvas id="qr-canvas"></canvas>
+            <p>长按/截图保存，发给同行小伙伴</p>
+          </div>
+        </div>
+      </aside>
+
+      <div id="map-wrap">
+        <div id="map"></div>
+        <!-- 图例面板 -->
+        <div class="legend-panel" id="legend-panel">
+          <h4>🗺️ 图例</h4>
+          <div class="legend-row"><div class="legend-line" style="background:var(--c-d2)"></div><span class="legend-text">D2 乌市→赛湖</span></div>
+          <div class="legend-row"><div class="legend-line" style="background:var(--c-d3)"></div><span class="legend-text">D3 赛湖→伊宁</span></div>
+          <div class="legend-row"><div class="legend-line" style="background:var(--c-d4)"></div><span class="legend-text">D4 伊宁→新源</span></div>
+          <div class="legend-row"><div class="legend-line" style="background:var(--c-d5)"></div><span class="legend-text">D5 新源→那拉提</span></div>
+          <div class="legend-row"><div class="legend-line" style="background:var(--c-d6)"></div><span class="legend-text">D6 那拉提→乌市</span></div>
+          <div style="margin-top:5px;border-top:1px solid #e2e8f0;padding-top:5px;">
+            <div class="legend-row"><div class="legend-dot" style="background:var(--c-d1)"></div><span class="legend-text">集合/散团</span></div>
+            <div class="legend-row"><div class="legend-dot" style="background:var(--c-d2)"></div><span class="legend-text">景点打卡</span></div>
+            <div class="legend-row"><div class="legend-dot" style="background:#94a3b8;border-style:dashed"></div><span class="legend-text">途经城镇</span></div>
+          </div>
+        </div>
+
+        <!-- 移动端天数快速导航 -->
+        <div class="day-nav" id="day-nav">
+          <div class="day-nav-btn" style="background:var(--c-d1)" data-day="1">D1</div>
+          <div class="day-nav-btn" style="background:var(--c-d2)" data-day="2">D2</div>
+          <div class="day-nav-btn" style="background:var(--c-d3)" data-day="3">D3</div>
+          <div class="day-nav-btn" style="background:var(--c-d4)" data-day="4">D4</div>
+          <div class="day-nav-btn" style="background:var(--c-d5)" data-day="5">D5</div>
+          <div class="day-nav-btn" style="background:var(--c-d6)" data-day="6">D6</div>
+          <div class="day-nav-btn" style="background:var(--c-d7)" data-day="7">D7</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.bootcdn.net/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script>
+    /* ===== WGS-84 → GCJ-02 坐标偏移 ===== */
+    var PI = Math.PI;
+    var a_earth = 6378245.0;
+    var ee = 0.00669342162296594323;
+    function outOfChina(lat, lng) {
+      return (lng < 72.004 || lng > 137.8347 || lat < 0.8293 || lat > 55.8271);
+    }
+    function transformLat(x, y) {
+      var ret = -100.0 + 2.0 * x + 3.0 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x));
+      ret += (20.0 * Math.sin(6.0 * x * PI) + 20.0 * Math.sin(2.0 * x * PI)) * 2.0 / 3.0;
+      ret += (20.0 * Math.sin(y * PI) + 40.0 * Math.sin(y / 3.0 * PI)) * 2.0 / 3.0;
+      ret += (160.0 * Math.sin(y / 12.0 * PI) + 320.0 * Math.sin(y * PI / 30.0)) * 2.0 / 3.0;
+      return ret;
+    }
+    function transformLng(x, y) {
+      var ret = 300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x));
+      ret += (20.0 * Math.sin(6.0 * x * PI) + 20.0 * Math.sin(2.0 * x * PI)) * 2.0 / 3.0;
+      ret += (20.0 * Math.sin(x * PI) + 40.0 * Math.sin(x / 3.0 * PI)) * 2.0 / 3.0;
+      ret += (150.0 * Math.sin(x / 12.0 * PI) + 300.0 * Math.sin(x / 30.0 * PI)) * 2.0 / 3.0;
+      return ret;
+    }
+    function wgs84ToGcj02(wgsLat, wgsLng) {
+      if (outOfChina(wgsLat, wgsLng)) return [wgsLat, wgsLng];
+      var dLat = transformLat(wgsLng - 105.0, wgsLat - 35.0);
+      var dLng = transformLng(wgsLng - 105.0, wgsLat - 35.0);
+      var radLat = wgsLat / 180.0 * PI;
+      var magic = Math.sin(radLat);
+      magic = 1 - ee * magic * magic;
+      var sqrtMagic = Math.sqrt(magic);
+      dLat = (dLat * 180.0) / ((a_earth * (1 - ee)) / (magic * sqrtMagic) * PI);
+      dLng = (dLng * 180.0) / (a_earth / sqrtMagic * Math.cos(radLat) * PI);
+      return [wgsLat + dLat, wgsLng + dLng];
+    }
+    function G(lat, lng) { return wgs84ToGcj02(lat, lng); }
+    function GA(pts) { return pts.map(function(p) { return G(p[0], p[1]); }); }
+
+    /* ===== 工具函数 ===== */
+    function popHtml(title, sub, bullets) {
+      var li = (bullets || []).map(function(b) { return '<li>' + b + '</li>'; }).join('');
+      return '<h3>' + title + '</h3>' +
+        (sub ? '<p class="pop-sub">' + sub + '</p>' : '') +
+        (li ? '<ul>' + li + '</ul>' : '') +
+        '<p class="pop-sub">完整说明见「逐日说明」面板。</p>';
+    }
+
+    function popUrumqiD1D7(d1, d7) {
+      function block(label, title, sub, bullets) {
+        var li = (bullets || []).map(function(b) { return '<li>' + b + '</li>'; }).join('');
+        return '<p class="pop-sub" style="margin-top:10px;margin-bottom:4px;"><strong>' + label + ' · ' + title + '</strong></p>' +
+          (sub ? '<p class="pop-sub">' + sub + '</p>' : '') +
+          (li ? '<ul>' + li + '</ul>' : '');
+      }
+      return '<h3>D1 + D7 · 乌鲁木齐</h3>' +
+        '<p class="pop-sub">首日集合与末日送机/站为同一城市，地图合并为一个圆点。</p>' +
+        block('D1', d1.popupTitle.replace(/^D1 · /, ''), d1.popupSub, d1.popupBullets) +
+        block('D7', d7.popupTitle.replace(/^D7 · /, ''), d7.popupSub, d7.popupBullets) +
+        '<p class="pop-sub">完整说明见「逐日说明」面板。</p>';
+    }
+
+    function segmentLen2(a, b) {
+      var dy = a[0] - b[0], dx = a[1] - b[1];
+      return Math.sqrt(dx * dx + dy * dy);
+    }
+    function pointAtFractionAlongPath(pts, t) {
+      if (!pts || pts.length === 0) return [0, 0];
+      if (pts.length === 1) return pts[0];
+      var segs = [], total = 0;
+      for (var i = 0; i < pts.length - 1; i++) {
+        var len = segmentLen2(pts[i], pts[i + 1]);
+        segs.push(len); total += len;
+      }
+      if (total <= 0) return pts[0];
+      var dist = total * Math.max(0, Math.min(1, t)), cum = 0;
+      for (var j = 0; j < segs.length; j++) {
+        if (cum + segs[j] >= dist) {
+          var segT = segs[j] <= 0 ? 0 : (dist - cum) / segs[j];
+          var p0 = pts[j], p1 = pts[j + 1];
+          return [p0[0] + segT * (p1[0] - p0[0]), p0[1] + segT * (p1[1] - p0[1])];
+        }
+        cum += segs[j];
+      }
+      return pts[pts.length - 1];
+    }
+
+    /* ===== 站点数据 ===== */
+    var stops = [
+      {
+        day: 'D1', name: '乌鲁木齐', lat: 43.830, lng: 87.600,
+        popupTitle: 'D1 · 4/29 乌鲁木齐（集合）',
+        popupSub: '集合日 · 接机/站 · 住乌市',
+        popupBullets: [
+          '无统一景点；酒店多 14:00 后入住，早到可寄存行李。',
+          '保持手机畅通，等候接机/接站通知。',
+          '市区可自理游览：大巴扎、红山、博物馆（预约）等。',
+          '🌡️ ☀白天 27℃ / 🌙夜间 9℃ · 小雨转多云 — 上午带伞，午后回暖；风力 4-5 级注意防风。'
+        ]
+      },
+      {
+        day: 'D2', name: '赛里木湖（东门区域）', lat: 44.575, lng: 81.395,
+        popupTitle: 'D2 · 4/30 赛里木湖',
+        popupSub: '乌市 → 赛湖 · 约 580 km / 7 h（未含游览与休息）',
+        popupBullets: [
+          '拼车请按约定时间集合，依次接驾。',
+          '下午进景区；赠送下午茶、民俗酒吧（不参加一般不退）。',
+          '当日通常不环湖，环湖在次日。',
+          '🌡️ ☀白天 8℃ / 🌙夜间 0℃ · 晴但风大 — 3-4 级风体感极冷！冲锋衣+抓绒/羽绒+手套+墨镜+防晒必备。'
+        ]
+      },
+      {
+        day: 'D3', name: '伊宁（六星街）', lat: 43.919, lng: 81.277,
+        popupTitle: 'D3 · 5/1 伊宁',
+        popupSub: '赛湖二次进园环湖 → 伊宁 · 行车约 260 km / 5 h',
+        popupBullets: [
+          '赛湖建议游玩约 4 h；有多处观景停靠点。',
+          '赠送跟车视频（按团期/二次进园规则，不参加不退）。',
+          '六星街旅拍为赠送，旺季可能排队，不去不退。',
+          '🌡️ ☀白天 31℃ / 🌙夜间 10℃ · 晴 — 白天炎热！短袖+防晒+遮阳帽；昼夜温差超 20℃，晚间加外套。'
+        ]
+      },
+      {
+        day: 'D4', name: '库尔德宁 → 新源', lat: 43.147, lng: 82.748, endLat: 43.429, endLng: 83.258,
+        popupTitle: 'D4 · 5/2 库尔德宁',
+        popupSub: '伊宁 → 库尔德宁 → 新源 · 约 320 km / 6 h',
+        popupBullets: [
+          '库尔德宁自驾进入，建议玩约 4 h；电瓶车等自理。',
+          '齐梦德木栈道上下约 2–3 h，量力而行。',
+          '晚宿新源县。',
+          '🌡️ ☀白天 29℃ / 🌙夜间 13℃ · 晴转多云 — 白天较热，山区穿短袖+防晒；傍晚备薄外套。'
+        ]
+      },
+      {
+        day: 'D5a', name: '吐尔根杏花沟（花期）', lat: 43.452, lng: 83.358,
+        popupTitle: 'D5 · 5/3 吐尔根杏花沟',
+        popupSub: '花期团期安排；花谢则取消该点直接去那拉提',
+        popupBullets: [
+          '花期受气候影响，以出发时景区与司机安排为准。',
+          '与那拉提同属 D5，顺序以当日路书为准。',
+          '🌡️ ☀白天 30℃ / 🌙夜间 12℃ · 阴转小雨 — 午后有雨，带雨具和防水鞋。'
+        ]
+      },
+      {
+        day: 'D5b', name: '那拉提（空中草原）', lat: 43.268, lng: 84.020,
+        popupTitle: 'D5 · 5/3 那拉提',
+        popupSub: '空中草原区间车 · 建议游玩约 4 h',
+        popupBullets: [
+          '若空中草原关闭可改河谷草原，退区间差价（以景区为准）。',
+          'D5 晚宿那拉提。',
+          '🌡️ ☀白天 30℃ / 🌙夜间 12℃ · 阴转小雨 — 午后有雨，备防水外套+雨具；草原温差大。'
+        ]
+      },
+      {
+        day: 'D6', name: '巴伦台（返程途经）', lat: 42.740, lng: 86.308,
+        popupTitle: 'D6 · 5/4 返程（G218 / 胜利隧道方向）',
+        popupSub: '那拉提 → 乌市 · 约 450 km / 8 h',
+        popupBullets: [
+          '经 G218、乌尉高速、天山胜利隧道等（以实际通行路线为准）。',
+          '不建议订当天离开乌市的航班/火车。',
+          '🌡️ 隧道内恒温 ≈10℃ · 出隧道后乌市 ☀29℃ / 🌙15℃ · 多云转阴 — 车内备外套，东南风 3-4 级。'
+        ]
+      },
+      {
+        day: 'D7', name: '乌鲁木齐送机/站', lat: 43.830, lng: 87.600,
+        popupTitle: 'D7 · 5/5 乌鲁木齐（散团）',
+        popupSub: '送机/站 · 结束行程',
+        popupBullets: [
+          '提前将返程航班/车次告知报名方。',
+          '送机联络多在返程前一日 22:00 前。',
+          '🌡️ ☀白天 24℃ / 🌙夜间 14℃ · 雨 — 带伞！西北风 3-4 级；雨天注意预留交通时间。'
+        ]
+      }
+    ];
+
+    /* ===== 途经城镇 ===== */
+    var towns = [
+      { name: '精河', lat: 44.605, lng: 82.890, note: 'D2途经，可在此简餐' },
+      { name: '果子沟', lat: 44.350, lng: 81.250, note: 'D2途经，果子沟大桥是网红打卡点' },
+      { name: '巩留', lat: 43.483, lng: 82.231, note: 'D4途经，库尔德宁所在县' },
+      { name: '新源', lat: 43.429, lng: 83.258, note: 'D4住宿地' },
+      /* 巴伦台与 D6 主站点重合，已由 D6 彩色标记代替 */
+      { name: '和静', lat: 42.322, lng: 86.385, note: 'D6途经' },
+      { name: '天山胜利隧道', lat: 42.95, lng: 86.60, note: 'D6穿越，约22km长隧道，恒温10℃' }
+    ];
+
+    /* ===== 初始化地图 ===== */
+    var isMobile = window.innerWidth <= 720;
+    var map = L.map('map', {
+      zoomControl: !isMobile,
+      tap: true,
+      dragging: true,
+      touchZoom: true,
+      bounceAtZoomLimits: true
+    }).setView(G(43.35, 84.2), isMobile ? 6 : 7);
+
+    // 移动端缩放按钮放右下角
+    if (isMobile) {
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
+    }
+
+    // 高德地图瓦片
+    L.tileLayer('https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}', {
+      maxZoom: 18,
+      subdomains: '1234',
+      attribution: '&copy; <a href="https://www.amap.com/">高德地图</a>'
+    }).addTo(map);
+
+    /* ===== 路线折线 ===== */
+    var outbound = GA([
+      [stops[0].lat, stops[0].lng],
+      [stops[1].lat, stops[1].lng],
+      [stops[2].lat, stops[2].lng],
+      [stops[3].lat, stops[3].lng],
+      [stops[3].endLat, stops[3].endLng],
+      [stops[4].lat, stops[4].lng],
+      [stops[5].lat, stops[5].lng],
+    ]);
+
+    var returnLeg = GA([
+      [stops[5].lat, stops[5].lng],
+      [42.55, 84.85],
+      [42.25, 85.55],
+      [stops[6].lat, stops[6].lng],
+      [42.88, 87.10],
+      [stops[7].lat, stops[7].lng],
+    ]);
+
+    var lineByDay = {
+      D2: '#2563eb',
+      D3: '#7c3aed',
+      D4: '#059669',
+      D5: '#d97706',
+      D6: '#dc2626'
+    };
+    var lineWeight = isMobile ? 3.5 : 4;
+    var lineOpts = { weight: lineWeight, opacity: 0.88 };
+
+    L.polyline([outbound[0], outbound[1]], Object.assign({ color: lineByDay.D2 }, lineOpts)).addTo(map);
+    L.polyline([outbound[1], outbound[2]], Object.assign({ color: lineByDay.D3 }, lineOpts)).addTo(map);
+    L.polyline([outbound[2], outbound[3], outbound[4]], Object.assign({ color: lineByDay.D4 }, lineOpts)).addTo(map);
+    L.polyline([outbound[4], outbound[5], outbound[6]], Object.assign({ color: lineByDay.D5 }, lineOpts)).addTo(map);
+    L.polyline(returnLeg, Object.assign({ color: lineByDay.D6 }, lineOpts)).addTo(map);
+
+    /* ===== 车程标签（移动端隐藏以减少视觉噪音） ===== */
+    var driveLabels = [];
+    function addDriveLabel(lat, lng, title, sub, lineColor) {
+      var c = lineColor || '#475569';
+      var html = '<div class="drive-label" style="border-color:' + c + '"><strong>' + title + '</strong><br><span class="dl-sub">' + sub + '</span></div>';
+      var m = L.marker([lat, lng], {
+        icon: L.divIcon({
+          className: 'drive-label-holder',
+          html: html,
+          iconSize: [140, 42],
+          iconAnchor: [70, 21]
+        }),
+        interactive: false,
+        keyboard: false
+      }).addTo(map);
+      driveLabels.push(m);
+      return m;
+    }
+
+    var p01 = pointAtFractionAlongPath([outbound[0], outbound[1]], 0.5);
+    addDriveLabel(p01[0], p01[1], 'D2 乌市 → 赛里木湖', '约 580 km · 约 7 h', lineByDay.D2);
+    var p12 = pointAtFractionAlongPath([outbound[1], outbound[2]], 0.5);
+    addDriveLabel(p12[0], p12[1], 'D3 赛湖 → 伊宁', '约 260 km · 约 5 h', lineByDay.D3);
+    var p234 = pointAtFractionAlongPath([outbound[2], outbound[3], outbound[4]], 0.5);
+    addDriveLabel(p234[0], p234[1], 'D4 伊宁 → 库尔德宁 → 新源', '约 320 km · 约 6 h', lineByDay.D4);
+    var p456 = pointAtFractionAlongPath([outbound[4], outbound[5], outbound[6]], 0.5);
+    addDriveLabel(p456[0], p456[1], 'D5 新源 → 吐尔根 → 那拉提', '约 250 km · 约 4 h', lineByDay.D5);
+    var pRet = pointAtFractionAlongPath(returnLeg, 0.5);
+    addDriveLabel(pRet[0], pRet[1], 'D6 那拉提 → 乌鲁木齐', '约 450 km · 约 8 h（经胜利隧道）', lineByDay.D6);
+
+    // 移动端低缩放时隐藏车程标签
+    function toggleDriveLabels() {
+      var z = map.getZoom();
+      driveLabels.forEach(function(m) {
+        if (isMobile && z < 7) {
+          m.getElement() && (m.getElement().style.display = 'none');
+        } else {
+          m.getElement() && (m.getElement().style.display = '');
+        }
+      });
+    }
+    map.on('zoomend', toggleDriveLabels);
+    setTimeout(toggleDriveLabels, 300);
+
+    /* ===== 景点圆点标记（高层 pane 确保不被城镇遮挡） ===== */
+    map.createPane('stops');
+    map.getPane('stops').style.zIndex = 650;
+    var dayColors = {
+      D1: '#64748b', D2: lineByDay.D2, D3: lineByDay.D3, D4: lineByDay.D4,
+      D5a: '#fb923c', D5b: lineByDay.D5, D6: lineByDay.D6, D7: '#64748b'
+    };
+
+    // 移动端增大圆点半径方便触摸
+    var rBoost = isMobile ? 2 : 0;
+
+    // 保存各天标记点引用，用于导航跳转
+    var dayMarkers = {};
+
+    stops.forEach(function(s) {
+      if (s.day === 'D7') return;
+      var html = popHtml(s.popupTitle, s.popupSub, s.popupBullets);
+      var gc = G(s.lat, s.lng);
+      if (s.day === 'D4') {
+        var m4 = L.circleMarker(gc, { pane: 'stops', radius: 8 + rBoost, fillColor: dayColors.D4, color: '#fff', weight: 2.5, fillOpacity: 0.92 })
+          .addTo(map).bindPopup(html);
+        dayMarkers['4'] = m4;
+        var gcEnd = G(s.endLat, s.endLng);
+        L.circleMarker(gcEnd, { pane: 'stops', radius: 7 + rBoost, fillColor: dayColors.D4, color: '#fff', weight: 2.5, fillOpacity: 0.88 })
+          .addTo(map)
+          .bindPopup(popHtml('D4 · 新源县（住宿）', '库尔德宁游览结束后入住', [
+            '地图下侧标记为县城住宿地示意。',
+            '具体酒店以出团通知书/平台披露为准。'
+          ]));
+        return;
+      }
+      if (s.day === 'D5a' || s.day === 'D5b') {
+        var m5 = L.circleMarker(gc, { pane: 'stops', radius: (s.day === 'D5b' ? 9 : 7) + rBoost, fillColor: dayColors[s.day], color: '#fff', weight: 2.5, fillOpacity: 0.92 })
+          .addTo(map).bindPopup(html);
+        if (s.day === 'D5b') dayMarkers['5'] = m5;
+        return;
+      }
+      if (s.day === 'D1') {
+        var m1 = L.circleMarker(gc, { pane: 'stops', radius: 12 + rBoost, fillColor: dayColors.D1, color: '#fff', weight: 3, fillOpacity: 0.95 })
+          .addTo(map)
+          .bindPopup(popUrumqiD1D7(stops[0], stops[7]));
+        dayMarkers['1'] = m1;
+        dayMarkers['7'] = m1;
+        return;
+      }
+      var c = dayColors[s.day] || '#334155';
+      var dayNum = s.day.replace('D', '');
+      var mk = L.circleMarker(gc, { pane: 'stops', radius: 8 + rBoost, fillColor: c, color: '#fff', weight: 2.5, fillOpacity: 0.92 })
+        .addTo(map).bindPopup(html);
+      dayMarkers[dayNum] = mk;
+    });
+
+    /* ===== 途经城镇 ===== */
+    var townMarkers = [];
+    towns.forEach(function(t) {
+      var gc = G(t.lat, t.lng);
+      var cm = L.circleMarker(gc, {
+        radius: isMobile ? 5 : 4,
+        fillColor: '#94a3b8',
+        color: '#fff',
+        weight: 1.5,
+        fillOpacity: 0.7
+      }).addTo(map).bindPopup('<h3>' + t.name + '</h3><p class="pop-sub">' + t.note + '</p>');
+
+      var lbl = L.marker(gc, {
+        icon: L.divIcon({
+          className: 'town-label-holder',
+          html: '<span class="town-label">' + t.name + '</span>',
+          iconSize: [60, 16],
+          iconAnchor: [-6, 8]
+        }),
+        interactive: false,
+        keyboard: false
+      }).addTo(map);
+
+      townMarkers.push({ marker: cm, label: lbl });
+    });
+
+    // 移动端低缩放时隐藏城镇标注
+    function toggleTownLabels() {
+      var z = map.getZoom();
+      townMarkers.forEach(function(t) {
+        var show = z >= (isMobile ? 8 : 7);
+        t.label.getElement() && (t.label.getElement().style.display = show ? '' : 'none');
+      });
+    }
+    map.on('zoomend', toggleTownLabels);
+    setTimeout(toggleTownLabels, 300);
+
+    /* ===== 视野适配 ===== */
+    var allPts = outbound.concat(returnLeg);
+    map.fitBounds(allPts, { padding: isMobile ? [20, 20] : [40, 40] });
+
+    /* ===== 导航跳转函数 ===== */
+    function flyToDay(dayNum) {
+      var s = stops[dayNum - 1];
+      if (!s) return;
+      var gc = G(s.lat, s.lng);
+      map.flyTo(gc, isMobile ? 9 : 10, { animate: true, duration: 0.6 });
+
+      // 打开对应弹窗
+      var mk = dayMarkers[String(dayNum)];
+      if (mk) {
+        setTimeout(function() { mk.openPopup(); }, 650);
+      }
+    }
+
+    /* ===== 底部抽屉交互（移动端） ===== */
+    (function() {
+      var handle = document.getElementById('drawer-handle');
+      var panel = document.getElementById('details');
+      var handleText = handle ? handle.querySelector('.drawer-handle-text') : null;
+      if (!handle || !panel) return;
+
+      var isOpen = false;
+
+      function toggleDrawer() {
+        isOpen = !isOpen;
+        if (isOpen) {
+          panel.classList.add('drawer-open');
+          if (handleText) handleText.textContent = '📋 下滑收起';
+        } else {
+          panel.classList.remove('drawer-open');
+          if (handleText) handleText.textContent = '📋 上滑查看逐日说明';
+          panel.scrollTop = 0;
+        }
+      }
+
+      // 点击把手
+      handle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleDrawer();
+      });
+
+      // 触摸手势：在把手区域上下滑动
+      var startY = 0;
+      var isDragging = false;
+
+      handle.addEventListener('touchstart', function(e) {
+        startY = e.touches[0].clientY;
+        isDragging = true;
+      }, { passive: true });
+
+      handle.addEventListener('touchmove', function(e) {
+        if (!isDragging) return;
+        var dy = e.touches[0].clientY - startY;
+        // 向上滑 > 30px 打开
+        if (dy < -30 && !isOpen) {
+          toggleDrawer();
+          isDragging = false;
+        }
+        // 向下滑 > 30px 关闭
+        if (dy > 30 && isOpen) {
+          toggleDrawer();
+          isDragging = false;
+        }
+      }, { passive: true });
+
+      handle.addEventListener('touchend', function() {
+        isDragging = false;
+      }, { passive: true });
+
+      // 点击 Day 卡片 -> 跳转地图并收起抽屉
+      document.querySelectorAll('.day-block').forEach(function(block) {
+        block.addEventListener('click', function() {
+          var dayNum = parseInt(this.getAttribute('data-day'));
+          if (dayNum) {
+            flyToDay(dayNum);
+            if (isOpen && isMobile) {
+              setTimeout(toggleDrawer, 200);
+            }
+          }
+        });
+      });
+    })();
+
+    /* ===== 移动端天数快速导航圆按钮 ===== */
+    document.querySelectorAll('.day-nav-btn').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var dayNum = parseInt(this.getAttribute('data-day'));
+        if (dayNum) flyToDay(dayNum);
+      });
+    });
+
+    /* ===== 桌面端侧栏点击联动 ===== */
+    if (!isMobile) {
+      document.querySelectorAll('.day-block').forEach(function(block) {
+        block.addEventListener('click', function() {
+          var dayNum = parseInt(this.getAttribute('data-day'));
+          if (dayNum) flyToDay(dayNum);
+        });
+      });
+    }
+
+    /* ===== 进度条点击导航 ===== */
+    document.querySelectorAll('.prog-node').forEach(function(node) {
+      node.addEventListener('click', function() {
+        var dayNum = parseInt(this.getAttribute('data-pday'));
+        if (dayNum) flyToDay(dayNum);
+      });
+    });
+
+    /* ===== 深色模式切换 ===== */
+    (function() {
+      var btn = document.getElementById('theme-toggle');
+      if (!btn) return;
+      var isDark = false;
+      // 恢复保存的主题
+      if (localStorage.getItem('yili-dark') === '1') {
+        document.body.classList.add('dark-mode');
+        btn.textContent = '☀️';
+        isDark = true;
+      }
+      btn.addEventListener('click', function() {
+        isDark = !isDark;
+        if (isDark) {
+          document.body.classList.add('dark-mode');
+          btn.textContent = '☀️';
+          localStorage.setItem('yili-dark', '1');
+        } else {
+          document.body.classList.remove('dark-mode');
+          btn.textContent = '🌙';
+          localStorage.setItem('yili-dark', '0');
+        }
+      });
+    })();
+
+    /* ===== 二维码生成（纯JS，无依赖） ===== */
+    (function() {
+      var canvas = document.getElementById('qr-canvas');
+      if (!canvas) return;
+      var url = 'https://piscees.github.io/yili-travel/';
+      // 简易 QR：使用 Google Chart API 生成图片替代
+      var img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = function() {
+        canvas.width = 160;
+        canvas.height = 160;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, 160, 160);
+      };
+      img.onerror = function() {
+        // 如果 Google API 不可用，显示链接文本
+        canvas.width = 200;
+        canvas.height = 40;
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#0d3d32';
+        ctx.font = '11px sans-serif';
+        ctx.fillText(url, 4, 25);
+      };
+      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + encodeURIComponent(url);
+    })();
+
+    /* ===== 响应式适配：窗口大小变化 ===== */
+    var resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        isMobile = window.innerWidth <= 720;
+        map.invalidateSize();
+      }, 200);
+    });
+
+    /* ===== 自定义备注功能 ===== */
+    function toggleNote(el) {
+      var area = el.parentElement;
+      var input = area.querySelector('.user-note-input');
+      if (input.style.display === 'none') {
+        input.style.display = '';
+        input.focus();
+        el.textContent = '✏️ 收起备注';
+      } else {
+        input.style.display = 'none';
+        el.textContent = input.value.trim() ? '✏️ 查看备注 (' + input.value.trim().substring(0, 8) + '…)' : '✏️ 写备注…';
+      }
+    }
+
+    var noteSaveTimers = {};
+    function saveNote(textarea, dayNum) {
+      var savedEl = textarea.parentElement.querySelector('.user-note-saved');
+      clearTimeout(noteSaveTimers[dayNum]);
+      noteSaveTimers[dayNum] = setTimeout(function() {
+        localStorage.setItem('yili-note-d' + dayNum, textarea.value);
+        savedEl.classList.add('show');
+        setTimeout(function() { savedEl.classList.remove('show'); }, 1500);
+      }, 500);
+    }
+
+    // 页面加载时恢复已保存的备注
+    (function() {
+      for (var d = 1; d <= 7; d++) {
+        var saved = localStorage.getItem('yili-note-d' + d);
+        if (saved) {
+          var area = document.querySelector('[data-note-day="' + d + '"]');
+          if (area) {
+            var input = area.querySelector('.user-note-input');
+            var toggle = area.querySelector('.user-note-toggle');
+            input.value = saved;
+            toggle.textContent = '✏️ 查看备注 (' + saved.substring(0, 8) + '…)';
+          }
+        }
+      }
+    })();
+
+    /* ===== 记账单功能 ===== */
+    (function() {
+      var STORAGE_KEY = 'yili-expenses';
+      var dayBgColors = {
+        D1: 'var(--c-d1)', D2: 'var(--c-d2)', D3: 'var(--c-d3)',
+        D4: 'var(--c-d4)', D5: 'var(--c-d5)', D6: 'var(--c-d6)', D7: 'var(--c-d7)'
+      };
+
+      function loadExpenses() {
+        try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+        catch(e) { return []; }
+      }
+      function saveExpenses(list) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      }
+
+      function renderExpenses() {
+        var list = loadExpenses();
+        var container = document.getElementById('expense-list');
+        var totalEl = document.getElementById('exp-total');
+        var countEl = document.getElementById('exp-count');
+        var avgEl = document.getElementById('exp-avg');
+
+        // 计算统计
+        var total = 0;
+        list.forEach(function(e) { total += e.amount; });
+        var daysWithExpense = {};
+        list.forEach(function(e) { daysWithExpense[e.day] = true; });
+        var dayCount = Object.keys(daysWithExpense).length || 1;
+
+        totalEl.textContent = '¥' + total.toFixed(total % 1 === 0 ? 0 : 2);
+        countEl.textContent = list.length;
+        avgEl.textContent = '¥' + (total / dayCount).toFixed(0);
+
+        // 按天分组
+        var groups = {};
+        var dayOrder = ['D1','D2','D3','D4','D5','D6','D7'];
+        list.forEach(function(e, idx) {
+          if (!groups[e.day]) groups[e.day] = [];
+          groups[e.day].push({ idx: idx, cat: e.cat, desc: e.desc, amount: e.amount });
+        });
+
+        if (list.length === 0) {
+          container.innerHTML = '<div class="expense-empty">🧾 还没有记录，开始记一笔吧</div>';
+          return;
+        }
+
+        var html = '';
+        dayOrder.forEach(function(day) {
+          if (!groups[day]) return;
+          var dayTotal = 0;
+          groups[day].forEach(function(e) { dayTotal += e.amount; });
+          html += '<div class="expense-day-group">';
+          html += '<div class="expense-day-header" style="background:' + dayBgColors[day] + '">';
+          html += '<span>' + day + '</span>';
+          html += '<span>小计 ¥' + dayTotal.toFixed(dayTotal % 1 === 0 ? 0 : 2) + '</span>';
+          html += '</div>';
+          groups[day].forEach(function(e) {
+            html += '<div class="expense-item">';
+            html += '<span class="ei-cat">' + e.cat + '</span>';
+            html += '<span class="ei-desc">' + escHtml(e.desc || '未命名') + '</span>';
+            html += '<span class="ei-amt">¥' + e.amount.toFixed(e.amount % 1 === 0 ? 0 : 2) + '</span>';
+            html += '<button class="ei-del" title="删除" data-idx="' + e.idx + '">×</button>';
+            html += '</div>';
+          });
+          html += '</div>';
+        });
+        container.innerHTML = html;
+
+        // 绑定删除
+        container.querySelectorAll('.ei-del').forEach(function(btn) {
+          btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var idx = parseInt(this.getAttribute('data-idx'));
+            var expenses = loadExpenses();
+            expenses.splice(idx, 1);
+            saveExpenses(expenses);
+            renderExpenses();
+          });
+        });
+      }
+
+      function escHtml(s) {
+        var d = document.createElement('div');
+        d.textContent = s;
+        return d.innerHTML;
+      }
+
+      // 添加记录
+      document.getElementById('exp-add-btn').addEventListener('click', function() {
+        var day = document.getElementById('exp-day').value;
+        var cat = document.getElementById('exp-cat').value;
+        var desc = document.getElementById('exp-desc').value.trim();
+        var amt = parseFloat(document.getElementById('exp-amt').value);
+        if (!amt || amt <= 0) {
+          document.getElementById('exp-amt').focus();
+          return;
+        }
+        var expenses = loadExpenses();
+        expenses.push({ day: day, cat: cat, desc: desc || cat, amount: amt, time: Date.now() });
+        saveExpenses(expenses);
+        document.getElementById('exp-desc').value = '';
+        document.getElementById('exp-amt').value = '';
+        renderExpenses();
+      });
+
+      // 回车添加
+      ['exp-desc', 'exp-amt'].forEach(function(id) {
+        document.getElementById(id).addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('exp-add-btn').click();
+          }
+        });
+      });
+
+      // 导出文本
+      document.getElementById('exp-export-btn').addEventListener('click', function() {
+        var list = loadExpenses();
+        if (list.length === 0) { alert('暂无记录可导出'); return; }
+        var text = '🏔️ 伊犁7日旅行账单\n' + '═'.repeat(24) + '\n\n';
+        var dayOrder = ['D1','D2','D3','D4','D5','D6','D7'];
+        var dayNames = { D1:'4/29 乌鲁木齐', D2:'4/30 赛里木湖', D3:'5/1 伊宁',
+                         D4:'5/2 库尔德宁', D5:'5/3 那拉提', D6:'5/4 返程', D7:'5/5 送机' };
+        var total = 0;
+        var groups = {};
+        list.forEach(function(e) {
+          if (!groups[e.day]) groups[e.day] = [];
+          groups[e.day].push(e);
+          total += e.amount;
+        });
+        dayOrder.forEach(function(day) {
+          if (!groups[day]) return;
+          var dayTotal = 0;
+          text += '📅 ' + day + ' ' + (dayNames[day] || '') + '\n';
+          groups[day].forEach(function(e) {
+            dayTotal += e.amount;
+            text += '  ' + e.cat + ' ' + e.desc + '  ¥' + e.amount.toFixed(e.amount % 1 === 0 ? 0 : 2) + '\n';
+          });
+          text += '  ── 小计 ¥' + dayTotal.toFixed(dayTotal % 1 === 0 ? 0 : 2) + '\n\n';
+        });
+        text += '═'.repeat(24) + '\n';
+        text += '💰 总计：¥' + total.toFixed(total % 1 === 0 ? 0 : 2) + '（共 ' + list.length + ' 笔）\n';
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function() {
+            alert('✅ 账单已复制到剪贴板！\n可粘贴到微信/备忘录');
+          });
+        } else {
+          // fallback
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          alert('✅ 账单已复制到剪贴板！');
+        }
+      });
+
+      // 初始渲染
+      renderExpenses();
+    })();
+  </script>
+</body>
+</html>

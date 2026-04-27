@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>伊犁7日路线图 · 手机版</title>
+  <style>
+    :root {
+      --c1: #64748b; --c2: #2563eb; --c3: #7c3aed;
+      --c4: #059669; --c5: #d97706; --c6: #dc2626; --c7: #64748b;
+      --bg: #f8faf9; --card: #fff; --accent: #0d3d32;
+      --safe-b: env(safe-area-inset-bottom, 0px);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 15px; }
+    body {
+      font-family: -apple-system, "SF Pro Text", "PingFang SC", "Helvetica Neue", sans-serif;
+      background: var(--bg); color: #1e293b;
+      line-height: 1.65; padding-bottom: calc(20px + var(--safe-b));
+      -webkit-text-size-adjust: 100%;
+    }
+
+    /* === 顶部 === */
+    .hero {
+      background: linear-gradient(135deg, #0d3d32 0%, #14725e 50%, #1a9e7a 100%);
+      color: #fff; padding: 28px 20px 22px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::after {
+      content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 24px;
+      background: var(--bg); border-radius: 24px 24px 0 0;
+    }
+    .hero .icon { font-size: 36px; margin-bottom: 6px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+    .hero h1 { font-size: 1.35rem; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .hero .sub { font-size: 0.75rem; opacity: 0.85; font-weight: 400; }
+
+    /* === 路线概览 SVG === */
+    .route-map {
+      margin: 16px 16px 0; padding: 16px; background: #fff;
+      border-radius: 16px; box-shadow: 0 2px 12px rgba(15,60,50,0.06);
+      border: 1px solid #e2ebe6; overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
+    .route-map h3 { font-size: 0.82rem; color: var(--accent); margin-bottom: 10px; font-weight: 700; }
+    .route-map svg { display: block; width: 100%; height: auto; }
+    .route-map .note-text { font-size: 0.7rem; color: #94a3b8; margin-top: 8px; text-align: center; }
+
+    /* === 天气横条 === */
+    .weather-strip {
+      margin: 16px 16px 0; display: flex; gap: 8px; overflow-x: auto;
+      padding-bottom: 4px; scrollbar-width: none; -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .weather-strip::-webkit-scrollbar { display: none; }
+    .wx {
+      flex-shrink: 0; background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 60%, #ecfdf5 100%);
+      border: 1px solid #bae6fd; border-radius: 12px; padding: 8px 12px;
+      font-size: 0.72rem; min-width: 105px; text-align: center;
+    }
+    .wx .wx-place { font-weight: 700; color: #0c4a6e; display: block; margin-bottom: 2px; }
+    .wx .wx-temp { font-weight: 600; color: #0369a1; }
+    .wx .wx-desc { color: #64748b; font-size: 0.65rem; display: block; margin-top: 1px; }
+
+    /* === 行程卡片 === */
+    .section { padding: 16px 16px 0; }
+    .section-title { font-size: 0.9rem; font-weight: 800; color: var(--accent); margin-bottom: 12px; }
+
+    .day-card {
+      background: var(--card); border-radius: 14px; margin-bottom: 14px;
+      border: 1px solid #e2ebe6; box-shadow: 0 2px 10px rgba(15,60,50,0.05);
+      overflow: hidden;
+    }
+    .day-head {
+      padding: 12px 16px 10px; display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid #f0f4f2;
+    }
+    .day-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 42px; height: 42px; border-radius: 12px; color: #fff;
+      font-size: 0.85rem; font-weight: 800; flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .day-head-text { flex: 1; min-width: 0; }
+    .day-head-text .date { font-size: 0.7rem; color: #94a3b8; font-weight: 500; }
+    .day-head-text .title { font-size: 0.88rem; font-weight: 700; color: #0f172a; margin-top: 1px; }
+    .day-wx-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      background: linear-gradient(135deg, #e0f2fe, #f0f9ff);
+      border: 1px solid #bae6fd; border-radius: 10px;
+      padding: 3px 8px; font-size: 0.65rem; color: #0369a1;
+      font-weight: 500; flex-shrink: 0; white-space: nowrap;
+    }
+    .day-body { padding: 12px 16px 14px; font-size: 0.82rem; }
+    .day-body .drive-info {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #f1f5f9; border-radius: 8px; padding: 4px 10px;
+      font-size: 0.75rem; font-weight: 600; color: #475569; margin-bottom: 8px;
+    }
+    .day-body p { margin-bottom: 8px; }
+    .day-body ul { margin: 0; padding-left: 1.15em; }
+    .day-body li { margin-bottom: 5px; }
+    .day-body strong { color: #0f172a; }
+
+    .clothes-tip {
+      background: linear-gradient(135deg, #fef3c7 0%, #fefce8 100%);
+      border: 1px solid #fde68a; border-radius: 10px;
+      padding: 8px 12px; margin-top: 8px; font-size: 0.75rem; color: #92400e;
+    }
+
+    /* === 备注 === */
+    .footer-note {
+      margin: 16px; padding: 14px 16px;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border-radius: 12px; border: 1px solid #a7f3d0;
+      font-size: 0.75rem; color: #065f46; line-height: 1.7;
+    }
+    .footer-note strong { color: #047857; }
+
+    /* === 路线连线动画 === */
+    @keyframes dash { to { stroke-dashoffset: 0; } }
+  </style>
+</head>
+<body>
+
+  <!-- ====== 顶部 ====== -->
+  <div class="hero">
+    <div class="icon">🏔️</div>
+    <h1>新疆伊犁 · 7日拼车路线图</h1>
+    <div class="sub">全程约 1,860 km ｜ 赛里木湖 · 伊宁 · 库尔德宁 · 那拉提 · 天山胜利隧道</div>
+  </div>
+
+  <!-- ====== 路线示意图 ====== -->
+  <div class="route-map">
+    <h3>🗺️ 路线示意图</h3>
+    <svg viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- 背景 -->
+      <defs>
+        <linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#e8f4f0"/>
+          <stop offset="100%" stop-color="#f0f9f6"/>
+        </linearGradient>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#000" flood-opacity="0.15"/>
+        </filter>
+      </defs>
+      <rect width="400" height="320" rx="12" fill="url(#bg-grad)"/>
+
+      <!-- 新疆轮廓示意 (简化) -->
+      <text x="200" y="22" text-anchor="middle" fill="#94a3b8" font-size="9" font-weight="500">新疆维吾尔自治区 · 伊犁环线示意</text>
+
+      <!-- 路线连线 -->
+      <!-- D2: 乌市→赛湖 (蓝) -->
+      <path d="M 320 105 C 280 80, 200 45, 110 60" stroke="#2563eb" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="6,3" opacity="0.85"/>
+      <!-- D3: 赛湖→伊宁 (紫) -->
+      <path d="M 110 60 C 100 90, 95 120, 98 155" stroke="#7c3aed" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="6,3" opacity="0.85"/>
+      <!-- D4: 伊宁→库尔德宁→新源 (绿) -->
+      <path d="M 98 155 C 120 180, 150 205, 185 215" stroke="#059669" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="6,3" opacity="0.85"/>
+      <!-- D5: 新源→那拉提 (黄) -->
+      <path d="M 185 215 C 200 220, 220 225, 240 225" stroke="#d97706" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="6,3" opacity="0.85"/>
+      <!-- D6: 那拉提→乌市 (红) -->
+      <path d="M 240 225 C 270 210, 300 170, 320 105" stroke="#dc2626" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="6,3" opacity="0.85"/>
+
+      <!-- 途经标注 -->
+      <text x="220" y="55" fill="#94a3b8" font-size="7.5">精河</text>
+      <circle cx="210" cy="58" r="2" fill="#94a3b8" opacity="0.5"/>
+      <text x="85" y="108" fill="#94a3b8" font-size="7.5">果子沟大桥</text>
+      <circle cx="105" cy="100" r="2" fill="#94a3b8" opacity="0.5"/>
+      <text x="130" y="200" fill="#94a3b8" font-size="7.5">巩留</text>
+      <circle cx="148" cy="195" r="2" fill="#94a3b8" opacity="0.5"/>
+      <text x="282" y="175" fill="#94a3b8" font-size="7.5">天山胜利隧道</text>
+      <circle cx="295" cy="168" r="2" fill="#94a3b8" opacity="0.5"/>
+
+      <!-- 景点/住宿节点 -->
+      <!-- 乌鲁木齐 -->
+      <circle cx="320" cy="105" r="8" fill="#64748b" stroke="#fff" stroke-width="2" filter="url(#shadow)"/>
+      <text x="320" y="125" text-anchor="middle" fill="#0f172a" font-size="10" font-weight="700">🏙️ 乌鲁木齐</text>
+      <text x="320" y="137" text-anchor="middle" fill="#64748b" font-size="7.5">D1集合 / D7散团</text>
+
+      <!-- 赛里木湖 -->
+      <circle cx="110" cy="60" r="8" fill="#2563eb" stroke="#fff" stroke-width="2" filter="url(#shadow)"/>
+      <text x="110" y="48" text-anchor="middle" fill="#0f172a" font-size="10" font-weight="700">🏞️ 赛里木湖</text>
+      <text x="110" y="37" text-anchor="middle" fill="#2563eb" font-size="7.5">D2-D3 · 580km</text>
+
+      <!-- 伊宁 -->
+      <circle cx="98" cy="155" r="8" fill="#7c3aed" stroke="#fff" stroke-width="2" filter="url(#shadow)"/>
+      <text x="65" y="152" text-anchor="middle" fill="#0f172a" font-size="10" font-weight="700">🕌 伊宁</text>
+      <text x="65" y="164" text-anchor="middle" fill="#7c3aed" font-size="7.5">D3 · 六星街</text>
+
+      <!-- 库尔德宁 -->
+      <circle cx="150" cy="215" r="6" fill="#059669" stroke="#fff" stroke-width="2" filter="url(#shadow)"/>
+      <text x="150" y="235" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="600">🌲 库尔德宁</text>
+      <text x="150" y="246" text-anchor="middle" fill="#059669" font-size="7">D4 · 320km</text>
+
+      <!-- 新源 -->
+      <circle cx="185" cy="215" r="5" fill="#059669" stroke="#fff" stroke-width="1.5" filter="url(#shadow)" opacity="0.7"/>
+      <text x="185" y="208" text-anchor="middle" fill="#94a3b8" font-size="7.5">新源(宿)</text>
+
+      <!-- 吐尔根杏花沟 -->
+      <circle cx="210" cy="240" r="5" fill="#d97706" stroke="#fff" stroke-width="1.5" filter="url(#shadow)" opacity="0.7"/>
+      <text x="210" y="256" text-anchor="middle" fill="#d97706" font-size="7.5">🌸 杏花沟</text>
+
+      <!-- 那拉提 -->
+      <circle cx="240" cy="225" r="7" fill="#d97706" stroke="#fff" stroke-width="2" filter="url(#shadow)"/>
+      <text x="260" y="244" text-anchor="middle" fill="#0f172a" font-size="10" font-weight="700">🌿 那拉提</text>
+      <text x="260" y="255" text-anchor="middle" fill="#d97706" font-size="7.5">D5 · 空中草原</text>
+
+      <!-- 路段距离标注 -->
+      <rect x="195" y="67" width="60" height="16" rx="8" fill="#fff" stroke="#2563eb" stroke-width="0.8" opacity="0.9"/>
+      <text x="225" y="78" text-anchor="middle" fill="#2563eb" font-size="7.5" font-weight="600">580km · 7h</text>
+
+      <rect x="60" y="110" width="55" height="16" rx="8" fill="#fff" stroke="#7c3aed" stroke-width="0.8" opacity="0.9"/>
+      <text x="87" y="121" text-anchor="middle" fill="#7c3aed" font-size="7.5" font-weight="600">260km · 5h</text>
+
+      <rect x="120" y="180" width="55" height="16" rx="8" fill="#fff" stroke="#059669" stroke-width="0.8" opacity="0.9"/>
+      <text x="147" y="191" text-anchor="middle" fill="#059669" font-size="7.5" font-weight="600">320km · 6h</text>
+
+      <rect x="192" y="228" width="55" height="16" rx="8" fill="#fff" stroke="#d97706" stroke-width="0.8" opacity="0.9"/>
+      <text x="219" y="239" text-anchor="middle" fill="#d97706" font-size="7.5" font-weight="600">250km · 4h</text>
+
+      <rect x="290" y="145" width="55" height="16" rx="8" fill="#fff" stroke="#dc2626" stroke-width="0.8" opacity="0.9"/>
+      <text x="317" y="156" text-anchor="middle" fill="#dc2626" font-size="7.5" font-weight="600">450km · 8h</text>
+
+      <!-- 图例 -->
+      <rect x="10" y="270" width="380" height="40" rx="8" fill="#fff" stroke="#e2ebe6" stroke-width="0.5" opacity="0.9"/>
+      <circle cx="30" cy="285" r="4" fill="#2563eb"/><text x="40" y="288" fill="#475569" font-size="7.5">D2 乌市→赛湖</text>
+      <circle cx="120" cy="285" r="4" fill="#7c3aed"/><text x="130" y="288" fill="#475569" font-size="7.5">D3 赛湖→伊宁</text>
+      <circle cx="210" cy="285" r="4" fill="#059669"/><text x="220" y="288" fill="#475569" font-size="7.5">D4 伊宁→新源</text>
+      <circle cx="300" cy="285" r="4" fill="#d97706"/><text x="310" y="288" fill="#475569" font-size="7.5">D5→那拉提</text>
+      <circle cx="30" cy="300" r="4" fill="#dc2626"/><text x="40" y="303" fill="#475569" font-size="7.5">D6 那拉提→乌市</text>
+      <circle cx="120" cy="300" r="4" fill="#64748b"/><text x="130" y="303" fill="#475569" font-size="7.5">集合/散团</text>
+      <circle cx="210" cy="300" r="3" fill="#94a3b8" stroke="#94a3b8" stroke-width="0.5" stroke-dasharray="2,1"/><text x="220" y="303" fill="#475569" font-size="7.5">途经城镇</text>
+    </svg>
+    <div class="note-text">⬆️ 路线仅为示意，实际以导航为准 · 总里程约 1,860 km</div>
+  </div>
+
+  <!-- ====== 天气横条 ====== -->
+  <div class="weather-strip">
+    <div class="wx"><span class="wx-place">🌦️ 乌市 4/29</span><span class="wx-temp">27℃/9℃</span><span class="wx-desc">小雨转多云</span></div>
+    <div class="wx"><span class="wx-place">☀️ 赛湖 4/30</span><span class="wx-temp">8℃/0℃</span><span class="wx-desc">晴·风大体感冷</span></div>
+    <div class="wx"><span class="wx-place">☀️ 伊宁 5/1</span><span class="wx-temp">31℃/10℃</span><span class="wx-desc">晴·温差大</span></div>
+    <div class="wx"><span class="wx-place">⛅ 新源 5/2</span><span class="wx-temp">29℃/13℃</span><span class="wx-desc">晴转多云</span></div>
+    <div class="wx"><span class="wx-place">🌧️ 那拉提 5/3</span><span class="wx-temp">30℃/12℃</span><span class="wx-desc">阴转小雨</span></div>
+    <div class="wx"><span class="wx-place">🏔️ 天山 5/4</span><span class="wx-temp">隧道10℃→乌市29℃</span><span class="wx-desc">多云转阴</span></div>
+    <div class="wx"><span class="wx-place">🌧️ 乌市 5/5</span><span class="wx-temp">24℃/14℃</span><span class="wx-desc">雨</span></div>
+  </div>
+
+  <!-- ====== 逐日行程 ====== -->
+  <div class="section">
+    <div class="section-title">📖 逐日行程</div>
+
+    <!-- D1 -->
+    <div class="day-card">
+      <div class="day-head">
+        <div class="day-badge" style="background:var(--c1)">D1</div>
+        <div class="day-head-text">
+          <div class="date">4月29日 · 星期三</div>
+          <div class="title">乌鲁木齐集合</div>
+        </div>
+        <div class="day-wx-badge">🌦️ 27℃/9℃</div>
+      </div>
+      <div class="day-body">
+        <p>全国各地抵达，<strong>接机/站</strong>后送酒店；当日为<strong>集合日</strong>，无统一景点行程。出发前将航班或车次告知报名方以便接机。</p>
+        <ul>
+          <li>工作人员一般于<strong>出发前一天晚上或当天</strong>电话/短信通知接机事宜，请保持手机畅通。</li>
+          <li>新疆酒店入住时间多在<strong>北京时间 14:00 以后</strong>；早到可寄存行李后市区自由活动。</li>
+          <li>行程单推荐（自理）：国际大巴扎、红山公园、新疆博物馆（需预约，周一闭馆）等。</li>
+        </ul>
+        <div class="clothes-tip">🌡️ <strong>穿衣</strong>：白天最高 27℃ 但上午有小雨，<strong>带伞</strong>；午后转多云回暖，薄T+薄外套；夜间降至 9℃，注意保暖。风力 4-5 级转小，注意防风。</div>
+      </div>
+    </div>
+
+    <!-- D2 -->
+    <div class="day-card">
+      <div class="day-head">
+        <div class="day-badge" style="background:var(--c2)">D2</div>
+        <div class="day-head-text">
+          <div class="date">4月30日 · 星期四</div>
+          <div class="title">乌鲁木齐 → 赛里木湖</div>
+        </div>
+        <div class="day-wx-badge">☀️ 8℃/0℃</div>
+      </div>
+      <div class="day-body">
+        <div class="drive-info">🚗 约 580 km · 约 7 小时</div>
+        <p>早 08:00–09:00 酒店早餐，司机按约定时间依次接人（拼车需准时集合）。</p>
+        <ul>
+          <li>上午赴<strong>赛里木湖</strong>；中午沿途简餐（如精河服务区或景区门口）。</li>
+          <li>下午进入景区，湖边打卡；安排<strong>赛里木湖下午茶</strong>及民俗酒吧体验（行程单写明赠送，个人不参加不退费）。</li>
+          <li>当日行程公里数有限，<strong>一般不环湖</strong>；环湖安排在次日。</li>
+        </ul>
+        <div class="clothes-tip">🌡️ <strong>穿衣</strong>：赛湖当天晴天但白天仅 8℃、夜间 0℃！3-4 级风体感更冷！<strong>冲锋衣+抓绒/羽绒</strong>必备，手套围巾建议带；墨镜、帽子、防晒霜标配。</div>
+      </div>
+    </div>
+
+    <!-- D3 -->
+    <div class="day-card">
+      <div class="day-head">
+        <div class="day-badge" style="background:var(--c3)">D3</div>
+        <div class="day-head-text">
+          <div class="date">5月1日 · 星期五</div>
+          <div class="title">赛里木湖环湖 → 伊宁</div>
+        </div>
+        <div class="day-wx-badge">☀️ 31℃/10℃</div>
+      </div>
+      <div class="day-body">
+        <div class="drive-info">🚗 约 260 km · 约 5 小时</div>
+        <p>早饭后再次进入赛湖，<strong>自驾环湖</strong>，建议游玩约 4 小时。</p>
+        <ul>
+          <li>常见打卡点（以现场为准）：风帆溪、点将台、克勒涌珠（观天鹅等）、金花紫卉灯塔等。</li>
+          <li>赠送<strong>跟车视频</strong>（行程单写二进环湖时；部分团期 3/7–4/19 等，以订单为准），不参加不退。</li>
+          <li>下午抵<strong>伊宁</strong>入住酒店，可游<strong>六星街</strong>；赠送<strong>旅拍</strong>（简妆 3 选 1、指定民族服装、9 张精修等），旺季可能排队，不去不退。</li>
+        </ul>
+        <div class="clothes-tip">🌡️ <strong>穿衣</strong>：伊宁白天高达 31℃ 较热！短袖+防晒+遮阳帽+墨镜；昼夜温差超 20℃，夜间仅 10℃，<strong>务必备薄外套</strong>。五一假期阳光强烈，注意防晒补水。</div>
+      </div>
+    </div>
+
+    <!-- D4 -->
+    <div class="day-card">
+      <div class="day-head">
+        <div class="day-badge" style="background:var(--c4)">D4</div>
+        <div class="day-head-text">
+          <div class="date">5月2日 · 星期六</div>
+          <div class="title">伊宁 → 库尔德宁 → 新源</div>
+        </div>
+        <div class="day-wx-badge">⛅ 29℃/13℃</div>
+      </div>
+      <div class="day-body">
+        <div class="drive-info">🚗 约 320 km · 约 6 小时</div>
+        <p>早饭后赴<strong>库尔德宁</strong>，<strong>自驾进入</strong>保护区，建议游玩约 4 小时（电瓶车等费用自理）。</p>
+        <ul>
+          <li>行程单建议停靠：十里画廊、喀峰大本营、齐梦德观景平台（木栈道上下约 2–3 小时；车至齐梦德需电瓶车自理）等。</li>
+          <li>晚宿<strong>新源县</strong>。</li>
+        </ul>
+        <div class="clothes-tip">🌡️ <strong>穿衣</strong>：白天 29℃ 较热，山区可穿短袖+防晒；傍晚转多云，山区夜间 13℃ 需薄外套；栈道步行穿防水运动鞋。</div>
+      </div>
+    </div>
+
+    <!-- D5 -->
+    <div class="day-card">
+      <div class="day-head">
+        <div class="day-badge" style="background:var(--c5)">D5</div>
+        <div class="day-head-text">
+          <div class="date">5月3日 · 星期日</div>
+          <div class="title">新源 → 吐尔根杏花 → 那拉提</div>
+        </div>
+        <div class="day-wx-badge">🌧️ 30℃/12℃</div>
+      </div>
+      <div class="day-body">
+        <div class="drive-info">🚗 约 250 km · 约 4 小时</div>
+        <p>早饭后前往<strong>吐尔根杏花沟</strong>（行程单写 3/28–4/7 等团期安排；2026 年花期受气候影响，若花谢则<strong>取消该点</strong>直接去那拉提）。</p>
+        <ul>
+          <li>下午那拉提乘<strong>区间车</strong>游览<strong>空中草原</strong>，建议约 4 小时；区间车路线以景区当日公布为准。</li>
+          <li>若空中草原因天气未开放，可改<strong>河谷草原</strong>，退区间车差价（行程单写 16 元/人，以景区执行为准）。</li>
+          <li>当晚宿<strong>那拉提</strong>。</li>
+        </ul>
+        <div class="clothes-tip">🌡️ <strong>穿衣</strong>：白天最高 30℃ 但午后转阴有小雨！<strong>带雨伞/雨衣</strong>；山区草原温差大，夜间降至 12℃，备外套；鞋要防水防滑。</div>
+      </div>
+    </div>
+
+    <!-- D6 -->
+    <div class="day-card">
+      <div class="day-head">
+        <div class="day-badge" style="background:var(--c6)">D6</div>
+        <div class="day-head-text">
+          <div class="date">5月4日 · 星期一</div>
+          <div class="title">那拉提 → 乌鲁木齐</div>
+        </div>
+        <div class="day-wx-badge">🏔️ 隧道10℃→乌市29℃</div>
+      </div>
+      <div class="day-body">
+        <div class="drive-info">🚗 约 450 km · 约 8 小时</div>
+        <p>沿 <strong>G218</strong> 等路段，经巴伦台方向，走<strong>乌尉高速</strong>，穿越<strong>天山胜利隧道</strong>（行程单强调为长隧道、恒温约 10℃ 等），返回乌鲁木齐。</p>
+        <ul>
+          <li><strong>不建议</strong>购买<strong>当天离开乌鲁木齐</strong>的机票/火车，以免路上延误误机。</li>
+        </ul>
+        <div class="clothes-tip">🌡️ <strong>穿衣</strong>：天山隧道内恒温 ≈10℃，车内备外套；出隧道后乌市白天高达 29℃、夜间 15℃，多云转阴。东南风 3-4 级。</div>
+      </div>
+    </div>
+
+    <!-- D7 -->
+    <div class="day-card">
+      <div class="day-head">
+        <div class="day-badge" style="background:var(--c7)">D7</div>
+        <div class="day-head-text">
+          <div class="date">5月5日 · 星期二</div>
+          <div class="title">乌鲁木齐送机/站</div>
+        </div>
+        <div class="day-wx-badge">🌧️ 24℃/14℃</div>
+      </div>
+      <div class="day-body">
+        <p>根据航班/车次<strong>送机或送站</strong>。请提前将返程交通信息告知报名方；送机人员一般于<strong>返程前一天 22:00 前</strong>联系确认。</p>
+        <div class="clothes-tip">🌡️ <strong>穿衣</strong>：当天有雨，最高 24℃ / 最低 14℃，<strong>带伞</strong>；西北风 3-4 级。注意预留充足时间前往机场/车站，雨天路况可能影响交通。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== 底部备注 ====== -->
+  <div class="footer-note">
+    <strong>💡 说明</strong>：本路线图基于行程单整理，仅供参考。若与实际路书、平台交易快照不一致，以<strong>书面合同及订单快照</strong>为准。<br/>
+    天气数据来源：中国天气网 2026.4.27 18:00 更新。出行前请再次确认最新天气。<br/>
+    路线示意图为简化版，实际行车路线以导航为准。
+  </div>
+
+</body>
+</html>
