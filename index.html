@@ -98,7 +98,14 @@
       font-weight: 700;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
+      flex-wrap: wrap;
+      line-height: 1.6;
+    }
+    .day-title-text {
+      flex-shrink: 1;
+      min-width: 0;
+      white-space: nowrap;
     }
     .day-tag {
       display: inline-block;
@@ -109,6 +116,15 @@
       font-weight: 700;
       letter-spacing: 0.5px;
       flex-shrink: 0;
+    }
+    .day-badges {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
     .day-block p { margin: 0 0 6px; }
     .day-block ul { margin: 0; padding-left: 1.15em; }
@@ -369,6 +385,9 @@
       }
       .day-block h3 { font-size: 0.9rem; }
       .day-tag { padding: 2px 9px; font-size: 11px; }
+      .day-badges { margin-left: 0; width: 100%; }
+      .day-weather { font-size: 9px; }
+      .altitude-badge { font-size: 9px; }
 
       /* Day 快速导航条 */
       .day-nav {
@@ -946,7 +965,7 @@
           <h2>📖 逐日说明</h2>
 
           <div class="day-block" id="d1" data-day="1">
-            <h3><span class="day-tag" style="background:var(--c-d1)">D1</span> 4/29 乌鲁木齐集合<span class="day-weather"><span class="dw-icon">🌦️</span>☀ 27℃ · 🌙 9℃ · 小雨转多云</span></h3>
+            <h3><span class="day-tag" style="background:var(--c-d1)">D1</span><span class="day-title-text">4/29 乌鲁木齐集合</span><span class="day-badges"><span class="day-weather"><span class="dw-icon">🌦️</span>☀ 27℃ · 🌙 9℃ · 小雨转多云</span></span></h3>
             <div class="timeline-mini">⏰ <span>全天</span> 自由到达 → <span>14:00后</span> 酒店入住 → <span>傍晚</span> 市区自由活动</div>
             <p>全国各地抵达，<strong>接机/站</strong>后送酒店；当日为<strong>集合日</strong>，无统一景点行程。出发前将航班或车次告知报名方以便接机。</p>
             <ul>
@@ -965,7 +984,7 @@
           </div>
 
           <div class="day-block" id="d2" data-day="2">
-            <h3><span class="day-tag" style="background:var(--c-d2)">D2</span> 4/30 乌鲁木齐 → 赛里木湖<span class="altitude-badge">⛰️ 海拔 2,070m</span><span class="day-weather"><span class="dw-icon">☀️</span>☀ 8℃ · 🌙 0℃ · 晴·风大</span></h3>
+            <h3><span class="day-tag" style="background:var(--c-d2)">D2</span><span class="day-title-text">4/30 乌鲁木齐 → 赛里木湖</span><span class="day-badges"><span class="altitude-badge">⛰️ 海拔 2,070m</span><span class="day-weather"><span class="dw-icon">☀️</span>☀ 8℃ · 🌙 0℃ · 晴·风大</span></span></h3>
             <div class="timeline-mini">⏰ <span>08:00</span> 出发 → <span>12:00</span> 精河午餐 → <span>15:00</span> 抵赛湖景区 → <span>17:00</span> 下午茶 → <span>19:00</span> 入住</div>
             <p>行车约 <strong>580 km / 约 7 小时</strong>（未含游览、用餐、休息、堵车）。早 08:00–09:00 酒店早餐，司机按约定时间依次接人（拼车需准时集合）。</p>
             <ul>
@@ -985,7 +1004,7 @@
           </div>
 
           <div class="day-block" id="d3" data-day="3">
-            <h3><span class="day-tag" style="background:var(--c-d3)">D3</span> 5/1 赛里木湖环湖 → 伊宁<span class="day-weather"><span class="dw-icon">☀️</span>☀ 31℃ · 🌙 10℃ · 晴</span></h3>
+            <h3><span class="day-tag" style="background:var(--c-d3)">D3</span><span class="day-title-text">5/1 赛里木湖环湖 → 伊宁</span><span class="day-badges"><span class="day-weather"><span class="dw-icon">☀️</span>☀ 31℃ · 🌙 10℃ · 晴</span></span></h3>
             <div class="timeline-mini">⏰ <span>08:00</span> 二次进湖 → <span>12:00</span> 环湖结束 → <span>14:00</span> 赴伊宁 → <span>17:00</span> 入住 → <span>18:00</span> 六星街旅拍</div>
             <p>行车约 <strong>260 km / 约 5 小时</strong>（未含游览等）。早饭后再次进入赛湖，<strong>自驾环湖</strong>，建议游玩约 4 小时。</p>
             <ul>
@@ -1004,7 +1023,7 @@
           </div>
 
           <div class="day-block" id="d4" data-day="4">
-            <h3><span class="day-tag" style="background:var(--c-d4)">D4</span> 5/2 伊宁 → 库尔德宁 → 新源<span class="altitude-badge">⛰️ 海拔 1,400~2,600m</span><span class="day-weather"><span class="dw-icon">⛅</span>☀ 29℃ · 🌙 13℃ · 晴转多云</span></h3>
+            <h3><span class="day-tag" style="background:var(--c-d4)">D4</span><span class="day-title-text">5/2 伊宁 → 库尔德宁 → 新源</span><span class="day-badges"><span class="altitude-badge">⛰️ 海拔 1,400~2,600m</span><span class="day-weather"><span class="dw-icon">⛅</span>☀ 29℃ · 🌙 13℃ · 晴转多云</span></span></h3>
             <div class="timeline-mini">⏰ <span>08:00</span> 出发 → <span>11:00</span> 抵库尔德宁 → <span>15:00</span> 游览结束 → <span>17:00</span> 入住新源</div>
             <p>行车约 <strong>320 km / 约 6 小时</strong>。早饭后赴<strong>库尔德宁</strong>，<strong>自驾进入</strong>保护区，建议游玩约 4 小时（电瓶车等费用自理）。</p>
             <ul>
@@ -1022,7 +1041,7 @@
           </div>
 
           <div class="day-block" id="d5" data-day="5">
-            <h3><span class="day-tag" style="background:var(--c-d5)">D5</span> 5/3 新源 → 吐尔根杏花 → 那拉提<span class="altitude-badge">⛰️ 草原 2,000m+</span><span class="day-weather"><span class="dw-icon">🌧️</span>☀ 30℃ · 🌙 12℃ · 阴转小雨</span></h3>
+            <h3><span class="day-tag" style="background:var(--c-d5)">D5</span><span class="day-title-text">5/3 新源 → 吐尔根杏花 → 那拉提</span><span class="day-badges"><span class="altitude-badge">⛰️ 草原 2,000m+</span><span class="day-weather"><span class="dw-icon">🌧️</span>☀ 30℃ · 🌙 12℃ · 阴转小雨</span></span></h3>
             <div class="timeline-mini">⏰ <span>08:00</span> 出发 → <span>09:30</span> 吐尔根（花期）→ <span>12:00</span> 午餐 → <span>14:00</span> 那拉提空中草原 → <span>18:00</span> 入住</div>
             <p>行车约 <strong>250 km / 约 4 小时</strong>。早饭后前往<strong>吐尔根杏花沟</strong>（行程单写 3/28–4/7 等团期安排；2026 年花期受气候影响，若花谢则<strong>取消该点</strong>直接去那拉提）。</p>
             <ul>
@@ -1042,7 +1061,7 @@
           </div>
 
           <div class="day-block" id="d6" data-day="6">
-            <h3><span class="day-tag" style="background:var(--c-d6)">D6</span> 5/4 那拉提 → 乌鲁木齐<span class="altitude-badge">⛰️ 隧道 ~3,000m</span><span class="day-weather"><span class="dw-icon">🏔️</span>隧道 10℃ → 乌市 ☀ 29℃ · 多云转阴</span></h3>
+            <h3><span class="day-tag" style="background:var(--c-d6)">D6</span><span class="day-title-text">5/4 那拉提 → 乌鲁木齐</span><span class="day-badges"><span class="altitude-badge">⛰️ 隧道 ~3,000m</span><span class="day-weather"><span class="dw-icon">🏔️</span>隧道 10℃ → 乌市 ☀ 29℃ · 多云转阴</span></span></h3>
             <div class="timeline-mini">⏰ <span>07:30</span> 出发 → <span>12:00</span> 午餐 → <span>14:00</span> 天山胜利隧道 → <span>17:00</span> 抵乌市</div>
             <p>行车约 <strong>450 km / 约 8 小时</strong>。沿 <strong>G218</strong> 等路段，经巴伦台方向，走<strong>乌尉高速</strong>，穿越<strong>天山胜利隧道</strong>（行程单强调为长隧道、恒温约 10℃ 等），返回乌鲁木齐。</p>
             <ul>
@@ -1059,7 +1078,7 @@
           </div>
 
           <div class="day-block" id="d7" data-day="7">
-            <h3><span class="day-tag" style="background:var(--c-d7)">D7</span> 5/5 乌鲁木齐送机/站<span class="day-weather"><span class="dw-icon">🌧️</span>☀ 24℃ · 🌙 14℃ · 雨</span></h3>
+            <h3><span class="day-tag" style="background:var(--c-d7)">D7</span><span class="day-title-text">5/5 乌鲁木齐送机/站</span><span class="day-badges"><span class="day-weather"><span class="dw-icon">🌧️</span>☀ 24℃ · 🌙 14℃ · 雨</span></span></h3>
             <div class="timeline-mini">⏰ 根据航班/车次安排送机 · 建议<span>提前2.5h</span>到机场 · 雨天预留额外时间</div>
             <p>根据航班/车次<strong>送机或送站</strong>。请提前将返程交通信息告知报名方；送机人员一般于<strong>返程前一天 22:00 前</strong>联系确认。</p>
             <ul>
