@@ -412,6 +412,238 @@
       .day-nav-btn { width: 32px; height: 32px; font-size: 9px; }
     }
 
+    /* ===== 新增模块通用样式 ===== */
+    .info-section {
+      margin-top: 12px;
+      padding: 12px;
+      background: #fff;
+      border-radius: 10px;
+      border: 1px solid #e2ebe6;
+      box-shadow: var(--card-shadow);
+    }
+    .info-section h4 {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin: 0 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .info-section table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+    }
+    .info-section th {
+      background: #ecfdf5;
+      color: var(--accent);
+      font-weight: 600;
+      padding: 5px 8px;
+      text-align: left;
+      border-bottom: 2px solid #a7f3d0;
+    }
+    .info-section td {
+      padding: 4px 8px;
+      border-bottom: 1px solid #f0f5f3;
+    }
+    .info-section ul { margin: 0; padding-left: 1.15em; font-size: 11.5px; }
+    .info-section li { margin-bottom: 4px; }
+    .tag-free { color: #059669; font-weight: 600; }
+    .tag-self { color: #dc2626; font-weight: 600; }
+
+    /* 海拔徽章 */
+    .altitude-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 1px solid #f59e0b;
+      border-radius: 12px;
+      padding: 1px 8px;
+      font-size: 9.5px;
+      color: #92400e;
+      font-weight: 600;
+      margin-left: 6px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* 时间节点 */
+    .timeline-mini {
+      font-size: 10.5px;
+      color: #64748b;
+      margin: 4px 0 6px;
+      padding: 4px 8px;
+      background: #f8fafc;
+      border-radius: 6px;
+      border-left: 3px solid #a7f3d0;
+    }
+    .timeline-mini span { font-weight: 600; color: var(--accent); }
+
+    /* 美食标签 */
+    .food-tip {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: linear-gradient(135deg, #fff7ed, #fed7aa);
+      border: 1px solid #fb923c;
+      border-radius: 8px;
+      padding: 2px 8px;
+      font-size: 10px;
+      color: #9a3412;
+      margin-top: 4px;
+    }
+
+    /* 拍照提示 */
+    .photo-tip {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+      border: 1px solid #a78bfa;
+      border-radius: 8px;
+      padding: 2px 8px;
+      font-size: 10px;
+      color: #5b21b6;
+      margin-top: 3px;
+    }
+
+    /* 信号提示 */
+    .signal-tip {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: linear-gradient(135deg, #fef2f2, #fecaca);
+      border: 1px solid #f87171;
+      border-radius: 8px;
+      padding: 2px 8px;
+      font-size: 10px;
+      color: #991b1b;
+      margin-top: 3px;
+    }
+
+    /* 行程进度条 */
+    #progress-bar {
+      background: #fff;
+      border-bottom: 1px solid #e2ebe6;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-shrink: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    #progress-bar::-webkit-scrollbar { display: none; }
+    .prog-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .prog-dot {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 8px; font-weight: 700;
+      border: 2px solid #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      transition: transform 0.15s;
+    }
+    .prog-node:active .prog-dot { transform: scale(0.9); }
+    .prog-place {
+      font-size: 8px; color: #64748b; margin-top: 2px;
+      white-space: nowrap; max-width: 52px; overflow: hidden; text-overflow: ellipsis;
+    }
+    .prog-line {
+      flex: 1; height: 3px; min-width: 16px; border-radius: 2px; margin: 0 -1px;
+      align-self: center; margin-top: -12px;
+    }
+
+    /* 深色模式切换按钮 */
+    .theme-toggle {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 9999;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      background: rgba(0,0,0,0.2);
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      backdrop-filter: blur(4px);
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.2s;
+    }
+    .theme-toggle:hover { background: rgba(0,0,0,0.35); }
+
+    /* 深色模式 */
+    body.dark-mode {
+      --sidebar-bg: #1a1a2e;
+      --accent: #6ee7b7;
+      --card-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    body.dark-mode #header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    }
+    body.dark-mode #weather-bar {
+      background: linear-gradient(90deg, #1e293b 0%, #0f172a 50%, #1e293b 100%);
+      border-color: #334155;
+      color: #94a3b8;
+    }
+    body.dark-mode .weather-item .wi-place { color: #7dd3fc; }
+    body.dark-mode .weather-item .wi-temp { color: #38bdf8; }
+    body.dark-mode #progress-bar {
+      background: #1e293b;
+      border-color: #334155;
+    }
+    body.dark-mode .prog-place { color: #94a3b8; }
+    body.dark-mode #details {
+      background: #1a1a2e;
+      border-color: #334155;
+    }
+    body.dark-mode .drawer-handle { background: #1a1a2e; }
+    body.dark-mode .drawer-handle-text { color: #6ee7b7; }
+    body.dark-mode .day-block {
+      background: #16213e;
+      border-color: #334155;
+      color: #e2e8f0;
+    }
+    body.dark-mode .day-block:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+    body.dark-mode .info-section {
+      background: #16213e;
+      border-color: #334155;
+      color: #e2e8f0;
+    }
+    body.dark-mode .info-section th {
+      background: #1e293b;
+      color: #6ee7b7;
+      border-color: #334155;
+    }
+    body.dark-mode .info-section td { border-color: #1e293b; }
+    body.dark-mode .note {
+      background: linear-gradient(135deg, #1e293b 0%, #16213e 100%);
+      border-color: #334155;
+      color: #6ee7b7;
+    }
+    body.dark-mode .timeline-mini { background: #1e293b; border-color: #334155; color: #94a3b8; }
+    body.dark-mode .timeline-mini span { color: #6ee7b7; }
+    body.dark-mode .legend-panel { background: rgba(30,41,59,0.96); border-color: #475569; }
+    body.dark-mode .legend-panel h4 { color: #e2e8f0; }
+    body.dark-mode .legend-text { color: #94a3b8; }
+    body.dark-mode .theme-toggle { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); }
+
+    /* 二维码浮层 */
+    .qr-section { text-align: center; margin-top: 12px; }
+    .qr-section canvas { border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .qr-section p { font-size: 10px; color: #64748b; margin-top: 4px; }
+
     /* ===== 桌面端隐藏移动端组件 ===== */
     .drawer-handle { display: none; }
     .day-nav { display: none; }
@@ -450,6 +682,26 @@
       <span class="weather-updated">📡 中国天气网 2026.4.27 18:00更新</span>
     </div>
 
+    <!-- 深色模式切换 -->
+    <button class="theme-toggle" id="theme-toggle" title="切换深色模式">🌙</button>
+
+    <!-- 行程进度条 -->
+    <div id="progress-bar">
+      <div class="prog-node" data-pday="1"><div class="prog-dot" style="background:var(--c-d1)">D1</div><div class="prog-place">乌鲁木齐</div></div>
+      <div class="prog-line" style="background:var(--c-d2)"></div>
+      <div class="prog-node" data-pday="2"><div class="prog-dot" style="background:var(--c-d2)">D2</div><div class="prog-place">赛里木湖</div></div>
+      <div class="prog-line" style="background:var(--c-d3)"></div>
+      <div class="prog-node" data-pday="3"><div class="prog-dot" style="background:var(--c-d3)">D3</div><div class="prog-place">伊宁</div></div>
+      <div class="prog-line" style="background:var(--c-d4)"></div>
+      <div class="prog-node" data-pday="4"><div class="prog-dot" style="background:var(--c-d4)">D4</div><div class="prog-place">库尔德宁</div></div>
+      <div class="prog-line" style="background:var(--c-d5)"></div>
+      <div class="prog-node" data-pday="5"><div class="prog-dot" style="background:var(--c-d5)">D5</div><div class="prog-place">那拉提</div></div>
+      <div class="prog-line" style="background:var(--c-d6)"></div>
+      <div class="prog-node" data-pday="6"><div class="prog-dot" style="background:var(--c-d6)">D6</div><div class="prog-place">天山隧道</div></div>
+      <div class="prog-line" style="background:var(--c-d7)"></div>
+      <div class="prog-node" data-pday="7"><div class="prog-dot" style="background:var(--c-d7)">D7</div><div class="prog-place">乌鲁木齐</div></div>
+    </div>
+
     <div id="main">
       <aside id="details">
         <!-- 移动端抽屉把手 -->
@@ -463,6 +715,7 @@
 
           <div class="day-block" id="d1" data-day="1">
             <h3><span class="day-tag" style="background:var(--c-d1)">D1</span> 4/29 乌鲁木齐集合<span class="day-weather"><span class="dw-icon">🌦️</span>☀ 27℃ · 🌙 9℃ · 小雨转多云</span></h3>
+            <div class="timeline-mini">⏰ <span>全天</span> 自由到达 → <span>14:00后</span> 酒店入住 → <span>傍晚</span> 市区自由活动</div>
             <p>全国各地抵达，<strong>接机/站</strong>后送酒店；当日为<strong>集合日</strong>，无统一景点行程。出发前将航班或车次告知报名方以便接机。</p>
             <ul>
               <li>工作人员一般于<strong>出发前一天晚上或当天</strong>电话/短信通知接机事宜，请保持手机畅通。</li>
@@ -470,10 +723,13 @@
               <li>行程单推荐（自理）：国际大巴扎、红山公园、新疆博物馆（需预约，周一闭馆）等。</li>
               <li>🌡️ <strong>穿衣</strong>：白天最高 27℃ 但上午有小雨，<strong>带伞</strong>；午后转多云回暖，薄T+薄外套；夜间降至 9℃，注意保暖。风力 4-5 级转小，注意防风。</li>
             </ul>
+            <div class="food-tip">🍽️ 推荐：大盘鸡、烤包子、新疆拌面、酸奶、手抓饭 | 大巴扎夜市美食街</div>
+            <div class="photo-tip">📸 红山公园俯瞰全城日落 | 大巴扎建筑+夜景灯光 | 博物馆楼兰美女</div>
           </div>
 
           <div class="day-block" id="d2" data-day="2">
-            <h3><span class="day-tag" style="background:var(--c-d2)">D2</span> 4/30 乌鲁木齐 → 赛里木湖<span class="day-weather"><span class="dw-icon">☀️</span>☀ 8℃ · 🌙 0℃ · 晴·风大</span></h3>
+            <h3><span class="day-tag" style="background:var(--c-d2)">D2</span> 4/30 乌鲁木齐 → 赛里木湖<span class="altitude-badge">⛰️ 海拔 2,070m</span><span class="day-weather"><span class="dw-icon">☀️</span>☀ 8℃ · 🌙 0℃ · 晴·风大</span></h3>
+            <div class="timeline-mini">⏰ <span>08:00</span> 出发 → <span>12:00</span> 精河午餐 → <span>15:00</span> 抵赛湖景区 → <span>17:00</span> 下午茶 → <span>19:00</span> 入住</div>
             <p>行车约 <strong>580 km / 约 7 小时</strong>（未含游览、用餐、休息、堵车）。早 08:00–09:00 酒店早餐，司机按约定时间依次接人（拼车需准时集合）。</p>
             <ul>
               <li>上午赴<strong>赛里木湖</strong>；中午沿途简餐（如精河服务区或景区门口）。</li>
@@ -481,10 +737,14 @@
               <li>当日行程公里数有限，<strong>一般不环湖</strong>；环湖安排在次日。</li>
               <li>🌡️ <strong>穿衣</strong>：赛湖当天晴天但白天仅 8℃、夜间 0℃！3-4 级风体感更冷！<strong>冲锋衣+抓绒/羽绒</strong>必备，手套围巾建议带；墨镜、帽子、防晒霜标配。</li>
             </ul>
+            <div class="food-tip">🍽️ 精河服务区简餐 | 景区烤全羊/羊肉汤 | 奶茶、馕坑肉</div>
+            <div class="photo-tip">📸 果子沟大桥（网红打卡·车上拍）| 赛湖湖畔倒影·日落金光 | 蓝冰（如有）</div>
+            <div class="signal-tip">📶 果子沟隧道群路段信号弱，提前下载离线地图/音乐</div>
           </div>
 
           <div class="day-block" id="d3" data-day="3">
             <h3><span class="day-tag" style="background:var(--c-d3)">D3</span> 5/1 赛里木湖环湖 → 伊宁<span class="day-weather"><span class="dw-icon">☀️</span>☀ 31℃ · 🌙 10℃ · 晴</span></h3>
+            <div class="timeline-mini">⏰ <span>08:00</span> 二次进湖 → <span>12:00</span> 环湖结束 → <span>14:00</span> 赴伊宁 → <span>17:00</span> 入住 → <span>18:00</span> 六星街旅拍</div>
             <p>行车约 <strong>260 km / 约 5 小时</strong>（未含游览等）。早饭后再次进入赛湖，<strong>自驾环湖</strong>，建议游玩约 4 小时。</p>
             <ul>
               <li>常见打卡点（以现场为准）：风帆溪、点将台、克勒涌珠（观天鹅等）、金花紫卉灯塔等。</li>
@@ -492,20 +752,26 @@
               <li>下午抵<strong>伊宁</strong>入住酒店，可游<strong>六星街</strong>；赠送<strong>旅拍</strong>（简妆 3 选 1、指定民族服装、9 张精修等），旺季可能排队，不去不退。</li>
               <li>🌡️ <strong>穿衣</strong>：伊宁白天高达 31℃ 较热！短袖+防晒+遮阳帽+墨镜；昼夜温差超 20℃，夜间仅 10℃，<strong>务必备薄外套</strong>。五一假期阳光强烈，注意防晒补水。</li>
             </ul>
+            <div class="food-tip">🍽️ 六星街：冰淇淋·手工酸奶·烤肉 | 伊宁夜市：面肺子、烤羊排、石榴汁</div>
+            <div class="photo-tip">📸 赛湖环湖·点将台日出 | 六星街蓝色小巷·民族风旅拍 | 喀赞其彩色民居</div>
           </div>
 
           <div class="day-block" id="d4" data-day="4">
-            <h3><span class="day-tag" style="background:var(--c-d4)">D4</span> 5/2 伊宁 → 库尔德宁 → 新源<span class="day-weather"><span class="dw-icon">⛅</span>☀ 29℃ · 🌙 13℃ · 晴转多云</span></h3>
+            <h3><span class="day-tag" style="background:var(--c-d4)">D4</span> 5/2 伊宁 → 库尔德宁 → 新源<span class="altitude-badge">⛰️ 海拔 1,400~2,600m</span><span class="day-weather"><span class="dw-icon">⛅</span>☀ 29℃ · 🌙 13℃ · 晴转多云</span></h3>
+            <div class="timeline-mini">⏰ <span>08:00</span> 出发 → <span>11:00</span> 抵库尔德宁 → <span>15:00</span> 游览结束 → <span>17:00</span> 入住新源</div>
             <p>行车约 <strong>320 km / 约 6 小时</strong>。早饭后赴<strong>库尔德宁</strong>，<strong>自驾进入</strong>保护区，建议游玩约 4 小时（电瓶车等费用自理）。</p>
             <ul>
               <li>行程单建议停靠：十里画廊、喀峰大本营、齐梦德观景平台（木栈道上下约 2–3 小时；车至齐梦德需电瓶车自理）等。</li>
               <li>晚宿<strong>新源县</strong>。</li>
               <li>🌡️ <strong>穿衣</strong>：白天 29℃ 较热，山区可穿短袖+防晒；傍晚转多云，山区夜间 13℃ 需薄外套；栈道步行穿防水运动鞋。</li>
             </ul>
+            <div class="food-tip">🍽️ 巩留/新源：大盘鸡、椒麻鸡、纳仁（手抓肉配面片）、酥油奶茶</div>
+            <div class="photo-tip">📸 十里画廊云杉雪山 | 喀峰大本营震撼雪峰 | 齐梦德栈道森林光影</div>
           </div>
 
           <div class="day-block" id="d5" data-day="5">
-            <h3><span class="day-tag" style="background:var(--c-d5)">D5</span> 5/3 新源 → 吐尔根杏花 → 那拉提<span class="day-weather"><span class="dw-icon">🌧️</span>☀ 30℃ · 🌙 12℃ · 阴转小雨</span></h3>
+            <h3><span class="day-tag" style="background:var(--c-d5)">D5</span> 5/3 新源 → 吐尔根杏花 → 那拉提<span class="altitude-badge">⛰️ 草原 2,000m+</span><span class="day-weather"><span class="dw-icon">🌧️</span>☀ 30℃ · 🌙 12℃ · 阴转小雨</span></h3>
+            <div class="timeline-mini">⏰ <span>08:00</span> 出发 → <span>09:30</span> 吐尔根（花期）→ <span>12:00</span> 午餐 → <span>14:00</span> 那拉提空中草原 → <span>18:00</span> 入住</div>
             <p>行车约 <strong>250 km / 约 4 小时</strong>。早饭后前往<strong>吐尔根杏花沟</strong>（行程单写 3/28–4/7 等团期安排；2026 年花期受气候影响，若花谢则<strong>取消该点</strong>直接去那拉提）。</p>
             <ul>
               <li>下午那拉提乘<strong>区间车</strong>游览<strong>空中草原</strong>，建议约 4 小时；区间车路线以景区当日公布为准。</li>
@@ -513,27 +779,90 @@
               <li>当晚宿<strong>那拉提</strong>。</li>
               <li>🌡️ <strong>穿衣</strong>：白天最高 30℃ 但午后转阴有小雨！<strong>带雨伞/雨衣</strong>；山区草原温差大，夜间降至 12℃，备外套；鞋要防水防滑。</li>
             </ul>
+            <div class="food-tip">🍽️ 那拉提：烤全羊、熏马肉马肠、奶疙瘩、酥油茶 | 草原上的哈萨克美食</div>
+            <div class="photo-tip">📸 杏花沟（如开）漫山粉白 | 空中草原雪山+绿毯+牛羊 | 日落黄金草原</div>
+            <div class="signal-tip">📶 那拉提山区部分区域信号弱，建议提前缓存好地图和联系方式</div>
           </div>
 
           <div class="day-block" id="d6" data-day="6">
-            <h3><span class="day-tag" style="background:var(--c-d6)">D6</span> 5/4 那拉提 → 乌鲁木齐<span class="day-weather"><span class="dw-icon">🏔️</span>隧道 10℃ → 乌市 ☀ 29℃ · 多云转阴</span></h3>
+            <h3><span class="day-tag" style="background:var(--c-d6)">D6</span> 5/4 那拉提 → 乌鲁木齐<span class="altitude-badge">⛰️ 隧道 ~3,000m</span><span class="day-weather"><span class="dw-icon">🏔️</span>隧道 10℃ → 乌市 ☀ 29℃ · 多云转阴</span></h3>
+            <div class="timeline-mini">⏰ <span>07:30</span> 出发 → <span>12:00</span> 午餐 → <span>14:00</span> 天山胜利隧道 → <span>17:00</span> 抵乌市</div>
             <p>行车约 <strong>450 km / 约 8 小时</strong>。沿 <strong>G218</strong> 等路段，经巴伦台方向，走<strong>乌尉高速</strong>，穿越<strong>天山胜利隧道</strong>（行程单强调为长隧道、恒温约 10℃ 等），返回乌鲁木齐。</p>
             <ul>
               <li><strong>不建议</strong>购买<strong>当天离开乌鲁木齐</strong>的机票/火车，以免路上延误误机。</li>
               <li>🌡️ <strong>穿衣</strong>：天山隧道内恒温 ≈10℃，车内备外套；出隧道后乌市白天高达 29℃、夜间 15℃，多云转阴。东南风 3-4 级。</li>
             </ul>
+            <div class="food-tip">🍽️ 到乌市后犒劳自己：红柳烤肉、丸子汤、卡瓦斯、新疆炒米粉</div>
+            <div class="signal-tip">📶 天山胜利隧道（约22km）内手机信号极弱甚至无信号，提前通知家人</div>
           </div>
 
           <div class="day-block" id="d7" data-day="7">
             <h3><span class="day-tag" style="background:var(--c-d7)">D7</span> 5/5 乌鲁木齐送机/站<span class="day-weather"><span class="dw-icon">🌧️</span>☀ 24℃ · 🌙 14℃ · 雨</span></h3>
+            <div class="timeline-mini">⏰ 根据航班/车次安排送机 · 建议<span>提前2.5h</span>到机场 · 雨天预留额外时间</div>
             <p>根据航班/车次<strong>送机或送站</strong>。请提前将返程交通信息告知报名方；送机人员一般于<strong>返程前一天 22:00 前</strong>联系确认。</p>
             <ul>
               <li>🌡️ <strong>穿衣</strong>：当天有雨，最高 24℃ / 最低 14℃，<strong>带伞</strong>；西北风 3-4 级。注意预留充足时间前往机场/车站，雨天路况可能影响交通。</li>
             </ul>
+            <div class="food-tip">🍽️ 最后一顿：机场附近新疆特产店可买馕、巴旦木、葡萄干带回去</div>
           </div>
 
           <div class="note">
             <strong>💡 地图使用说明</strong>：点击圆点可查看当日摘要；乌市首尾两天共用一个标记。底图 © 高德地图。若与实际路书、平台交易快照不一致，以<strong>书面合同及订单快照</strong>为准。
+          </div>
+
+          <!-- 费用清单 -->
+          <div class="info-section">
+            <h4>💰 费用一览</h4>
+            <table>
+              <tr><th>项目</th><th>状态</th><th>说明</th></tr>
+              <tr><td>全程用车+司机</td><td class="tag-free">✅ 包含</td><td>拼车费用内</td></tr>
+              <tr><td>6晚住宿</td><td class="tag-free">✅ 包含</td><td>以订单约定标准</td></tr>
+              <tr><td>接机/送机</td><td class="tag-free">✅ 包含</td><td>首尾两天</td></tr>
+              <tr><td>赛湖下午茶+酒吧</td><td class="tag-free">✅ 赠送</td><td>不参加不退</td></tr>
+              <tr><td>六星街旅拍</td><td class="tag-free">✅ 赠送</td><td>简妆3选1·9张精修</td></tr>
+              <tr><td>跟车视频</td><td class="tag-free">✅ 赠送</td><td>按团期，不参加不退</td></tr>
+              <tr><td>景区大门票</td><td class="tag-self">💳 自理</td><td>赛湖·库尔德宁·那拉提等</td></tr>
+              <tr><td>景区区间车/电瓶车</td><td class="tag-self">💳 自理</td><td>那拉提区间车·库尔德宁电瓶车</td></tr>
+              <tr><td>全程餐饮</td><td class="tag-self">💳 自理</td><td>丰俭由人，参考美食推荐</td></tr>
+              <tr><td>旅游保险</td><td class="tag-self">💳 自理</td><td>强烈建议购买</td></tr>
+            </table>
+          </div>
+
+          <!-- 必备物品清单 -->
+          <div class="info-section">
+            <h4>🎒 必备物品清单</h4>
+            <table>
+              <tr><th>类别</th><th>物品</th></tr>
+              <tr><td>📄 证件</td><td>身份证（必须！新疆安检多）、驾照（如有）、学生证（景区打折）</td></tr>
+              <tr><td>👕 衣物</td><td>冲锋衣/羽绒（赛湖0℃）、短袖（伊宁31℃）、薄外套、防水鞋、手套围巾</td></tr>
+              <tr><td>☀️ 防晒</td><td>SPF50+防晒霜、墨镜、遮阳帽、润唇膏（紫外线极强）</td></tr>
+              <tr><td>🌧️ 防雨</td><td>雨伞/雨衣（D5/D7有雨）</td></tr>
+              <tr><td>💊 药品</td><td>晕车药、感冒药、肠胃药、创可贴、高反药（赛湖/那拉提2000m+）</td></tr>
+              <tr><td>🔌 电子</td><td>充电宝（必带！长途车程）、数据线、相机、耳机</td></tr>
+              <tr><td>🧴 洗漱</td><td>牙刷牙膏、毛巾（部分酒店不提供）、保湿面膜（新疆极干）</td></tr>
+              <tr><td>🍫 零食</td><td>水、巧克力、坚果（长途车程补给）</td></tr>
+            </table>
+          </div>
+
+          <!-- 紧急联系 -->
+          <div class="info-section">
+            <h4>🆘 紧急联系</h4>
+            <ul>
+              <li>🚔 报警：<strong>110</strong> ｜ 🚑 急救：<strong>120</strong> ｜ 🚒 火警：<strong>119</strong></li>
+              <li>🛣️ 道路救援：<strong>12122</strong></li>
+              <li>📞 新疆旅游投诉：<strong>0991-12345</strong></li>
+              <li>🏥 赛里木湖最近医院：博乐市人民医院（景区出发约1.5h）</li>
+              <li>🏥 那拉提最近医院：新源县人民医院（约30min）</li>
+              <li>⚠️ 高反症状（头痛、恶心、气短）及时告知司机，严重时立即就医</li>
+              <li>📱 新疆与内地有约 <strong>2 小时时差</strong>，日落约 21:00-22:00</li>
+            </ul>
+          </div>
+
+          <!-- 二维码分享 -->
+          <div class="info-section qr-section" id="qr-section">
+            <h4>📱 扫码分享给同行</h4>
+            <canvas id="qr-canvas"></canvas>
+            <p>长按/截图保存，发给同行小伙伴</p>
           </div>
         </div>
       </aside>
@@ -1050,6 +1379,65 @@
         });
       });
     }
+
+    /* ===== 进度条点击导航 ===== */
+    document.querySelectorAll('.prog-node').forEach(function(node) {
+      node.addEventListener('click', function() {
+        var dayNum = parseInt(this.getAttribute('data-pday'));
+        if (dayNum) flyToDay(dayNum);
+      });
+    });
+
+    /* ===== 深色模式切换 ===== */
+    (function() {
+      var btn = document.getElementById('theme-toggle');
+      if (!btn) return;
+      var isDark = false;
+      // 恢复保存的主题
+      if (localStorage.getItem('yili-dark') === '1') {
+        document.body.classList.add('dark-mode');
+        btn.textContent = '☀️';
+        isDark = true;
+      }
+      btn.addEventListener('click', function() {
+        isDark = !isDark;
+        if (isDark) {
+          document.body.classList.add('dark-mode');
+          btn.textContent = '☀️';
+          localStorage.setItem('yili-dark', '1');
+        } else {
+          document.body.classList.remove('dark-mode');
+          btn.textContent = '🌙';
+          localStorage.setItem('yili-dark', '0');
+        }
+      });
+    })();
+
+    /* ===== 二维码生成（纯JS，无依赖） ===== */
+    (function() {
+      var canvas = document.getElementById('qr-canvas');
+      if (!canvas) return;
+      var url = 'https://piscees.github.io/yili-travel/';
+      // 简易 QR：使用 Google Chart API 生成图片替代
+      var img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = function() {
+        canvas.width = 160;
+        canvas.height = 160;
+        var ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, 160, 160);
+      };
+      img.onerror = function() {
+        // 如果 Google API 不可用，显示链接文本
+        canvas.width = 200;
+        canvas.height = 40;
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#0d3d32';
+        ctx.font = '11px sans-serif';
+        ctx.fillText(url, 4, 25);
+      };
+      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=' + encodeURIComponent(url);
+    })();
 
     /* ===== 响应式适配：窗口大小变化 ===== */
     var resizeTimer;
