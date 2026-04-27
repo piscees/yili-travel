@@ -663,6 +663,64 @@
     .qr-section canvas { border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     .qr-section p { font-size: 10px; color: #64748b; margin-top: 4px; }
 
+    /* ===== 行程贴士区块 ===== */
+    .day-tips {
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1.5px solid;
+      font-size: 11px;
+      line-height: 1.65;
+    }
+    .day-tips.tips-easy {
+      background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+      border-color: #6ee7b7;
+      color: #065f46;
+    }
+    .day-tips.tips-medium {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border-color: #fbbf24;
+      color: #92400e;
+    }
+    .day-tips.tips-hard {
+      background: linear-gradient(135deg, #fef2f2, #fecaca);
+      border-color: #f87171;
+      color: #991b1b;
+    }
+    .day-tips .tips-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+      font-weight: 700;
+      font-size: 11.5px;
+    }
+    .day-tips .tips-stars {
+      letter-spacing: 1px;
+    }
+    .day-tips ul {
+      margin: 0;
+      padding-left: 1.15em;
+    }
+    .day-tips li {
+      margin-bottom: 3px;
+    }
+    body.dark-mode .day-tips.tips-easy {
+      background: linear-gradient(135deg, #064e3b33, #065f4622);
+      border-color: #065f46;
+      color: #6ee7b7;
+    }
+    body.dark-mode .day-tips.tips-medium {
+      background: linear-gradient(135deg, #78350f33, #92400e22);
+      border-color: #92400e;
+      color: #fbbf24;
+    }
+    body.dark-mode .day-tips.tips-hard {
+      background: linear-gradient(135deg, #7f1d1d33, #991b1b22);
+      border-color: #991b1b;
+      color: #fca5a5;
+    }
+
     /* ===== 自定义备注 ===== */
     .user-note-area {
       margin-top: 8px;
@@ -976,6 +1034,14 @@
             </ul>
             <div class="food-tip">🍽️ 推荐：大盘鸡、烤包子、新疆拌面、酸奶、手抓饭 | 大巴扎夜市美食街</div>
             <div class="photo-tip">📸 红山公园俯瞰全城日落 | 大巴扎建筑+夜景灯光 | 博物馆楼兰美女</div>
+            <div class="day-tips tips-easy">
+              <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐ 轻松</span></div>
+              <ul>
+                <li>当天无统一行程，放心睡到自然醒，倒时差、养精蓄锐</li>
+                <li>建议下午逛<strong>大巴扎+红山公园日落</strong>，晚上吃顿正宗新疆菜开胃</li>
+                <li>早点回酒店休息——<strong>明天 8:00 出发、7 小时车程</strong>，是全程最早起床日之一</li>
+              </ul>
+            </div>
             <div class="user-note-area" data-note-day="1">
               <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
               <textarea class="user-note-input" style="display:none" placeholder="写点什么…航班信息、酒店地址、待办事项等" oninput="saveNote(this,1)"></textarea>
@@ -996,6 +1062,15 @@
             <div class="food-tip">🍽️ 精河服务区简餐 | 景区烤全羊/羊肉汤 | 奶茶、馕坑肉</div>
             <div class="photo-tip">📸 果子沟大桥（网红打卡·车上拍）| 赛湖湖畔倒影·日落金光 | 蓝冰（如有）</div>
             <div class="signal-tip">📶 果子沟隧道群路段信号弱，提前下载离线地图/音乐</div>
+            <div class="day-tips tips-hard">
+              <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐ 很赶</span></div>
+              <ul>
+                <li><strong>务必 8:00 准时出发</strong>，每耽误 30 分钟到赛湖就少 30 分钟游览时间</li>
+                <li>午饭建议<strong>在精河快速解决</strong>（30min 内），打包馕+烤包子车上吃更省时间</li>
+                <li>下午茶和酒吧如果不感兴趣，<strong>果断跳过</strong>，把时间留给湖边拍照</li>
+                <li>赛湖约 20:30 日落，<strong>抓住日落黄金时段</strong>是这天的最大收获</li>
+              </ul>
+            </div>
             <div class="user-note-area" data-note-day="2">
               <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
               <textarea class="user-note-input" style="display:none" placeholder="写点什么…景区门票、集合时间等" oninput="saveNote(this,2)"></textarea>
@@ -1015,6 +1090,15 @@
             </ul>
             <div class="food-tip">🍽️ 六星街：冰淇淋·手工酸奶·烤肉 | 伊宁夜市：面肺子、烤羊排、石榴汁</div>
             <div class="photo-tip">📸 赛湖环湖·点将台日出 | 六星街蓝色小巷·民族风旅拍 | 喀赞其彩色民居</div>
+            <div class="day-tips tips-medium">
+              <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 中等偏赶</span></div>
+              <ul>
+                <li>环湖<strong>不要贪多</strong>，挑 2-3 个核心点打卡（推荐：点将台 > 克勒涌珠 > 金花灯塔）</li>
+                <li>环湖控制在<strong> 3h 以内</strong>，12:00 前离湖，给路上留够时间</li>
+                <li>旅拍旺季五一<strong>几乎必排长队</strong>，排队超 40min 建议放弃</li>
+                <li><strong>六星街逛 1-1.5h 就够</strong>，更推荐省下时间去喀赞其（更有原生感）</li>
+              </ul>
+            </div>
             <div class="user-note-area" data-note-day="3">
               <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
               <textarea class="user-note-input" style="display:none" placeholder="写点什么…旅拍时间、想吃的美食等" oninput="saveNote(this,3)"></textarea>
@@ -1033,6 +1117,14 @@
             </ul>
             <div class="food-tip">🍽️ 巩留/新源：大盘鸡、椒麻鸡、纳仁（手抓肉配面片）、酥油奶茶</div>
             <div class="photo-tip">📸 十里画廊云杉雪山 | 喀峰大本营震撼雪峰 | 齐梦德栈道森林光影</div>
+            <div class="day-tips tips-hard">
+              <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐ 很赶</span></div>
+              <ul>
+                <li><strong>二选一策略</strong>：深度走齐梦德栈道（放弃十里画廊细逛），或快速游十里画廊+喀峰大本营（放弃栈道登顶）</li>
+                <li>全部都去 = 走马观花 + 累到崩溃，推荐选<strong>喀峰大本营拍雪山 + 十里画廊车游</strong>，省 1.5h 体力</li>
+                <li>电瓶车<strong>能坐就坐</strong>，别省这个钱——体力留给明天那拉提</li>
+              </ul>
+            </div>
             <div class="user-note-area" data-note-day="4">
               <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
               <textarea class="user-note-input" style="display:none" placeholder="写点什么…电瓶车费用、徒步提醒等" oninput="saveNote(this,4)"></textarea>
@@ -1053,6 +1145,16 @@
             <div class="food-tip">🍽️ 那拉提：烤全羊、熏马肉马肠、奶疙瘩、酥油茶 | 草原上的哈萨克美食</div>
             <div class="photo-tip">📸 杏花沟（如开）漫山粉白 | 空中草原雪山+绿毯+牛羊 | 日落黄金草原</div>
             <div class="signal-tip">📶 那拉提山区部分区域信号弱，建议提前缓存好地图和联系方式</div>
+            <div class="day-tips tips-medium">
+              <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 中等</span></div>
+              <ul>
+                <li>吐尔根 5/3 花期大概率已结束，<strong>做好直奔那拉提的准备</strong>，反而多出 1-2h</li>
+                <li>那拉提空中草原是<strong>全程含金量最高的景点</strong>，一定要去！</li>
+                <li>区间车五一可能排队 30-60min，<strong>提前做好心理准备</strong></li>
+                <li>下午有小雨，<strong>带雨衣比雨伞好</strong>（草原风大，伞扛不住）</li>
+                <li>回住宿后好好休息——<strong>D6 是魔鬼赶路日</strong></li>
+              </ul>
+            </div>
             <div class="user-note-area" data-note-day="5">
               <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
               <textarea class="user-note-input" style="display:none" placeholder="写点什么…区间车路线、草原注意事项等" oninput="saveNote(this,5)"></textarea>
@@ -1070,6 +1172,16 @@
             </ul>
             <div class="food-tip">🍽️ 到乌市后犒劳自己：红柳烤肉、丸子汤、卡瓦斯、新疆炒米粉</div>
             <div class="signal-tip">📶 天山胜利隧道（约22km）内手机信号极弱甚至无信号，提前通知家人</div>
+            <div class="day-tips tips-hard">
+              <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐⭐ 最赶（纯赶路日）</span></div>
+              <ul>
+                <li>心态调整：<strong>这天就是在赶路</strong>，8 小时车程、零景点，不要抱有游览幻想</li>
+                <li><strong>7:30 一定要出发</strong>，路上任何延误都可能导致到乌市超晚</li>
+                <li>多准备零食和水，车上就是吃吃睡睡</li>
+                <li><strong>绝对不要买当天离疆的票</strong>——这不是建议，是底线</li>
+                <li>隧道 22km 无信号，<strong>提前通知家人</strong></li>
+              </ul>
+            </div>
             <div class="user-note-area" data-note-day="6">
               <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
               <textarea class="user-note-input" style="display:none" placeholder="写点什么…返程注意、要买的特产等" oninput="saveNote(this,6)"></textarea>
@@ -1085,6 +1197,14 @@
               <li>🌡️ <strong>穿衣</strong>：当天有雨，最高 24℃ / 最低 14℃，<strong>带伞</strong>；西北风 3-4 级。注意预留充足时间前往机场/车站，雨天路况可能影响交通。</li>
             </ul>
             <div class="food-tip">🍽️ 最后一顿：机场附近新疆特产店可买馕、巴旦木、葡萄干带回去</div>
+            <div class="day-tips tips-easy">
+              <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐ 轻松</span></div>
+              <ul>
+                <li>当天有雨，<strong>预留充足时间前往机场/车站</strong>，雨天路况可能影响交通</li>
+                <li>建议<strong>提前 2.5 小时</strong>到机场（新疆安检比内地严格）</li>
+                <li>机场附近可最后买一波特产：馕、巴旦木、葡萄干、薰衣草精油</li>
+              </ul>
+            </div>
             <div class="user-note-area" data-note-day="7">
               <div class="user-note-toggle" onclick="toggleNote(this)">✏️ 写备注…</div>
               <textarea class="user-note-input" style="display:none" placeholder="写点什么…航班信息、送机时间等" oninput="saveNote(this,7)"></textarea>
