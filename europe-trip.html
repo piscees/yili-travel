@@ -186,6 +186,58 @@
     .tip-list { margin: 4px 0 0; padding-left: 1.1em; }
     .tip-list li { margin-bottom: 2px; }
 
+    /* ===== 美食推荐 ===== */
+    .food-reco {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      line-height: 1.65;
+      background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+      color: #7c2d12;
+      border: 1px solid #fed7aa;
+    }
+    .food-reco .food-header {
+      font-weight: 700;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11.5px;
+    }
+    .food-reco ul { margin: 0; padding-left: 1.1em; }
+    .food-reco li { margin-bottom: 3px; }
+    .food-reco .shop-name { font-weight: 700; color: #c2410c; }
+    .food-reco .food-tag {
+      display: inline-block;
+      padding: 0 5px;
+      border-radius: 3px;
+      font-size: 9px;
+      font-weight: 700;
+      color: #fff;
+      background: #ea580c;
+      margin-left: 3px;
+      vertical-align: middle;
+    }
+    .food-reco .hidden-gem {
+      margin-top: 5px;
+      padding: 5px 8px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 5px;
+      font-size: 10.5px;
+    }
+    .food-reco .hidden-gem .gem-label {
+      font-weight: 700;
+      color: #b45309;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .food-reco { background: linear-gradient(135deg, #3b2f1e, #451a03); color: #fed7aa; border-color: #92400e; }
+      .food-reco .shop-name { color: #fb923c; }
+      .food-reco .hidden-gem { background: rgba(0,0,0,0.25); }
+      .food-reco .hidden-gem .gem-label { color: #fbbf24; }
+    }
+
     .note {
       margin-top: 12px;
       padding: 10px 12px;
@@ -319,6 +371,18 @@
             <li>🏛️ 罗马人民广场 Piazza del Popolo</li>
             <li>🏛️ 西班牙广场 Piazza di Spagna — ⚠️ 注意防盗</li>
           </ul>
+          <div class="food-reco">
+            <div class="food-header">🍴 美食·推荐</div>
+            <ul>
+              <li><span class="shop-name">Roscioli Salumeria</span> — 特莱维喷泉附近，顶级熟食店+餐厅，Carbonara（培根蛋面）和 Cacio e Pepe（芝士胡椒面）罗马双绝 <span class="food-tag">必吃</span></li>
+              <li><span class="shop-name">Sant'Eustachio Il Caffè</span> — 万神殿旁，罗马最有名的咖啡馆，gran caffè 浓缩加绵密奶泡，2.5€</li>
+              <li><span class="shop-name">Pizzeria La Montecarlo</span> — 纳沃纳广场附近，本地人排队的平价薄底披萨，8€吃饱</li>
+              <li>🍦 <span class="shop-name">Giolitti</span> — 1900年开业，意大利议会旁百年冰淇淋老店，开心果味绝佳</li>
+            </ul>
+            <div class="hidden-gem">
+              <span class="gem-label">💎 隐藏推荐：</span> 从纳沃纳广场往西走5分钟到 <b>Trastevere 区</b>（特拉斯提弗列），这是罗马最有生活气息的街区，石板路+爬满常春藤的小巷，傍晚 Piazza di Santa Maria 广场坐满喝酒的本地人。推荐 <b>Da Enzo al 29</b>（常排队但值得）吃正宗 Carciofi alla Giudia（炸犹太朝鲜蓟）。
+            </div>
+          </div>
           <div class="travel-tip tip-yellow">
             <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 中等偏赶</span></div>
             <ul class="tip-list">
@@ -348,19 +412,19 @@
             <li>🏛️ 圣彼得广场 Piazza San Pietro</li>
             <li>🏰 圣天使城堡 Castel Sant'Angelo — 14€</li>
           </ul>
+          <div class="food-reco">
+            <div class="food-header">🍴 美食·推荐</div>
+            <ul>
+              <li><span class="shop-name">Pizzarium Bonci</span> — 梵蒂冈城墙外5分钟，罗马最佳方形切片披萨（Pizza al Taglio），按重量计价，每片2-4€ <span class="food-tag">必吃</span></li>
+              <li><span class="shop-name">Il Sorpasso</span> — 梵蒂冈附近网红Bistrot，午餐套餐性价比高，Supplì（炸饭团）超好吃</li>
+              <li>🥐 <span class="shop-name">Sciascia Caffè</span> — 1919年老咖啡馆，招牌巧克力杯咖啡（把咖啡倒进巧克力涂层杯里喝）</li>
+            </ul>
+            <div class="hidden-gem">
+              <span class="gem-label">💎 隐藏推荐：</span> 梵蒂冈博物馆内部有个 <b>松果庭院 Cortile della Pigna</b>，很多人路过没注意——巨大的青铜松果雕塑和阿尔纳尔多·波莫多罗的「球中球」雕塑非常值得驻足。从圣彼得大教堂穹顶下来后，沿 Via della Conciliazione 大道回望，可以拍到教堂+方尖碑+柱廊的完美对称构图。
+            </div>
+          </div>
           <div class="travel-tip tip-red">
             <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐ 很赶</span></div>
-            <ul class="tip-list">
-              <li>06:30 起床，08:00 到梵蒂冈博物馆</li>
-              <li>周三是弥撒日，上午教堂不开，下午才能排队</li>
-              <li>圣彼得大教堂登顶只能现场买票，不能预约，下午4点停售</li>
-              <li>下午两点前去排队登顶，这里非常值得</li>
-              <li>语音导游6€很值，注意西斯廷两个出口别走散</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- DAY 3 -->
         <div class="day-block" data-day="3" onclick="flyTo(41.8902,12.4922,14)">
           <h3>
             <span class="day-title-text" style="color:var(--c-d3)">📍 D3 · 罗马</span>
@@ -380,18 +444,19 @@
             <li>🏛️ 威尼斯广场 Piazza Venezia</li>
             <li>🎨 博尔盖塞美术馆 Borghese Gallery — 最后场次</li>
           </ul>
+          <div class="food-reco">
+            <div class="food-header">🍴 美食·推荐</div>
+            <ul>
+              <li><span class="shop-name">Trattoria Luzzi</span> — 斗兽场正对面，本地老餐馆，Amatriciana（番茄培根面）和烤羊排超香，人均12-15€ <span class="food-tag">性价比</span></li>
+              <li><span class="shop-name">Gelateria La Romana</span> — 连锁但品质在线，招牌 Pistachio 开心果味和 Crema Romana，大份3.5€</li>
+              <li>🥤 <span class="shop-name">Bar del Cappuccino</span> — 离博尔盖塞美术馆很近，当地人的早餐首选，Cornetto（意式牛角包）+ 卡布奇诺 3€</li>
+            </ul>
+            <div class="hidden-gem">
+              <span class="gem-label">💎 隐藏推荐：</span> 斗兽场旁有条小路通往 <b>Colle Oppio 公园</b>，从树荫间可以拍到斗兽场的绝美角度，游客很少。真理之口排队时间可能很长，其实旁边的 <b>科斯梅丁圣母教堂</b> 本身更值得看（中世纪壁画保存完好）。傍晚到 <b>橘园花园 Giardino degli Aranci</b>（阿文提诺山上）看日落，免费且浪漫。旁边还有个 <b>马耳他骑士团锁孔</b>，透过钥匙孔能看到完美框住的圣彼得穹顶！
+            </div>
+          </div>
           <div class="travel-tip tip-red">
             <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐⭐ 最赶</span></div>
-            <ul class="tip-list">
-              <li>10:00 斗兽场，17:45 博尔盖塞美术馆最后场次</li>
-              <li>斗兽场只买到普通票，遗址入口买票排队较短</li>
-              <li>古罗马广场几乎没遮阴，避开正午</li>
-              <li>帕拉蒂尼山看点：弗拉维亚宫、运动场、罗穆路斯小屋</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- DAY 4 -->
         <div class="day-block" data-day="4" onclick="flyTo(43.7696,11.2558,14)">
           <h3>
             <span class="day-title-text" style="color:var(--c-d4)">📍 D4 · 罗马→佛罗伦萨</span>
@@ -410,18 +475,19 @@
             <li>🌉 维琪奥桥 Ponte Vecchio</li>
             <li>🏰 皮蒂宫 Pitti Palace — 16€</li>
           </ul>
+          <div class="food-reco">
+            <div class="food-header">🍴 美食·推荐</div>
+            <ul>
+              <li><span class="shop-name">Mercato Centrale Firenze</span> — 中央市场2楼美食街，各种意大利本地美食一站搞定，牛肚包/松露帕尼尼/手工意面，人均10-15€ <span class="food-tag">必去</span></li>
+              <li><span class="shop-name">Trattoria Mario</span> — 中央市场旁，1953年开业家族小馆，拼桌制，T骨牛排 40€/kg（约够2人），午餐排队+不接受预约 <span class="food-tag">本地人最爱</span></li>
+              <li><span class="shop-name">Trattoria Marione</span> — 离旧宫很近，本地人常去的家常托斯卡纳菜，份量足价格实惠</li>
+            </ul>
+            <div class="hidden-gem">
+              <span class="gem-label">💎 隐藏推荐：</span> 维琪奥桥不只是看金店——桥中间有个半身像是 <b>本韦努托·切利尼</b>（文艺复兴金匠大师），很多人擦肩而过。从桥南端沿河往西走5分钟可到 <b>Santo Spirito 广场</b>，这是佛罗伦萨最有生活气息的地方，当地人傍晚聚在台阶上喝 Aperol Spritz，周围小店比游客区有趣得多。
+            </div>
+          </div>
           <div class="travel-tip tip-yellow">
             <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 中等</span></div>
-            <ul class="tip-list">
-              <li>12:30 到酒店放行李后出发吃午饭，推荐中央市场</li>
-              <li>14:30 学院美术馆，走红牌预约队伍</li>
-              <li>美第奇宫旁边的家族礼拜堂有米开朗基罗的《昼》《夜》《晨》《昏》</li>
-              <li>旧宫可现场买票，塔楼可以登高，留意钟声拍照有味道</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- DAY 5 -->
         <div class="day-block" data-day="5" onclick="flyTo(43.7696,11.2558,14)">
           <h3>
             <span class="day-title-text" style="color:var(--c-d5)">📍 D5 · 佛罗伦萨</span>
@@ -441,19 +507,20 @@
             <li>🌅 米开朗琪罗广场 — 俯瞰佛罗伦萨最佳点</li>
             <li>⛪ 圣米尼亚托教堂 San Miniato al Monte — 免费</li>
           </ul>
+          <div class="food-reco">
+            <div class="food-header">🍴 美食·推荐</div>
+            <ul>
+              <li>🥩 <span class="shop-name">Trattoria dall'Oste</span> — 佛罗伦萨T骨牛排名店，多种牛肉产地可选（契安尼纳牛最正宗），1kg起切约45-55€ <span class="food-tag">必吃</span></li>
+              <li><span class="shop-name">Da Nerbone</span> — 中央市场内1872年老店，排长队的牛肚包（Lampredotto Panino）3.5€，加辣酱更过瘾</li>
+              <li><span class="shop-name">Vivoli</span> — 1930年冰淇淋老店，圣十字大教堂附近，Crema 和 Cioccolato 味经典</li>
+              <li>🍷 晚餐推荐去 <b>Enoteca Pitti Gola e Cantina</b>（皮蒂宫对面），小而精的酒吧+小食，托斯卡纳红酒配火腿奶酪拼盘绝配</li>
+            </ul>
+            <div class="hidden-gem">
+              <span class="gem-label">💎 隐藏推荐：</span> 米开朗琪罗广场上面还有一个 <b>圣米尼亚托教堂 San Miniato al Monte</b>，比广场更高、人更少，黄昏时修道士的格里高利圣歌回荡在教堂里，是佛罗伦萨最动人的时刻之一。乌菲兹出来后沿河走到 <b>Lungarno（阿诺河沿岸步道）</b>，夕阳倒映在河面上非常出片。
+            </div>
+          </div>
           <div class="travel-tip tip-red">
             <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐ 很赶</span></div>
-            <ul class="tip-list">
-              <li>09:30 乌菲兹，旺季最好提前预约赶早去</li>
-              <li>13:30 圣母百花大教堂，不登穹顶，下午三点多关门</li>
-              <li>乔托钟楼414阶纯步行，量力而行</li>
-              <li>碧提宫、巴杰罗、美迪奇礼拜堂都可现场随意</li>
-              <li>黄昏去米开朗琪罗广场看落日，值得！</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- DAY 6 -->
         <div class="day-block" data-day="6" onclick="flyTo(45.4408,12.3155,13)">
           <h3>
             <span class="day-title-text" style="color:var(--c-d6)">📍 D6 · 佛罗伦萨→威尼斯</span>
@@ -479,19 +546,20 @@
             <li>🌅 大运河夕阳</li>
             <li>⛪ 圣方济会荣耀圣母教堂 — 3€</li>
           </ul>
+          <div class="food-reco">
+            <div class="food-header">🍴 美食·推荐</div>
+            <ul>
+              <li>🦑 <span class="shop-name">Alle Testiere</span> — 威尼斯最佳海鲜小馆（仅9张桌），必点墨鱼面 Spaghetti al Nero di Seppia，人均40-50€ <span class="food-tag">必吃</span></li>
+              <li><span class="shop-name">Cantina Do Spade</span> — 里亚托桥附近，1415年开业！Cicchetti（威尼斯版Tapas小食）种类最全，1-2€/个，配一杯 Spritz 绝配</li>
+              <li><span class="shop-name">Dal Moro's Fresh Pasta To Go</span> — 圣马可广场4分钟步行，现做意面外带，意面+酱6€，排队快、好吃便宜</li>
+              <li>🍦 <span class="shop-name">Suso Gelatoteca</span> — 圣马可附近手工冰淇淋，Pistachio + Salted Caramel 双球组合封神</li>
+            </ul>
+            <div class="hidden-gem">
+              <span class="gem-label">💎 隐藏推荐：</span> <b>沉船书店 Libreria Acqua Alta</b> 不只是拍照——书店后面有个用旧书堆成的楼梯，爬上去可以看到运河。从圣马可广场坐水上巴士2号线到 <b>圣乔治马焦雷岛</b>，登钟楼8€能俯瞰整个威尼斯泻湖+圣马可广场全景，比圣马可钟楼人少太多。黄昏在 <b>扎特雷河滨（Fondamenta delle Zattere）</b>散步，面对朱代卡岛看夕阳，本地人遛狗喝酒的地方，完全没有游客区的喧嚣。
+            </div>
+          </div>
           <div class="travel-tip tip-red">
             <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐⭐ 最赶</span></div>
-            <ul class="tip-list">
-              <li>13个景点一天走完，非常赶！建议优先级排序</li>
-              <li>圣马可教堂必须先存大包（免费），仅腰包大小可入</li>
-              <li>圣乔治马焦雷教堂不用预约，现场买票可登高</li>
-              <li>贡多拉可找人拼船分摊费用</li>
-              <li>黄昏留给大运河看夕阳</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- DAY 7 -->
         <div class="day-block" data-day="7" onclick="flyTo(46.6242,8.0413,12)">
           <h3>
             <span class="day-title-text" style="color:var(--c-d7)">📍 D7 · 威尼斯→格林德瓦</span>
@@ -504,18 +572,19 @@
           <div class="transport-info">🚄 IC81 苏黎世 → 因特拉肯东站 | 16:45–19:00</div>
           <div class="transport-info">🚄 因特拉肯东站 → 格林德瓦 | 19:34–20:10</div>
           <div class="hotel-info">🏨 Eiger Mountain & Soul Resort</div>
+          <div class="food-reco">
+            <div class="food-header">🍴 美食·推荐</div>
+            <ul>
+              <li>🧀 到达格林德瓦后，超市买 <b>瑞士Raclette奶酪</b> 和 <b>Rivella（瑞士国民汽水）</b>尝尝鲜</li>
+              <li><span class="shop-name">Coop/Migros 超市</span> — 瑞士双大连锁超市，三明治+沙拉 8-12CHF，火车上解决晚餐的高性价比选择</li>
+              <li>💡 苏黎世转车如有时间，火车站大厅 <b>Sprüngli</b> 买盒 Luxemburgerli（迷你马卡龙），瑞士国宝级甜点</li>
+            </ul>
+            <div class="hidden-gem">
+              <span class="gem-label">💎 隐藏推荐：</span> 因特拉肯东站换乘等火车时，出站右转走3分钟到 <b>Höhematte 大草坪</b>，晴天能同时看到少女峰、僧侣峰、艾格峰三座雪山排成一排，绝佳打卡点。格林德瓦到达后如果天晴，酒店阳台就能看到 <b>艾格峰北壁</b> 的壮观日落金山。
+            </div>
+          </div>
           <div class="travel-tip tip-yellow">
             <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 中转日</span></div>
-            <ul class="tip-list">
-              <li>纯中转日：飞机+两段火车，注意转车时间</li>
-              <li>到达后用小程序买瑞士交通票</li>
-              <li>晚上可以拍星空延时，格林德瓦光污染少</li>
-              <li>提前看格林德瓦天气，决定明天First的娱乐项目</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- DAY 8 -->
         <div class="day-block" data-day="8" onclick="flyTo(46.6242,8.0413,13)">
           <h3>
             <span class="day-title-text" style="color:var(--c-d8)">📍 D8 · 格林德瓦</span>
@@ -531,18 +600,20 @@
             <li>🏘️ 格林德瓦小镇漫步</li>
             <li>🌄 梦幻山坡 Grindelwald-Grund</li>
           </ul>
+          <div class="food-reco">
+            <div class="food-header">🍴 美食·推荐</div>
+            <ul>
+              <li>🫕 <span class="shop-name">Hotel Kreuz & Post 餐厅</span> — 小镇中心，正宗瑞士奶酪火锅（Fondue）约25-30CHF/人，配面包块和小土豆 <span class="food-tag">必吃</span></li>
+              <li><span class="shop-name">Memory Restaurant</span> — First缆车站下方，窗景直面艾格峰北壁，Rösti（瑞士黄金土豆饼）配培根煎蛋 18CHF</li>
+              <li>🍫 <span class="shop-name">Coop 超市</span>买 <b>Cailler/Lindt 巧克力</b>，比国内便宜一半，瑞士本土 Frey 巧克力更小众更好吃</li>
+              <li>💡 First 山顶餐厅有 <b>Berghaus First</b>，在海拔2168m吃一碗瑞士大麦浓汤（Gerstensuppe），配阿尔卑斯全景</li>
+            </ul>
+            <div class="hidden-gem">
+              <span class="gem-label">💎 隐藏推荐：</span> 梦幻山坡其实有两个角度——大多数人站在公路边拍，但走到 <b>山坡下方的小路</b>（往Grund方向），仰拍教堂+雪山背景更有纵深感。First 山顶的 <b>First Cliff Walk</b>（悬崖栈道）是免费的！走到尽头有个伸出悬崖的观景台，脚下就是悬崖和瀑布。晚上如果天气好，格林德瓦几乎没有光污染，在酒店阳台 <b>拍银河</b> 不需要任何交通。
+            </div>
+          </div>
           <div class="travel-tip tip-green">
             <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐ 轻松</span></div>
-            <ul class="tip-list">
-              <li>整天都在格林德瓦，节奏相对宽松</li>
-              <li>First 山顶有多个娱乐项目，看天气选择</li>
-              <li>梦幻山坡适合拍照，艾格峰北壁为背景</li>
-              <li>小镇很适合下午悠闲闲逛、喝咖啡</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- DAY 9 -->
         <div class="day-block" data-day="9" onclick="flyTo(48.8566,2.3522,12)">
           <h3>
             <span class="day-title-text" style="color:var(--c-d9)">📍 D9 · 格林德瓦→巴黎</span>
@@ -559,17 +630,19 @@
             <li>🏛️ 协和广场 Place de la Concorde</li>
             <li>🌳 杜乐丽花园 Jardin des Tuileries</li>
           </ul>
+          <div class="food-reco">
+            <div class="food-header">🍴 美食·推荐</div>
+            <ul>
+              <li>🥐 到达巴黎后直奔酒店附近找一家 <b>Boulangerie（面包房）</b>，买 Croissant（可颂）+ Pain au Chocolat（巧克力面包），法国的比瑞士/意大利好吃太多 <span class="food-tag">第一口法国</span></li>
+              <li><span class="shop-name">Angelina Paris</span> — 协和广场旁里沃利街，招牌非洲热巧克力（Chocolat Chaud l'Africain）浓稠如熔岩，8.5€ <span class="food-tag">必喝</span></li>
+              <li>💡 巴塞尔转车等候时，车站附近的 <b>Läckerli Huus</b> 可以买巴塞尔特产蜂蜜胡桃饼（Läckerli）</li>
+            </ul>
+            <div class="hidden-gem">
+              <span class="gem-label">💎 隐藏推荐：</span> 到巴黎虽已近晚8点，但10月的巴黎日落在7:30左右，<b>杜乐丽花园</b>夜间亮灯后有种独特的氛围——喷泉+远处卢浮宫金字塔的灯光倒影，比白天更有巴黎感。协和广场夜景的方尖碑+埃菲尔铁塔远景同框也很出片。
+            </div>
+          </div>
           <div class="travel-tip tip-yellow">
             <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 赶路日</span></div>
-            <ul class="tip-list">
-              <li>三段火车转车，注意时间衔接</li>
-              <li>到巴黎已近晚8点，只能简单逛逛周边</li>
-              <li>协和广场和杜乐丽花园适合夜间散步</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- DAY 10 -->
         <div class="day-block" data-day="10" onclick="flyTo(48.8566,2.3522,13)">
           <h3>
             <span class="day-title-text" style="color:var(--c-d10)">📍 D10 · 巴黎（精华日）</span>
@@ -595,19 +668,20 @@
             <li>⛪ 巴黎圣母院 Notre-Dame</li>
             <li>🎨 蓬皮杜中心 Centre Pompidou</li>
           </ul>
+          <div class="food-reco">
+            <div class="food-header">🍴 美食·推荐</div>
+            <ul>
+              <li>🥖 <span class="shop-name">Café de Flore</span> — 左岸双叟咖啡馆，萨特、波伏瓦常客，Croque Monsieur（法式火腿芝士三明治）14€ + 咖啡，吃的是氛围 <span class="food-tag">文青打卡</span></li>
+              <li><span class="shop-name">Breizh Café</span> — 玛黑区，巴黎最佳可丽饼（Galette），荞麦饼皮+火腿奶酪蛋 12€</li>
+              <li>🍰 <span class="shop-name">Pierre Hermé</span> — 法式甜点之神，马卡龙 Ispahan（荔枝玫瑰覆盆子）口味封神，2.5€/个</li>
+              <li><span class="shop-name">L'As du Fallafel</span> — 玛黑区犹太街，巴黎最佳法拉费三明治，7.5€，队伍长但值得</li>
+            </ul>
+            <div class="hidden-gem">
+              <span class="gem-label">💎 隐藏推荐：</span> 卢浮宫 <b>德农翼二楼</b>（蒙娜丽莎对面墙）的 <b>《加纳的婚宴》</b> 才是卢浮宫最大的画作，但99%的人只顾拍蒙娜丽莎背对着它。从凯旋门沿香街走回来时，拐进 <b>Avenue Montaigne</b>（蒙田大道），这里比香街安静，沿途是 Dior/Louis Vuitton 总部，建筑本身就是艺术品。埃菲尔铁塔最佳拍摄点不在正下方，而是 <b>特洛卡代罗广场</b>（对岸），或者 <b>Bir-Hakeim 桥</b>上（电影《盗梦空间》取景地）。
+            </div>
+          </div>
           <div class="travel-tip tip-red">
             <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐⭐ 最赶</span></div>
-            <ul class="tip-list">
-              <li>14个景点暴走日！建议早出晚归</li>
-              <li>卢浮宫至少留3小时，提前网上订票</li>
-              <li>铁塔和凯旋门挑一个登顶即可</li>
-              <li>圣母院火灾后修复中，能否入内需确认</li>
-              <li>动线建议：卢浮宫→歌剧院→香街→凯旋门→铁塔→左岸</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- DAY 11 -->
         <div class="day-block" data-day="11" onclick="flyTo(48.8049,2.1204,12)">
           <h3>
             <span class="day-title-text" style="color:var(--c-d11)">📍 D11 · 巴黎（博物馆+凡尔赛）</span>
@@ -625,18 +699,20 @@
             <li>🛍️ 香榭丽舍大街（购物扫尾）</li>
             <li>🌳 杜乐丽花园（散步收尾）</li>
           </ul>
+          <div class="food-reco">
+            <div class="food-header">🍴 美食·推荐</div>
+            <ul>
+              <li>🍽️ <span class="shop-name">Ore - Ducasse au Château de Versailles</span> — 凡尔赛宫内Alain Ducasse主理餐厅，午餐套餐38€，在宫殿里吃法餐这体验独一无二 <span class="food-tag">特别体验</span></li>
+              <li><span class="shop-name">Le Bouillon Chartier</span> — 巴黎最有名的平价法式食堂，1896年Art Nouveau内饰，牛排+薯条 12€，排队但值得 <span class="food-tag">性价比王</span></li>
+              <li>🍰 <span class="shop-name">Ladurée</span> — 香榭丽舍旗舰店，法式马卡龙发明者，买一盒做伴手礼（6个装约17€）</li>
+              <li>💡 最后一晚推荐去 <b>蒙马特高地</b> 吃晚餐 — <span class="shop-name">Le Consulat</span> 或 <span class="shop-name">La Maison Rose</span> 拍照+用餐，粉色小屋外景即使不吃也值得打卡</li>
+            </ul>
+            <div class="hidden-gem">
+              <span class="gem-label">💎 隐藏推荐：</span> 凡尔赛宫大家都看镜厅和花园，但 <b>大特里亚农宫 Grand Trianon</b> 和 <b>玛丽·安托瓦内特庄园</b>（含票内）人极少，有种穿越到18世纪法国乡村的感觉。奥赛博物馆5楼大钟后面有个 <b>巨大透明钟面</b>，透过钟面可以看到塞纳河+卢浮宫，是巴黎最浪漫的取景框之一。<b>圣礼拜堂</b>最佳体验：上午10-11点阳光透过1113块彩色玻璃的时刻，整个教堂像一个巨大的万花筒。
+            </div>
+          </div>
           <div class="travel-tip tip-red">
             <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐ 很赶</span></div>
-            <ul class="tip-list">
-              <li>凡尔赛宫需留半天，建议早上去</li>
-              <li>奥赛和圣礼拜堂在市区可同路线走</li>
-              <li>圣礼拜堂的彩色玻璃窗是巴黎最美之一</li>
-              <li>最后一晚在巴黎，可安排购物和夜景</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- DAY 12 -->
         <div class="day-block" data-day="12" onclick="flyTo(48.8566,2.3522,11)">
           <h3>
             <span class="day-title-text" style="color:var(--c-d12)">📍 D12 · 巴黎→重庆</span>
@@ -646,17 +722,16 @@
             </span>
           </h3>
           <div class="transport-info">✈️ 巴黎→重庆 | 11:55–04:35+1（次日到达）</div>
-          <div class="travel-tip tip-green">
-            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐ 轻松</span></div>
-            <ul class="tip-list">
-              <li>上午可以补购纪念品、在酒店附近散步</li>
-              <li>提前2.5h到机场，巴黎机场退税排队较长</li>
-              <li>记得办理退税（Tax Refund）</li>
+          <div class="food-reco">
+            <div class="food-header">🍴 美食·推荐</div>
+            <ul>
+              <li>🥐 最后的法国早餐：酒店附近任何 <b>Boulangerie</b> 买一个 Croissant au Beurre（黄油可颂）+ Café Crème，3-4€ 的完美告别</li>
+              <li>💡 戴高乐机场 T1 出发层有 <b>Ladurée 免税店</b>，最后机会补货马卡龙（比市区便宜约10%）</li>
+              <li>🧀 机场 <b>Buy Paris Duty Free</b> 可以买真空包装法国奶酪（Comté/Brie）带回国，比市内免税店选择更多</li>
             </ul>
           </div>
-        </div>
-
-        <!-- DAY 13 -->
+          <div class="travel-tip tip-green">
+            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐ 轻松</span></div>
         <div class="day-block" data-day="13" onclick="flyTo(23.1291,113.2644,11)">
           <h3>
             <span class="day-title-text" style="color:var(--c-d13)">📍 D13 · 重庆→广州</span>
