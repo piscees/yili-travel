@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>欧洲13日 · 意瑞法之旅</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    :root {
+      --c-d1: #0891b2; --c-d2: #7c3aed; --c-d3: #2563eb;
+      --c-d4: #059669; --c-d5: #d97706; --c-d6: #0d9488;
+      --c-d7: #e11d48; --c-d8: #4f46e5; --c-d9: #0ea5e9;
+      --c-d10: #b45309; --c-d11: #8b5cf6; --c-d12: #64748b;
+      --c-d13: #64748b;
+      --sidebar-bg: #fafffe;
+      --accent: #0f766e;
+      --card-shadow: 0 1px 6px rgba(0,0,0,0.04);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; overflow: hidden; -webkit-tap-highlight-color: transparent; }
+
+    /* ===== 布局 ===== */
+    #layout { display: flex; flex-direction: column; height: 100%; }
+
+    /* ===== 顶部标题栏 ===== */
+    #header {
+      background: linear-gradient(135deg, #5eead4 0%, #67e8f9 50%, #a5f3fc 100%);
+      color: #0f4f4a;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      z-index: 10;
+      flex-shrink: 0;
+    }
+    #header .logo { font-size: 24px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2)); }
+    #header h1 { font-size: 16px; font-weight: 700; letter-spacing: 0.5px; }
+    #header .subtitle { font-size: 10.5px; opacity: 0.8; margin-top: 1px; font-weight: 400; }
+
+    /* ===== 桌面端布局 ===== */
+    #main { display: flex; flex: 1; min-height: 0; }
+
+    /* ===== 侧栏 ===== */
+    #details {
+      width: min(400px, 42vw);
+      min-width: 260px;
+      overflow-y: auto;
+      background: var(--sidebar-bg);
+      border-right: 1px solid #e5f5f0;
+      flex-shrink: 0;
+      padding: 14px 14px 18px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #1e293b;
+    }
+    #details::-webkit-scrollbar { width: 5px; }
+    #details::-webkit-scrollbar-thumb { background: #b0b4c4; border-radius: 3px; }
+    #details::-webkit-scrollbar-track { background: transparent; }
+
+    #details h2 {
+      font-size: 0.88rem;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #a7f3d0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .day-block {
+      margin-bottom: 10px;
+      padding: 12px 12px 10px;
+      background: #fff;
+      border-radius: 10px;
+      border: 1px solid #ecf5f2;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+    }
+    .day-block:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(13,148,136,0.06);
+    }
+    .day-block:active { transform: scale(0.985); }
+    .day-block h3 {
+      margin: 0 0 6px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+      line-height: 1.6;
+    }
+    .day-title-text {
+      flex-shrink: 1;
+      min-width: 0;
+      white-space: nowrap;
+    }
+    .day-tag {
+      display: inline-block;
+      padding: 1px 7px;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+    .day-badges {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .country-badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .badge-italy { background: #059669; }
+    .badge-vatican { background: #7c3aed; }
+    .badge-swiss { background: #dc2626; }
+    .badge-france { background: #2563eb; }
+    .badge-china { background: #d97706; }
+    .badge-transit { background: #64748b; }
+
+    .day-block p { margin: 0 0 6px; }
+    .day-block ul { margin: 0; padding-left: 1.15em; }
+    .day-block li { margin-bottom: 4px; }
+
+    /* ===== 交通信息 ===== */
+    .transport-info {
+      margin: 6px 0;
+      padding: 6px 10px;
+      background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%);
+      border-radius: 6px;
+      font-size: 11px;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+    .transport-info .icon { margin-right: 4px; }
+
+    /* ===== 住宿信息 ===== */
+    .hotel-info {
+      margin: 6px 0;
+      padding: 6px 10px;
+      background: linear-gradient(135deg, #fef3c7 0%, #fef9c3 100%);
+      border-radius: 6px;
+      font-size: 11px;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+
+    /* ===== 行程贴士 ===== */
+    .travel-tip {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+    .tip-green { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); color: #065f46; border: 1px solid #a7f3d0; }
+    .tip-yellow { background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%); color: #854d0e; border: 1px solid #fde68a; }
+    .tip-red { background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); color: #991b1b; border: 1px solid #fca5a5; }
+    .tips-header {
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .tips-stars { font-size: 10px; opacity: 0.85; }
+    .tip-list { margin: 4px 0 0; padding-left: 1.1em; }
+    .tip-list li { margin-bottom: 2px; }
+
+    .note {
+      margin-top: 12px;
+      padding: 10px 12px;
+      background: linear-gradient(135deg, #f7fdfb 0%, #ecfdf5 100%);
+      border-radius: 8px;
+      font-size: 11px;
+      color: #475569;
+      border: 1px solid #d1fae5;
+    }
+
+    /* ===== 地图 ===== */
+    #map { flex: 1; min-width: 0; min-height: 0; height: 100%; }
+    .poi-tooltip { font-size: 12px; font-weight: 600; padding: 4px 8px !important; border-radius: 8px !important; box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important; }
+
+    /* ===== 底部标签切换（移动端） ===== */
+    #tab-bar {
+      display: none;
+      background: #fff;
+      border-top: 1px solid #e2e8f0;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+      z-index: 20;
+      padding-bottom: var(--safe-bottom);
+    }
+    #tab-bar .tabs {
+      display: flex;
+      height: 48px;
+    }
+    #tab-bar .tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: #94a3b8;
+      cursor: pointer;
+      gap: 2px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #tab-bar .tab.active { color: #14b8a6; font-weight: 600; }
+    #tab-bar .tab .icon { font-size: 18px; }
+
+    /* ===== 进度条 ===== */
+    .progress-bar {
+      margin: 12px 0 8px;
+      padding: 8px 10px;
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #ecf5f2;
+    }
+    .progress-bar .label { font-size: 11px; color: #64748b; margin-bottom: 4px; }
+    .progress-bar .bar { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
+    .progress-bar .bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #6ee7b7, #67e8f9); transition: width 0.3s; }
+
+    /* ===== 深色模式 ===== */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --sidebar-bg: #0f2f2b;
+        --accent: #5eead4;
+        --card-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      }
+      body { background: #0a1f1c; color: #e2e8f0; }
+      #header { background: linear-gradient(135deg, #134e4a 0%, #0d9488 50%, #14b8a6 100%); color: #fff; }
+      #details { background: var(--sidebar-bg); border-right-color: #1a3f3a; color: #e2e8f0; }
+      .day-block { background: #0f2f2b; border-color: #1a3f3a; }
+      .day-block:hover { box-shadow: 0 4px 16px rgba(45,212,191,0.15); }
+      .transport-info { background: linear-gradient(135deg, #1e293b, #1e3a5f); color: #93c5fd; border-color: #334155; }
+      .hotel-info { background: linear-gradient(135deg, #1e293b, #3b2f1e); color: #fcd34d; border-color: #4b3f25; }
+      .note { background: linear-gradient(135deg, #0f2f2b, #134e4a); color: #5eead4; border-color: #0d9488; }
+      .tip-green { background: linear-gradient(135deg, #052e16, #064e3b); color: #6ee7b7; border-color: #065f46; }
+      .tip-yellow { background: linear-gradient(135deg, #3b2f1e, #422006); color: #fbbf24; border-color: #854d0e; }
+      .tip-red { background: linear-gradient(135deg, #3b1e1e, #450a0a); color: #fca5a5; border-color: #991b1b; }
+      .progress-bar { background: #0f2f2b; border-color: #1a3f3a; }
+      .progress-bar .bar { background: #1a3f3a; }
+      #tab-bar { background: #0f2f2b; border-top-color: #1a3f3a; }
+      #tab-bar .tab { color: #64748b; }
+      #tab-bar .tab.active { color: #2dd4bf; }
+    }
+
+    /* ===== 移动端 ===== */
+    @media (max-width: 768px) {
+      #main { flex-direction: column; }
+      #details { width: 100%; min-width: auto; border-right: none; border-bottom: 1px solid #ccfbf1; }
+      #map { min-height: 300px; }
+      #tab-bar { display: block; }
+      .view-details #details { display: block; flex: 1; }
+      .view-details #map { display: none; }
+      .view-map #details { display: none; }
+      .view-map #map { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div id="layout" class="view-details">
+    <!-- 顶部 -->
+    <div id="header">
+      <span class="logo">🇪🇺</span>
+      <div>
+        <h1>欧洲13日 · 意瑞法之旅</h1>
+        <div class="subtitle">2024.10.01 — 10.13 ｜ 广州→罗马→佛罗伦萨→威尼斯→格林德瓦→巴黎→广州</div>
+      </div>
+    </div>
+
+    <div id="main">
+      <!-- 侧栏行程 -->
+      <div id="details">
+        <h2>🗺️ 每日行程</h2>
+
+        <!-- 进度条 -->
+        <div class="progress-bar">
+          <div class="label">行程进度：13 天 · 4 国 · 70+ 景点</div>
+          <div class="bar"><div class="bar-fill" style="width:100%"></div></div>
+        </div>
+
+        <!-- DAY 1 -->
+        <div class="day-block" data-day="1" onclick="flyTo(41.9028,12.4964,13)">
+          <h3>
+            <span class="day-title-text" style="color:var(--c-d1)">📍 D1 · 广州→罗马</span>
+            <span class="day-badges">
+              <span class="day-tag" style="background:var(--c-d1)">10/01 周二</span>
+              <span class="country-badge badge-italy">🇮🇹 意大利</span>
+            </span>
+          </h3>
+          <div class="transport-info">✈️ CZ661 广州白云T2 → 罗马FCO T3 | 00:30–07:15</div>
+          <div class="hotel-info">🏨 蜂巢酒店 The Hive Hotel | Via Torino 6, 罗马</div>
+          <ul>
+            <li>🏛️ 特莱维喷泉（许愿池）Fontana di Trevi</li>
+            <li>🏛️ 万神殿 Pantheon — 票价5€，中午可见丁达尔效应</li>
+            <li>⛪ 圣依纳爵堂 Sant'Ignazio Church — 免费</li>
+            <li>🏛️ 纳沃纳广场 Piazza Navona — 免费</li>
+            <li>🏛️ 罗马人民广场 Piazza del Popolo</li>
+            <li>🏛️ 西班牙广场 Piazza di Spagna — ⚠️ 注意防盗</li>
+          </ul>
+          <div class="travel-tip tip-yellow">
+            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 中等偏赶</span></div>
+            <ul class="tip-list">
+              <li>红眼航班到达，先放行李再出发，注意调整时差</li>
+              <li>万神殿中午去可看丁达尔效应，圣伊纳爵免费</li>
+              <li>西班牙广场扒手多，注意财物安全</li>
+              <li>早点回去休息，第二天六点半要起</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 2 -->
+        <div class="day-block" data-day="2" onclick="flyTo(41.9029,12.4534,14)">
+          <h3>
+            <span class="day-title-text" style="color:var(--c-d2)">📍 D2 · 梵蒂冈</span>
+            <span class="day-badges">
+              <span class="day-tag" style="background:var(--c-d2)">10/02 周三</span>
+              <span class="country-badge badge-vatican">🇻🇦 梵蒂冈</span>
+            </span>
+          </h3>
+          <div class="hotel-info">🏨 蜂巢酒店 The Hive Hotel | Via Torino 6, 罗马</div>
+          <ul>
+            <li>🏛️ 梵蒂冈博物馆 Vatican Museum — 20€，已买带早餐票</li>
+            <li>🎨 西斯廷礼拜堂 Sistine Chapel — 含在博物馆票内</li>
+            <li>📚 梵蒂冈使徒图书馆</li>
+            <li>⛪ 圣彼得大教堂 — 免费入场，登穹顶8€步行/10€电梯</li>
+            <li>🏛️ 圣彼得广场 Piazza San Pietro</li>
+            <li>🏰 圣天使城堡 Castel Sant'Angelo — 14€</li>
+          </ul>
+          <div class="travel-tip tip-red">
+            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐ 很赶</span></div>
+            <ul class="tip-list">
+              <li>06:30 起床，08:00 到梵蒂冈博物馆</li>
+              <li>周三是弥撒日，上午教堂不开，下午才能排队</li>
+              <li>圣彼得大教堂登顶只能现场买票，不能预约，下午4点停售</li>
+              <li>下午两点前去排队登顶，这里非常值得</li>
+              <li>语音导游6€很值，注意西斯廷两个出口别走散</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 3 -->
+        <div class="day-block" data-day="3" onclick="flyTo(41.8902,12.4922,14)">
+          <h3>
+            <span class="day-title-text" style="color:var(--c-d3)">📍 D3 · 罗马</span>
+            <span class="day-badges">
+              <span class="day-tag" style="background:var(--c-d3)">10/03 周四</span>
+              <span class="country-badge badge-italy">🇮🇹 意大利</span>
+            </span>
+          </h3>
+          <div class="hotel-info">🏨 蜂巢酒店 The Hive Hotel | Via Torino 6, 罗马</div>
+          <ul>
+            <li>⛪ 圣伯多禄锁链堂 — 免费，有摩西像</li>
+            <li>🏟️ 罗马斗兽场 Colosseo — 套票16€</li>
+            <li>🏛️ 君士坦丁凯旋门 — 免费</li>
+            <li>⛰️ 帕拉蒂尼山 Palatine Hill — 含在斗兽场套票</li>
+            <li>🏛️ 古罗马广场 Foro Romano — 含在斗兽场套票</li>
+            <li>👄 真理之口 Bocca della Verità — 免费</li>
+            <li>🏛️ 威尼斯广场 Piazza Venezia</li>
+            <li>🎨 博尔盖塞美术馆 Borghese Gallery — 最后场次</li>
+          </ul>
+          <div class="travel-tip tip-red">
+            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐⭐ 最赶</span></div>
+            <ul class="tip-list">
+              <li>10:00 斗兽场，17:45 博尔盖塞美术馆最后场次</li>
+              <li>斗兽场只买到普通票，遗址入口买票排队较短</li>
+              <li>古罗马广场几乎没遮阴，避开正午</li>
+              <li>帕拉蒂尼山看点：弗拉维亚宫、运动场、罗穆路斯小屋</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 4 -->
+        <div class="day-block" data-day="4" onclick="flyTo(43.7696,11.2558,14)">
+          <h3>
+            <span class="day-title-text" style="color:var(--c-d4)">📍 D4 · 罗马→佛罗伦萨</span>
+            <span class="day-badges">
+              <span class="day-tag" style="background:var(--c-d4)">10/04 周五</span>
+              <span class="country-badge badge-italy">🇮🇹 意大利</span>
+            </span>
+          </h3>
+          <div class="transport-info">🚄 火车 9416 罗马中央车站 → 佛罗伦萨 | 10:35–12:11</div>
+          <div class="hotel-info">🏨 B&B Lorenzo de' Medici | 佛罗伦萨</div>
+          <ul>
+            <li>🏛️ 美第奇宫 Palazzo Medici Riccardi — 10€</li>
+            <li>🎨 佛罗伦萨美术学院画廊 — 12€，大卫像！</li>
+            <li>🏰 佛罗伦萨旧宫 Palazzo Vecchio — 16.5€</li>
+            <li>🏛️ 市政广场 Piazza della Signoria</li>
+            <li>🌉 维琪奥桥 Ponte Vecchio</li>
+            <li>🏰 皮蒂宫 Pitti Palace — 16€</li>
+          </ul>
+          <div class="travel-tip tip-yellow">
+            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 中等</span></div>
+            <ul class="tip-list">
+              <li>12:30 到酒店放行李后出发吃午饭，推荐中央市场</li>
+              <li>14:30 学院美术馆，走红牌预约队伍</li>
+              <li>美第奇宫旁边的家族礼拜堂有米开朗基罗的《昼》《夜》《晨》《昏》</li>
+              <li>旧宫可现场买票，塔楼可以登高，留意钟声拍照有味道</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 5 -->
+        <div class="day-block" data-day="5" onclick="flyTo(43.7696,11.2558,14)">
+          <h3>
+            <span class="day-title-text" style="color:var(--c-d5)">📍 D5 · 佛罗伦萨</span>
+            <span class="day-badges">
+              <span class="day-tag" style="background:var(--c-d5)">10/05 周六</span>
+              <span class="country-badge badge-italy">🇮🇹 意大利</span>
+            </span>
+          </h3>
+          <div class="hotel-info">🏨 B&B Lorenzo de' Medici | Via Sant'Antonino 34, 佛罗伦萨</div>
+          <ul>
+            <li>🍖 中央市场旁牛肚包 — 3.5€，必吃！</li>
+            <li>🎨 乌菲兹美术馆 Uffizi Gallery — 20€</li>
+            <li>⛪ 圣母百花大教堂 — 教堂免费，联票18€</li>
+            <li>🔔 乔托钟楼 Giotto's Campanile — 414阶无电梯</li>
+            <li>🚪 天堂之门 Porta del Paradiso — 洗礼堂东门复制品</li>
+            <li>⛪ 圣十字大教堂 — 8€</li>
+            <li>🌅 米开朗琪罗广场 — 俯瞰佛罗伦萨最佳点</li>
+            <li>⛪ 圣米尼亚托教堂 San Miniato al Monte — 免费</li>
+          </ul>
+          <div class="travel-tip tip-red">
+            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐ 很赶</span></div>
+            <ul class="tip-list">
+              <li>09:30 乌菲兹，旺季最好提前预约赶早去</li>
+              <li>13:30 圣母百花大教堂，不登穹顶，下午三点多关门</li>
+              <li>乔托钟楼414阶纯步行，量力而行</li>
+              <li>碧提宫、巴杰罗、美迪奇礼拜堂都可现场随意</li>
+              <li>黄昏去米开朗琪罗广场看落日，值得！</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 6 -->
+        <div class="day-block" data-day="6" onclick="flyTo(45.4408,12.3155,13)">
+          <h3>
+            <span class="day-title-text" style="color:var(--c-d6)">📍 D6 · 佛罗伦萨→威尼斯</span>
+            <span class="day-badges">
+              <span class="day-tag" style="background:var(--c-d6)">10/06 周日</span>
+              <span class="country-badge badge-italy">🇮🇹 意大利</span>
+            </span>
+          </h3>
+          <div class="transport-info">🚄 火车 8906 佛罗伦萨 → 威尼斯 Santa Lucia | 10:40–12:55</div>
+          <div class="hotel-info">🏨 Hotel Gardena 伽丁纳酒店 | 威尼斯</div>
+          <ul>
+            <li>🌉 威尼斯里亚托桥 Ponte Rialto</li>
+            <li>📚 沉船书店 Libreria Acqua Alta — 09:00–20:00</li>
+            <li>⛪ 圣马可大教堂 — 免费，禁止短裤无袖，不可拍照</li>
+            <li>🏛️ 圣马可广场 Piazza San Marco — 免费</li>
+            <li>📚 圣马可国家图书馆 — 20€</li>
+            <li>🏰 总督府 Palazzo Ducale — 25€</li>
+            <li>⛪ 圣乔治马焦雷教堂 — 可登高</li>
+            <li>🌉 叹息桥 Ponte dei Sospiri — 免费</li>
+            <li>🚣 贡多拉游船 — 白天~80€/船，夜间~100€/船</li>
+            <li>🌉 学院桥 Ponte dell'Accademia</li>
+            <li>🎨 威尼斯美术学院画廊 — 15€</li>
+            <li>🌅 大运河夕阳</li>
+            <li>⛪ 圣方济会荣耀圣母教堂 — 3€</li>
+          </ul>
+          <div class="travel-tip tip-red">
+            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐⭐ 最赶</span></div>
+            <ul class="tip-list">
+              <li>13个景点一天走完，非常赶！建议优先级排序</li>
+              <li>圣马可教堂必须先存大包（免费），仅腰包大小可入</li>
+              <li>圣乔治马焦雷教堂不用预约，现场买票可登高</li>
+              <li>贡多拉可找人拼船分摊费用</li>
+              <li>黄昏留给大运河看夕阳</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 7 -->
+        <div class="day-block" data-day="7" onclick="flyTo(46.6242,8.0413,12)">
+          <h3>
+            <span class="day-title-text" style="color:var(--c-d7)">📍 D7 · 威尼斯→格林德瓦</span>
+            <span class="day-badges">
+              <span class="day-tag" style="background:var(--c-d7)">10/07 周一</span>
+              <span class="country-badge badge-swiss">🇨🇭 瑞士</span>
+            </span>
+          </h3>
+          <div class="transport-info">✈️ Swiss LX1663 威尼斯Marco Polo → 苏黎世 | 14:55–16:05</div>
+          <div class="transport-info">🚄 IC81 苏黎世 → 因特拉肯东站 | 16:45–19:00</div>
+          <div class="transport-info">🚄 因特拉肯东站 → 格林德瓦 | 19:34–20:10</div>
+          <div class="hotel-info">🏨 Eiger Mountain & Soul Resort</div>
+          <div class="travel-tip tip-yellow">
+            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 中转日</span></div>
+            <ul class="tip-list">
+              <li>纯中转日：飞机+两段火车，注意转车时间</li>
+              <li>到达后用小程序买瑞士交通票</li>
+              <li>晚上可以拍星空延时，格林德瓦光污染少</li>
+              <li>提前看格林德瓦天气，决定明天First的娱乐项目</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 8 -->
+        <div class="day-block" data-day="8" onclick="flyTo(46.6242,8.0413,13)">
+          <h3>
+            <span class="day-title-text" style="color:var(--c-d8)">📍 D8 · 格林德瓦</span>
+            <span class="day-badges">
+              <span class="day-tag" style="background:var(--c-d8)">10/08 周二</span>
+              <span class="country-badge badge-swiss">🇨🇭 瑞士</span>
+            </span>
+          </h3>
+          <div class="hotel-info">🏨 Eiger Mountain & Soul Resort</div>
+          <ul>
+            <li>📍 格林德瓦尔德游客中心</li>
+            <li>🏔️ Grindelwald–First — 缆车+滑翔+徒步</li>
+            <li>🏘️ 格林德瓦小镇漫步</li>
+            <li>🌄 梦幻山坡 Grindelwald-Grund</li>
+          </ul>
+          <div class="travel-tip tip-green">
+            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐ 轻松</span></div>
+            <ul class="tip-list">
+              <li>整天都在格林德瓦，节奏相对宽松</li>
+              <li>First 山顶有多个娱乐项目，看天气选择</li>
+              <li>梦幻山坡适合拍照，艾格峰北壁为背景</li>
+              <li>小镇很适合下午悠闲闲逛、喝咖啡</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 9 -->
+        <div class="day-block" data-day="9" onclick="flyTo(48.8566,2.3522,12)">
+          <h3>
+            <span class="day-title-text" style="color:var(--c-d9)">📍 D9 · 格林德瓦→巴黎</span>
+            <span class="day-badges">
+              <span class="day-tag" style="background:var(--c-d9)">10/09 周三</span>
+              <span class="country-badge badge-france">🇫🇷 法国</span>
+            </span>
+          </h3>
+          <div class="transport-info">🚄 格林德瓦→因特拉肯 | 10:47–11:24</div>
+          <div class="transport-info">🚄 因特拉肯→巴塞尔 | 12:00–14:06</div>
+          <div class="transport-info">🚄 巴塞尔→巴黎 | 16:34–19:38</div>
+          <div class="hotel-info">🏨 Maison Armance - Esprit de France</div>
+          <ul>
+            <li>🏛️ 协和广场 Place de la Concorde</li>
+            <li>🌳 杜乐丽花园 Jardin des Tuileries</li>
+          </ul>
+          <div class="travel-tip tip-yellow">
+            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 赶路日</span></div>
+            <ul class="tip-list">
+              <li>三段火车转车，注意时间衔接</li>
+              <li>到巴黎已近晚8点，只能简单逛逛周边</li>
+              <li>协和广场和杜乐丽花园适合夜间散步</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 10 -->
+        <div class="day-block" data-day="10" onclick="flyTo(48.8566,2.3522,13)">
+          <h3>
+            <span class="day-title-text" style="color:var(--c-d10)">📍 D10 · 巴黎（精华日）</span>
+            <span class="day-badges">
+              <span class="day-tag" style="background:var(--c-d10)">10/10 周四</span>
+              <span class="country-badge badge-france">🇫🇷 法国</span>
+            </span>
+          </h3>
+          <div class="hotel-info">🏨 Maison Armance - Esprit de France</div>
+          <ul>
+            <li>🌳 杜乐丽花园 Jardin des Tuileries</li>
+            <li>🎨 卢浮宫 Musée du Louvre</li>
+            <li>🎭 巴黎歌剧院 Palais Garnier</li>
+            <li>🛍️ 香榭丽舍大街 Champs-Élysées</li>
+            <li>🏛️ 凯旋门 Arc de Triomphe</li>
+            <li>🌳 特洛卡代罗花园</li>
+            <li>🗼 埃菲尔铁塔 Eiffel Tower</li>
+            <li>🌳 战神广场 Champ de Mars</li>
+            <li>🏛️ 荣军院 Les Invalides</li>
+            <li>🎨 罗丹博物馆 Musée Rodin</li>
+            <li>🌳 卢森堡公园 Jardin du Luxembourg</li>
+            <li>🏛️ 先贤祠 Panthéon</li>
+            <li>⛪ 巴黎圣母院 Notre-Dame</li>
+            <li>🎨 蓬皮杜中心 Centre Pompidou</li>
+          </ul>
+          <div class="travel-tip tip-red">
+            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐⭐ 最赶</span></div>
+            <ul class="tip-list">
+              <li>14个景点暴走日！建议早出晚归</li>
+              <li>卢浮宫至少留3小时，提前网上订票</li>
+              <li>铁塔和凯旋门挑一个登顶即可</li>
+              <li>圣母院火灾后修复中，能否入内需确认</li>
+              <li>动线建议：卢浮宫→歌剧院→香街→凯旋门→铁塔→左岸</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 11 -->
+        <div class="day-block" data-day="11" onclick="flyTo(48.8049,2.1204,12)">
+          <h3>
+            <span class="day-title-text" style="color:var(--c-d11)">📍 D11 · 巴黎（博物馆+凡尔赛）</span>
+            <span class="day-badges">
+              <span class="day-tag" style="background:var(--c-d11)">10/11 周五</span>
+              <span class="country-badge badge-france">🇫🇷 法国</span>
+            </span>
+          </h3>
+          <div class="hotel-info">🏨 Maison Armance - Esprit de France</div>
+          <ul>
+            <li>🎨 奥赛博物馆 Musée d'Orsay</li>
+            <li>⛪ 圣礼拜堂 La Sainte-Chapelle — 彩窗绝美</li>
+            <li>🏰 凡尔赛宫 Château de Versailles</li>
+            <li>🗼 埃菲尔铁塔（夜景补打卡）</li>
+            <li>🛍️ 香榭丽舍大街（购物扫尾）</li>
+            <li>🌳 杜乐丽花园（散步收尾）</li>
+          </ul>
+          <div class="travel-tip tip-red">
+            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐ 很赶</span></div>
+            <ul class="tip-list">
+              <li>凡尔赛宫需留半天，建议早上去</li>
+              <li>奥赛和圣礼拜堂在市区可同路线走</li>
+              <li>圣礼拜堂的彩色玻璃窗是巴黎最美之一</li>
+              <li>最后一晚在巴黎，可安排购物和夜景</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 12 -->
+        <div class="day-block" data-day="12" onclick="flyTo(48.8566,2.3522,11)">
+          <h3>
+            <span class="day-title-text" style="color:var(--c-d12)">📍 D12 · 巴黎→重庆</span>
+            <span class="day-badges">
+              <span class="day-tag" style="background:var(--c-d12)">10/12 周六</span>
+              <span class="country-badge badge-transit">✈️ 回程</span>
+            </span>
+          </h3>
+          <div class="transport-info">✈️ 巴黎→重庆 | 11:55–04:35+1（次日到达）</div>
+          <div class="travel-tip tip-green">
+            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐ 轻松</span></div>
+            <ul class="tip-list">
+              <li>上午可以补购纪念品、在酒店附近散步</li>
+              <li>提前2.5h到机场，巴黎机场退税排队较长</li>
+              <li>记得办理退税（Tax Refund）</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 13 -->
+        <div class="day-block" data-day="13" onclick="flyTo(23.1291,113.2644,11)">
+          <h3>
+            <span class="day-title-text" style="color:var(--c-d13)">📍 D13 · 重庆→广州</span>
+            <span class="day-badges">
+              <span class="day-tag" style="background:var(--c-d13)">10/13 周日</span>
+              <span class="country-badge badge-china">🇨🇳 回家</span>
+            </span>
+          </h3>
+          <div class="transport-info">✈️ 重庆→广州 | 11:40–14:00</div>
+          <div class="travel-tip tip-green">
+            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐ 轻松</span></div>
+            <ul class="tip-list">
+              <li>经停重庆转机回广州</li>
+              <li>倒时差，好好休息！</li>
+              <li>整理照片、写游记的好时机 📸</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 底部备注 -->
+        <div class="note">
+          <strong>💰 费用参考：</strong> 多数景点需提前网上预约可免排队。罗马斗兽场套票16€含三个景点；梵蒂冈博物馆20€+5€预订费；乌菲兹美术馆20€；凡尔赛宫建议提前订票。贡多拉可拼船分摊。<br><br>
+          <strong>📋 实用提示：</strong>
+          <ul style="margin:4px 0 0;padding-left:1.2em;">
+            <li>意大利餐厅类型：Ristorante（正式）> Trattoria（家常）> Osteria（酒吧+小菜，最实惠）</li>
+            <li>圣马可教堂禁止短裤/无袖/大包入内</li>
+            <li>西班牙广场、罗马地铁注意防扒手</li>
+            <li>瑞士可用小程序买交通票</li>
+            <li>巴黎机场退税排队长，提前预留时间</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 地图 -->
+      <div id="map"></div>
+    </div>
+
+    <!-- 移动端标签栏 -->
+    <div id="tab-bar">
+      <div class="tabs">
+        <div class="tab active" onclick="switchView('details')">
+          <span class="icon">📋</span>行程
+        </div>
+        <div class="tab" onclick="switchView('map')">
+          <span class="icon">🗺️</span>地图
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    // ===== 地图初始化 =====
+    const map = L.map('map', { zoomControl: true }).setView([46.0, 10.0], 5);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap &copy; CARTO',
+      maxZoom: 19,
+      subdomains: 'abcd'
+    }).addTo(map);
+
+    // ===== 路线点 =====
+    const route = [
+      { name: "罗马", lat: 41.9028, lng: 12.4964, day: 1, color: "#dc2626" },
+      { name: "梵蒂冈", lat: 41.9029, lng: 12.4534, day: 2, color: "#7c3aed" },
+      { name: "罗马(D3)", lat: 41.8902, lng: 12.4922, day: 3, color: "#2563eb" },
+      { name: "佛罗伦萨", lat: 43.7696, lng: 11.2558, day: 4, color: "#059669" },
+      { name: "佛罗伦萨(D5)", lat: 43.7730, lng: 11.2560, day: 5, color: "#d97706" },
+      { name: "威尼斯", lat: 45.4408, lng: 12.3155, day: 6, color: "#0891b2" },
+      { name: "格林德瓦", lat: 46.6242, lng: 8.0413, day: 7, color: "#e11d48" },
+      { name: "格林德瓦(D8)", lat: 46.6260, lng: 8.0430, day: 8, color: "#4f46e5" },
+      { name: "巴黎", lat: 48.8566, lng: 2.3522, day: 9, color: "#0d9488" },
+      { name: "巴黎(D10)", lat: 48.8580, lng: 2.3500, day: 10, color: "#b45309" },
+      { name: "凡尔赛+巴黎", lat: 48.8049, lng: 2.1204, day: 11, color: "#7c3aed" },
+      { name: "巴黎(D12)", lat: 48.8566, lng: 2.3522, day: 12, color: "#64748b" }
+    ];
+
+    // ===== 城市间路线 =====
+    const cityRoute = [
+      [41.9028, 12.4964],   // 罗马
+      [43.7696, 11.2558],   // 佛罗伦萨
+      [45.4408, 12.3155],   // 威尼斯
+      [46.6242, 8.0413],    // 格林德瓦
+      [48.8566, 2.3522]     // 巴黎
+    ];
+
+    L.polyline(cityRoute, {
+      color: '#0d9488',
+      weight: 3,
+      opacity: 0.6,
+      dashArray: '8, 6'
+    }).addTo(map);
+
+    // ===== 标记点 =====
+    const mainCities = [
+      { name: "罗马", lat: 41.9028, lng: 12.4964, emoji: "🏛️", color: "#dc2626" },
+      { name: "梵蒂冈", lat: 41.9029, lng: 12.4534, emoji: "⛪", color: "#7c3aed" },
+      { name: "佛罗伦萨", lat: 43.7696, lng: 11.2558, emoji: "🎨", color: "#059669" },
+      { name: "威尼斯", lat: 45.4408, lng: 12.3155, emoji: "🚣", color: "#0891b2" },
+      { name: "格林德瓦", lat: 46.6242, lng: 8.0413, emoji: "🏔️", color: "#e11d48" },
+      { name: "巴黎", lat: 48.8566, lng: 2.3522, emoji: "🗼", color: "#4f46e5" }
+    ];
+
+    mainCities.forEach(c => {
+      L.marker([c.lat, c.lng], {
+        icon: L.divIcon({
+          className: '',
+          html: `<div style="background:${c.color};color:#fff;padding:3px 8px;border-radius:12px;font-size:12px;font-weight:700;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.3);display:flex;align-items:center;gap:3px;">${c.emoji} ${c.name}</div>`,
+          iconSize: null,
+          iconAnchor: [40, 15]
+        })
+      }).addTo(map);
+    });
+
+    // ===== 景点标记 =====
+    const pois = [
+      // D1 罗马
+      { name: "特莱维喷泉", lat: 41.9009, lng: 12.4833, day: 1, emoji: "🏛️" },
+      { name: "万神殿", lat: 41.8986, lng: 12.4769, day: 1, emoji: "🏛️" },
+      { name: "圣依纳爵堂", lat: 41.8990, lng: 12.4799, day: 1, emoji: "⛪" },
+      { name: "纳沃纳广场", lat: 41.8992, lng: 12.4731, day: 1, emoji: "🏛️" },
+      { name: "人民广场", lat: 41.9107, lng: 12.4765, day: 1, emoji: "🏛️" },
+      { name: "西班牙广场", lat: 41.9060, lng: 12.4822, day: 1, emoji: "🏛️" },
+      // D2 梵蒂冈
+      { name: "梵蒂冈博物馆", lat: 41.9065, lng: 12.4536, day: 2, emoji: "🏛️" },
+      { name: "西斯廷礼拜堂", lat: 41.9030, lng: 12.4545, day: 2, emoji: "🎨" },
+      { name: "圣彼得大教堂", lat: 41.9022, lng: 12.4539, day: 2, emoji: "⛪" },
+      { name: "圣彼得广场", lat: 41.9022, lng: 12.4567, day: 2, emoji: "🏛️" },
+      { name: "圣天使城堡", lat: 41.9031, lng: 12.4663, day: 2, emoji: "🏰" },
+      // D3 罗马
+      { name: "圣伯多禄锁链堂", lat: 41.8940, lng: 12.4933, day: 3, emoji: "⛪" },
+      { name: "罗马斗兽场", lat: 41.8902, lng: 12.4922, day: 3, emoji: "🏟️" },
+      { name: "君士坦丁凯旋门", lat: 41.8898, lng: 12.4905, day: 3, emoji: "🏛️" },
+      { name: "帕拉蒂尼山", lat: 41.8890, lng: 12.4875, day: 3, emoji: "⛰️" },
+      { name: "古罗马广场", lat: 41.8925, lng: 12.4853, day: 3, emoji: "🏛️" },
+      { name: "真理之口", lat: 41.8881, lng: 12.4815, day: 3, emoji: "👄" },
+      { name: "威尼斯广场", lat: 41.8958, lng: 12.4823, day: 3, emoji: "🏛️" },
+      { name: "博尔盖塞美术馆", lat: 41.9142, lng: 12.4921, day: 3, emoji: "🎨" },
+      // D4 佛罗伦萨
+      { name: "美第奇宫", lat: 43.7753, lng: 11.2542, day: 4, emoji: "🏛️" },
+      { name: "学院美术馆(大卫像)", lat: 43.7769, lng: 11.2586, day: 4, emoji: "🎨" },
+      { name: "佛罗伦萨旧宫", lat: 43.7694, lng: 11.2563, day: 4, emoji: "🏰" },
+      { name: "市政广场", lat: 43.7696, lng: 11.2558, day: 4, emoji: "🏛️" },
+      { name: "维琪奥桥", lat: 43.7680, lng: 11.2531, day: 4, emoji: "🌉" },
+      { name: "皮蒂宫", lat: 43.7653, lng: 11.2500, day: 4, emoji: "🏰" },
+      // D5 佛罗伦萨
+      { name: "乌菲兹美术馆", lat: 43.7677, lng: 11.2553, day: 5, emoji: "🎨" },
+      { name: "圣母百花大教堂", lat: 43.7731, lng: 11.2560, day: 5, emoji: "⛪" },
+      { name: "乔托钟楼", lat: 43.7726, lng: 11.2555, day: 5, emoji: "🔔" },
+      { name: "圣十字大教堂", lat: 43.7685, lng: 11.2625, day: 5, emoji: "⛪" },
+      { name: "米开朗琪罗广场", lat: 43.7629, lng: 11.2650, day: 5, emoji: "🌅" },
+      // D6 威尼斯
+      { name: "里亚托桥", lat: 45.4380, lng: 12.3359, day: 6, emoji: "🌉" },
+      { name: "沉船书店", lat: 45.4344, lng: 12.3420, day: 6, emoji: "📚" },
+      { name: "圣马可大教堂", lat: 45.4345, lng: 12.3396, day: 6, emoji: "⛪" },
+      { name: "圣马可广场", lat: 45.4341, lng: 12.3388, day: 6, emoji: "🏛️" },
+      { name: "总督府", lat: 45.4337, lng: 12.3405, day: 6, emoji: "🏰" },
+      { name: "叹息桥", lat: 45.4340, lng: 12.3410, day: 6, emoji: "🌉" },
+      { name: "学院桥", lat: 45.4312, lng: 12.3287, day: 6, emoji: "🌉" },
+      // D8 格林德瓦
+      { name: "First缆车站", lat: 46.6592, lng: 8.0568, day: 8, emoji: "🏔️" },
+      { name: "梦幻山坡", lat: 46.6195, lng: 8.0355, day: 8, emoji: "🌄" },
+      // D9 巴黎
+      { name: "协和广场", lat: 48.8656, lng: 2.3212, day: 9, emoji: "🏛️" },
+      { name: "杜乐丽花园", lat: 48.8634, lng: 2.3275, day: 9, emoji: "🌳" },
+      // D10 巴黎
+      { name: "卢浮宫", lat: 48.8606, lng: 2.3376, day: 10, emoji: "🎨" },
+      { name: "巴黎歌剧院", lat: 48.8720, lng: 2.3316, day: 10, emoji: "🎭" },
+      { name: "凯旋门", lat: 48.8738, lng: 2.2950, day: 10, emoji: "🏛️" },
+      { name: "埃菲尔铁塔", lat: 48.8584, lng: 2.2945, day: 10, emoji: "🗼" },
+      { name: "荣军院", lat: 48.8567, lng: 2.3125, day: 10, emoji: "🏛️" },
+      { name: "卢森堡公园", lat: 48.8462, lng: 2.3372, day: 10, emoji: "🌳" },
+      { name: "先贤祠", lat: 48.8462, lng: 2.3464, day: 10, emoji: "🏛️" },
+      { name: "巴黎圣母院", lat: 48.8530, lng: 2.3499, day: 10, emoji: "⛪" },
+      { name: "蓬皮杜中心", lat: 48.8607, lng: 2.3522, day: 10, emoji: "🎨" },
+      // D11 凡尔赛+巴黎
+      { name: "奥赛博物馆", lat: 48.8600, lng: 2.3266, day: 11, emoji: "🎨" },
+      { name: "圣礼拜堂", lat: 48.8554, lng: 2.3451, day: 11, emoji: "⛪" },
+      { name: "凡尔赛宫", lat: 48.8049, lng: 2.1204, day: 11, emoji: "🏰" }
+    ];
+
+    // 按天着色
+    const dayColors = {
+      1:'#dc2626',2:'#7c3aed',3:'#2563eb',4:'#059669',5:'#d97706',
+      6:'#0891b2',7:'#e11d48',8:'#4f46e5',9:'#0d9488',10:'#b45309',
+      11:'#7c3aed',12:'#64748b',13:'#64748b'
+    };
+
+    const poiLayer = L.layerGroup().addTo(map);
+    pois.forEach(p => {
+      const c = dayColors[p.day] || '#666';
+      L.circleMarker([p.lat, p.lng], {
+        radius: 6, fillColor: c, color: '#fff', weight: 1.5,
+        fillOpacity: 0.85
+      }).bindTooltip(`${p.emoji} ${p.name}`, {
+        direction: 'top', offset: [0, -8],
+        className: 'poi-tooltip'
+      }).addTo(poiLayer);
+    });
+
+    // 缩放级别 < 8 时隐藏景点标记，避免大比例尺下太密
+    map.on('zoomend', function() {
+      if (map.getZoom() < 8) {
+        map.removeLayer(poiLayer);
+      } else if (!map.hasLayer(poiLayer)) {
+        map.addLayer(poiLayer);
+      }
+    });
+
+    // 延迟触发 invalidateSize，确保 flex 容器布局完成后地图瓦片正确加载
+    setTimeout(() => { map.invalidateSize(); }, 300);
+
+    // ===== 飞到指定位置 =====
+    function flyTo(lat, lng, zoom) {
+      map.flyTo([lat, lng], zoom || 13, { duration: 1.2 });
+    }
+
+    // ===== 移动端切换 =====
+    function switchView(view) {
+      const layout = document.getElementById('layout');
+      layout.className = view === 'map' ? 'view-map' : 'view-details';
+      document.querySelectorAll('#tab-bar .tab').forEach(t => t.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      if (view === 'map') {
+        setTimeout(() => map.invalidateSize(), 100);
+      }
+    }
+
+    // ===== 自适应缩放 =====
+    const bounds = L.latLngBounds(cityRoute.map(c => [c[0], c[1]]));
+    map.fitBounds(bounds.pad(0.1));
+  </script>
+</body>
+</html>
