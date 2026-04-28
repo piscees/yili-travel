@@ -46,15 +46,16 @@
 
     /* ===== 侧栏 ===== */
     #details {
-      width: min(400px, 42vw);
-      min-width: 260px;
+      width: min(420px, 44vw);
+      min-width: 300px;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       background: var(--sidebar-bg);
       border-right: 1px solid #e5f5f0;
       flex-shrink: 0;
       padding: 14px 14px 18px;
-      font-size: 12px;
-      line-height: 1.6;
+      font-size: 12.5px;
+      line-height: 1.65;
       color: #1e293b;
     }
     #details::-webkit-scrollbar { width: 5px; }
@@ -62,7 +63,7 @@
     #details::-webkit-scrollbar-track { background: transparent; }
 
     #details h2 {
-      font-size: 0.88rem;
+      font-size: 0.92rem;
       color: var(--accent);
       font-weight: 700;
       margin-bottom: 10px;
@@ -73,11 +74,12 @@
       gap: 6px;
     }
 
+    /* ===== Day 卡片 ===== */
     .day-block {
       margin-bottom: 10px;
-      padding: 12px 12px 10px;
+      padding: 12px;
       background: #fff;
-      border-radius: 10px;
+      border-radius: 12px;
       border: 1px solid #ecf5f2;
       box-shadow: var(--card-shadow);
       transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -85,50 +87,55 @@
     }
     .day-block:hover {
       transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(13,148,136,0.06);
+      box-shadow: 0 4px 16px rgba(13,148,136,0.08);
     }
     .day-block:active { transform: scale(0.985); }
-    .day-block h3 {
-      margin: 0 0 6px;
-      font-size: 0.84rem;
-      font-weight: 700;
+
+    /* --- 卡片头部：分两行 --- */
+    .day-header {
+      margin-bottom: 8px;
+    }
+    .day-row1 {
       display: flex;
       align-items: center;
-      gap: 5px;
-      flex-wrap: wrap;
-      line-height: 1.6;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 4px;
     }
-    .day-title-text {
-      flex-shrink: 1;
-      min-width: 0;
+    .day-title {
+      font-size: 0.88rem;
+      font-weight: 700;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+      flex-shrink: 1;
     }
-    .day-tag {
+    .day-date {
       display: inline-block;
-      padding: 1px 7px;
+      padding: 2px 8px;
       border-radius: 4px;
       color: #fff;
       font-size: 10px;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.3px;
       flex-shrink: 0;
+      white-space: nowrap;
     }
-    .day-badges {
+    .day-row2 {
       display: flex;
       align-items: center;
       gap: 4px;
-      margin-left: auto;
-      flex-shrink: 0;
       flex-wrap: wrap;
-      justify-content: flex-end;
     }
     .country-badge {
       display: inline-block;
-      padding: 1px 6px;
+      padding: 1px 7px;
       border-radius: 4px;
-      font-size: 9px;
+      font-size: 9.5px;
       font-weight: 700;
       color: #fff;
+      white-space: nowrap;
     }
     .badge-italy { background: #059669; }
     .badge-vatican { background: #7c3aed; }
@@ -136,6 +143,21 @@
     .badge-france { background: #2563eb; }
     .badge-china { background: #d97706; }
     .badge-transit { background: #64748b; }
+    .intensity-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-size: 9.5px;
+      font-weight: 600;
+      background: #f1f5f9;
+      color: #64748b;
+      white-space: nowrap;
+    }
+    .intensity-badge.intense { background: #fef2f2; color: #dc2626; }
+    .intensity-badge.moderate { background: #fefce8; color: #b45309; }
+    .intensity-badge.easy { background: #ecfdf5; color: #059669; }
 
     .day-block p { margin: 0 0 6px; }
     .day-block ul { margin: 0; padding-left: 1.15em; }
@@ -143,7 +165,7 @@
 
     /* ===== 交通信息 ===== */
     .transport-info {
-      margin: 6px 0;
+      margin: 5px 0;
       padding: 6px 10px;
       background: linear-gradient(135deg, #eff6ff 0%, #e0f2fe 100%);
       border-radius: 6px;
@@ -151,11 +173,10 @@
       color: #1e40af;
       border: 1px solid #bfdbfe;
     }
-    .transport-info .icon { margin-right: 4px; }
 
     /* ===== 住宿信息 ===== */
     .hotel-info {
-      margin: 6px 0;
+      margin: 5px 0;
       padding: 6px 10px;
       background: linear-gradient(135deg, #fef3c7 0%, #fef9c3 100%);
       border-radius: 6px;
@@ -163,6 +184,13 @@
       color: #92400e;
       border: 1px solid #fde68a;
     }
+
+    /* ===== 景点列表 ===== */
+    .poi-list {
+      margin: 6px 0;
+      padding-left: 1.15em;
+    }
+    .poi-list li { margin-bottom: 3px; }
 
     /* ===== 行程贴士 ===== */
     .travel-tip {
@@ -182,7 +210,6 @@
       align-items: center;
       gap: 6px;
     }
-    .tips-stars { font-size: 10px; opacity: 0.85; }
     .tip-list { margin: 4px 0 0; padding-left: 1.1em; }
     .tip-list li { margin-bottom: 2px; }
 
@@ -231,13 +258,6 @@
       color: #b45309;
     }
 
-    @media (prefers-color-scheme: dark) {
-      .food-reco { background: linear-gradient(135deg, #3b2f1e, #451a03); color: #fed7aa; border-color: #92400e; }
-      .food-reco .shop-name { color: #fb923c; }
-      .food-reco .hidden-gem { background: rgba(0,0,0,0.25); }
-      .food-reco .hidden-gem .gem-label { color: #fbbf24; }
-    }
-
     .note {
       margin-top: 12px;
       padding: 10px 12px;
@@ -251,6 +271,18 @@
     /* ===== 地图 ===== */
     #map { flex: 1; min-width: 0; min-height: 0; height: 100%; }
     .poi-tooltip { font-size: 12px; font-weight: 600; padding: 4px 8px !important; border-radius: 8px !important; box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important; }
+
+    /* ===== 进度条 ===== */
+    .progress-bar {
+      margin: 0 0 10px;
+      padding: 8px 10px;
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #ecf5f2;
+    }
+    .progress-bar .label { font-size: 11px; color: #64748b; margin-bottom: 4px; }
+    .progress-bar .bar { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
+    .progress-bar .bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #6ee7b7, #67e8f9); transition: width 0.3s; }
 
     /* ===== 底部标签切换（移动端） ===== */
     #tab-bar {
@@ -280,18 +312,6 @@
     #tab-bar .tab.active { color: #14b8a6; font-weight: 600; }
     #tab-bar .tab .icon { font-size: 18px; }
 
-    /* ===== 进度条 ===== */
-    .progress-bar {
-      margin: 12px 0 8px;
-      padding: 8px 10px;
-      background: #fff;
-      border-radius: 8px;
-      border: 1px solid #ecf5f2;
-    }
-    .progress-bar .label { font-size: 11px; color: #64748b; margin-bottom: 4px; }
-    .progress-bar .bar { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
-    .progress-bar .bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, #6ee7b7, #67e8f9); transition: width 0.3s; }
-
     /* ===== 深色模式 ===== */
     @media (prefers-color-scheme: dark) {
       :root {
@@ -315,18 +335,56 @@
       #tab-bar { background: #0f2f2b; border-top-color: #1a3f3a; }
       #tab-bar .tab { color: #64748b; }
       #tab-bar .tab.active { color: #2dd4bf; }
+      .food-reco { background: linear-gradient(135deg, #3b2f1e, #451a03); color: #fed7aa; border-color: #92400e; }
+      .food-reco .shop-name { color: #fb923c; }
+      .food-reco .hidden-gem { background: rgba(0,0,0,0.25); }
+      .food-reco .hidden-gem .gem-label { color: #fbbf24; }
+      .intensity-badge { background: #1a3f3a; color: #94a3b8; }
+      .intensity-badge.intense { background: #3b1e1e; color: #fca5a5; }
+      .intensity-badge.moderate { background: #3b2f1e; color: #fbbf24; }
+      .intensity-badge.easy { background: #052e16; color: #6ee7b7; }
     }
 
     /* ===== 移动端 ===== */
     @media (max-width: 768px) {
+      #header { padding: 8px 12px; gap: 8px; }
+      #header h1 { font-size: 14px; }
+      #header .subtitle { font-size: 9.5px; }
+
       #main { flex-direction: column; }
-      #details { width: 100%; min-width: auto; border-right: none; border-bottom: 1px solid #ccfbf1; }
+      #details {
+        width: 100% !important;
+        min-width: auto !important;
+        border-right: none;
+        padding: 10px 10px 14px;
+        font-size: 12px;
+      }
       #map { min-height: 300px; }
       #tab-bar { display: block; }
-      .view-details #details { display: block; flex: 1; }
+      .view-details #details { display: block; flex: 1; overflow-y: auto; }
       .view-details #map { display: none; }
       .view-map #details { display: none; }
       .view-map #map { flex: 1; }
+
+      .day-block { padding: 10px; margin-bottom: 8px; border-radius: 10px; }
+      .day-title { font-size: 0.82rem; }
+      .day-date { font-size: 9px; padding: 1px 6px; }
+      .country-badge { font-size: 9px; padding: 1px 5px; }
+      .intensity-badge { font-size: 9px; padding: 1px 5px; }
+
+      .transport-info, .hotel-info { font-size: 10.5px; padding: 5px 8px; }
+      .travel-tip { font-size: 10.5px; padding: 6px 8px; }
+      .food-reco { font-size: 10.5px; padding: 6px 8px; }
+      .food-reco .food-header { font-size: 11px; }
+      .food-reco .hidden-gem { font-size: 10px; }
+    }
+
+    @media (max-width: 380px) {
+      #header h1 { font-size: 13px; }
+      #header .subtitle { font-size: 8.5px; }
+      #details { padding: 8px 8px 12px; font-size: 11.5px; }
+      .day-block { padding: 8px; }
+      .day-title { font-size: 0.78rem; }
     }
   </style>
 </head>
@@ -354,247 +412,324 @@
 
         <!-- DAY 1 -->
         <div class="day-block" data-day="1" onclick="flyTo(41.9028,12.4964,13)">
-          <h3>
-            <span class="day-title-text" style="color:var(--c-d1)">📍 D1 · 广州→罗马</span>
-            <span class="day-badges">
-              <span class="day-tag" style="background:var(--c-d1)">10/01 周二</span>
+          <div class="day-header">
+            <div class="day-row1">
+              <span class="day-title" style="color:var(--c-d1)">📍 D1 · 广州→罗马</span>
+              <span class="day-date" style="background:var(--c-d1)">10/01 周二</span>
+            </div>
+            <div class="day-row2">
               <span class="country-badge badge-italy">🇮🇹 意大利</span>
-            </span>
-          </h3>
+              <span class="intensity-badge moderate">⭐⭐⭐ 中等偏赶</span>
+            </div>
+          </div>
           <div class="transport-info">✈️ CZ661 广州白云T2 → 罗马FCO T3 | 00:30–07:15</div>
           <div class="hotel-info">🏨 蜂巢酒店 The Hive Hotel | Via Torino 6, 罗马</div>
-          <ul>
+          <ul class="poi-list">
             <li>🏛️ 特莱维喷泉（许愿池）Fontana di Trevi</li>
             <li>🏛️ 万神殿 Pantheon — 票价5€，中午可见丁达尔效应</li>
-            <li>⛪ 圣依纳爵堂 Sant'Ignazio Church — 免费</li>
+            <li>⛪ 圣依纳爵堂 Sant'Ignazio — 免费</li>
             <li>🏛️ 纳沃纳广场 Piazza Navona — 免费</li>
             <li>🏛️ 罗马人民广场 Piazza del Popolo</li>
-            <li>🏛️ 西班牙广场 Piazza di Spagna — ⚠️ 注意防盗</li>
+            <li>🏛️ 西班牙广场 — ⚠️ 注意防盗</li>
           </ul>
           <div class="food-reco">
             <div class="food-header">🍴 美食·推荐</div>
             <ul>
-              <li><span class="shop-name">Roscioli Salumeria</span> — 特莱维喷泉附近，顶级熟食店+餐厅，Carbonara（培根蛋面）和 Cacio e Pepe（芝士胡椒面）罗马双绝 <span class="food-tag">必吃</span></li>
-              <li><span class="shop-name">Sant'Eustachio Il Caffè</span> — 万神殿旁，罗马最有名的咖啡馆，gran caffè 浓缩加绵密奶泡，2.5€</li>
-              <li><span class="shop-name">Pizzeria La Montecarlo</span> — 纳沃纳广场附近，本地人排队的平价薄底披萨，8€吃饱</li>
-              <li>🍦 <span class="shop-name">Giolitti</span> — 1900年开业，意大利议会旁百年冰淇淋老店，开心果味绝佳</li>
+              <li><span class="shop-name">Roscioli Salumeria</span> — 顶级熟食店，Carbonara 和 Cacio e Pepe 罗马双绝 <span class="food-tag">必吃</span></li>
+              <li><span class="shop-name">Sant'Eustachio Il Caffè</span> — 万神殿旁百年咖啡馆，gran caffè 2.5€</li>
+              <li><span class="shop-name">Pizzeria La Montecarlo</span> — 纳沃纳附近平价薄底披萨 8€</li>
+              <li>🍦 <span class="shop-name">Giolitti</span> — 1900年百年冰淇淋老店，开心果味绝佳</li>
             </ul>
             <div class="hidden-gem">
-              <span class="gem-label">💎 隐藏推荐：</span> 从纳沃纳广场往西走5分钟到 <b>Trastevere 区</b>（特拉斯提弗列），这是罗马最有生活气息的街区，石板路+爬满常春藤的小巷，傍晚 Piazza di Santa Maria 广场坐满喝酒的本地人。推荐 <b>Da Enzo al 29</b>（常排队但值得）吃正宗 Carciofi alla Giudia（炸犹太朝鲜蓟）。
+              <span class="gem-label">💎 隐藏推荐：</span> 纳沃纳广场往西5分钟到 <b>Trastevere 区</b>，石板路+常春藤小巷，推荐 <b>Da Enzo al 29</b> 吃正宗炸犹太朝鲜蓟。
             </div>
           </div>
           <div class="travel-tip tip-yellow">
-            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 中等偏赶</span></div>
+            <div class="tips-header">💡 行程贴士</div>
             <ul class="tip-list">
               <li>红眼航班到达，先放行李再出发，注意调整时差</li>
-              <li>万神殿中午去可看丁达尔效应，圣伊纳爵免费</li>
+              <li>万神殿中午去可看丁达尔效应</li>
               <li>西班牙广场扒手多，注意财物安全</li>
-              <li>早点回去休息，第二天六点半要起</li>
+              <li>早点休息，第二天六点半要起</li>
             </ul>
           </div>
         </div>
 
         <!-- DAY 2 -->
         <div class="day-block" data-day="2" onclick="flyTo(41.9029,12.4534,14)">
-          <h3>
-            <span class="day-title-text" style="color:var(--c-d2)">📍 D2 · 梵蒂冈</span>
-            <span class="day-badges">
-              <span class="day-tag" style="background:var(--c-d2)">10/02 周三</span>
+          <div class="day-header">
+            <div class="day-row1">
+              <span class="day-title" style="color:var(--c-d2)">📍 D2 · 梵蒂冈</span>
+              <span class="day-date" style="background:var(--c-d2)">10/02 周三</span>
+            </div>
+            <div class="day-row2">
               <span class="country-badge badge-vatican">🇻🇦 梵蒂冈</span>
-            </span>
-          </h3>
+              <span class="intensity-badge intense">⭐⭐⭐⭐ 很赶</span>
+            </div>
+          </div>
           <div class="hotel-info">🏨 蜂巢酒店 The Hive Hotel | Via Torino 6, 罗马</div>
-          <ul>
-            <li>🏛️ 梵蒂冈博物馆 Vatican Museum — 20€，已买带早餐票</li>
-            <li>🎨 西斯廷礼拜堂 Sistine Chapel — 含在博物馆票内</li>
+          <ul class="poi-list">
+            <li>🏛️ 梵蒂冈博物馆 — 20€，已买带早餐票</li>
+            <li>🎨 西斯廷礼拜堂 — 含在博物馆票内</li>
             <li>📚 梵蒂冈使徒图书馆</li>
-            <li>⛪ 圣彼得大教堂 — 免费入场，登穹顶8€步行/10€电梯</li>
-            <li>🏛️ 圣彼得广场 Piazza San Pietro</li>
-            <li>🏰 圣天使城堡 Castel Sant'Angelo — 14€</li>
+            <li>⛪ 圣彼得大教堂 — 免费，登穹顶8€/10€</li>
+            <li>🏛️ 圣彼得广场</li>
+            <li>🏰 圣天使城堡 — 14€</li>
           </ul>
           <div class="food-reco">
             <div class="food-header">🍴 美食·推荐</div>
             <ul>
-              <li><span class="shop-name">Pizzarium Bonci</span> — 梵蒂冈城墙外5分钟，罗马最佳方形切片披萨（Pizza al Taglio），按重量计价，每片2-4€ <span class="food-tag">必吃</span></li>
-              <li><span class="shop-name">Il Sorpasso</span> — 梵蒂冈附近网红Bistrot，午餐套餐性价比高，Supplì（炸饭团）超好吃</li>
-              <li>🥐 <span class="shop-name">Sciascia Caffè</span> — 1919年老咖啡馆，招牌巧克力杯咖啡（把咖啡倒进巧克力涂层杯里喝）</li>
+              <li><span class="shop-name">Pizzarium Bonci</span> — 罗马最佳方形切片披萨，按重量计价 2-4€/片 <span class="food-tag">必吃</span></li>
+              <li><span class="shop-name">Il Sorpasso</span> — 网红Bistrot，Supplì（炸饭团）超好吃</li>
+              <li>🥐 <span class="shop-name">Sciascia Caffè</span> — 1919年老店，巧克力杯咖啡</li>
             </ul>
             <div class="hidden-gem">
-              <span class="gem-label">💎 隐藏推荐：</span> 梵蒂冈博物馆内部有个 <b>松果庭院 Cortile della Pigna</b>，很多人路过没注意——巨大的青铜松果雕塑和阿尔纳尔多·波莫多罗的「球中球」雕塑非常值得驻足。从圣彼得大教堂穹顶下来后，沿 Via della Conciliazione 大道回望，可以拍到教堂+方尖碑+柱廊的完美对称构图。
+              <span class="gem-label">💎 隐藏推荐：</span> 博物馆内 <b>松果庭院</b> 的「球中球」雕塑值得驻足。穹顶下来后沿 Via della Conciliazione 回望可拍到完美对称构图。
             </div>
           </div>
           <div class="travel-tip tip-red">
-            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐ 很赶</span></div>
+            <div class="tips-header">💡 行程贴士</div>
+            <ul class="tip-list">
+              <li>提前网上订票，6:30到梵蒂冈博物馆排队</li>
+              <li>登穹顶体力消耗大，带够水</li>
+              <li>圣天使城堡日落很美，傍晚去最佳</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 3 -->
         <div class="day-block" data-day="3" onclick="flyTo(41.8902,12.4922,14)">
-          <h3>
-            <span class="day-title-text" style="color:var(--c-d3)">📍 D3 · 罗马</span>
-            <span class="day-badges">
-              <span class="day-tag" style="background:var(--c-d3)">10/03 周四</span>
+          <div class="day-header">
+            <div class="day-row1">
+              <span class="day-title" style="color:var(--c-d3)">📍 D3 · 罗马</span>
+              <span class="day-date" style="background:var(--c-d3)">10/03 周四</span>
+            </div>
+            <div class="day-row2">
               <span class="country-badge badge-italy">🇮🇹 意大利</span>
-            </span>
-          </h3>
+              <span class="intensity-badge intense">⭐⭐⭐⭐⭐ 最赶</span>
+            </div>
+          </div>
           <div class="hotel-info">🏨 蜂巢酒店 The Hive Hotel | Via Torino 6, 罗马</div>
-          <ul>
+          <ul class="poi-list">
             <li>⛪ 圣伯多禄锁链堂 — 免费，有摩西像</li>
             <li>🏟️ 罗马斗兽场 Colosseo — 套票16€</li>
             <li>🏛️ 君士坦丁凯旋门 — 免费</li>
-            <li>⛰️ 帕拉蒂尼山 Palatine Hill — 含在斗兽场套票</li>
-            <li>🏛️ 古罗马广场 Foro Romano — 含在斗兽场套票</li>
-            <li>👄 真理之口 Bocca della Verità — 免费</li>
-            <li>🏛️ 威尼斯广场 Piazza Venezia</li>
-            <li>🎨 博尔盖塞美术馆 Borghese Gallery — 最后场次</li>
+            <li>⛰️ 帕拉蒂尼山 — 含在套票</li>
+            <li>🏛️ 古罗马广场 — 含在套票</li>
+            <li>👄 真理之口 — 免费</li>
+            <li>🏛️ 威尼斯广场</li>
+            <li>🎨 博尔盖塞美术馆 — 最后场次</li>
           </ul>
           <div class="food-reco">
             <div class="food-header">🍴 美食·推荐</div>
             <ul>
-              <li><span class="shop-name">Trattoria Luzzi</span> — 斗兽场正对面，本地老餐馆，Amatriciana（番茄培根面）和烤羊排超香，人均12-15€ <span class="food-tag">性价比</span></li>
-              <li><span class="shop-name">Gelateria La Romana</span> — 连锁但品质在线，招牌 Pistachio 开心果味和 Crema Romana，大份3.5€</li>
-              <li>🥤 <span class="shop-name">Bar del Cappuccino</span> — 离博尔盖塞美术馆很近，当地人的早餐首选，Cornetto（意式牛角包）+ 卡布奇诺 3€</li>
+              <li><span class="shop-name">Trattoria Luzzi</span> — 斗兽场正对面，Amatriciana 和烤羊排，人均12-15€ <span class="food-tag">性价比</span></li>
+              <li><span class="shop-name">Gelateria La Romana</span> — Pistachio 开心果味，大份3.5€</li>
+              <li>🥤 <span class="shop-name">Bar del Cappuccino</span> — 博尔盖塞附近，Cornetto+卡布奇诺 3€</li>
             </ul>
             <div class="hidden-gem">
-              <span class="gem-label">💎 隐藏推荐：</span> 斗兽场旁有条小路通往 <b>Colle Oppio 公园</b>，从树荫间可以拍到斗兽场的绝美角度，游客很少。真理之口排队时间可能很长，其实旁边的 <b>科斯梅丁圣母教堂</b> 本身更值得看（中世纪壁画保存完好）。傍晚到 <b>橘园花园 Giardino degli Aranci</b>（阿文提诺山上）看日落，免费且浪漫。旁边还有个 <b>马耳他骑士团锁孔</b>，透过钥匙孔能看到完美框住的圣彼得穹顶！
+              <span class="gem-label">💎 隐藏推荐：</span> 斗兽场旁 <b>Colle Oppio 公园</b> 可拍绝美角度。傍晚到 <b>橘园花园</b> 看日落，旁边 <b>马耳他骑士团锁孔</b> 透过钥匙孔能看到圣彼得穹顶！
             </div>
           </div>
           <div class="travel-tip tip-red">
-            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐⭐ 最赶</span></div>
+            <div class="tips-header">💡 行程贴士</div>
+            <ul class="tip-list">
+              <li>斗兽场提前网上订票，到场直接进入</li>
+              <li>博尔盖塞美术馆必须预约，限时2小时</li>
+              <li>这天景点最多，注意体力分配</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 4 -->
         <div class="day-block" data-day="4" onclick="flyTo(43.7696,11.2558,14)">
-          <h3>
-            <span class="day-title-text" style="color:var(--c-d4)">📍 D4 · 罗马→佛罗伦萨</span>
-            <span class="day-badges">
-              <span class="day-tag" style="background:var(--c-d4)">10/04 周五</span>
+          <div class="day-header">
+            <div class="day-row1">
+              <span class="day-title" style="color:var(--c-d4)">📍 D4 · 罗马→佛罗伦萨</span>
+              <span class="day-date" style="background:var(--c-d4)">10/04 周五</span>
+            </div>
+            <div class="day-row2">
               <span class="country-badge badge-italy">🇮🇹 意大利</span>
-            </span>
-          </h3>
+              <span class="intensity-badge moderate">⭐⭐⭐ 中等</span>
+            </div>
+          </div>
           <div class="transport-info">🚄 火车 9416 罗马中央车站 → 佛罗伦萨 | 10:35–12:11</div>
           <div class="hotel-info">🏨 B&B Lorenzo de' Medici | 佛罗伦萨</div>
-          <ul>
-            <li>🏛️ 美第奇宫 Palazzo Medici Riccardi — 10€</li>
-            <li>🎨 佛罗伦萨美术学院画廊 — 12€，大卫像！</li>
-            <li>🏰 佛罗伦萨旧宫 Palazzo Vecchio — 16.5€</li>
-            <li>🏛️ 市政广场 Piazza della Signoria</li>
+          <ul class="poi-list">
+            <li>🏛️ 美第奇宫 — 10€</li>
+            <li>🎨 学院美术馆（大卫像！）— 12€</li>
+            <li>🏰 佛罗伦萨旧宫 — 16.5€</li>
+            <li>🏛️ 市政广场</li>
             <li>🌉 维琪奥桥 Ponte Vecchio</li>
-            <li>🏰 皮蒂宫 Pitti Palace — 16€</li>
+            <li>🏰 皮蒂宫 — 16€</li>
           </ul>
           <div class="food-reco">
             <div class="food-header">🍴 美食·推荐</div>
             <ul>
-              <li><span class="shop-name">Mercato Centrale Firenze</span> — 中央市场2楼美食街，各种意大利本地美食一站搞定，牛肚包/松露帕尼尼/手工意面，人均10-15€ <span class="food-tag">必去</span></li>
-              <li><span class="shop-name">Trattoria Mario</span> — 中央市场旁，1953年开业家族小馆，拼桌制，T骨牛排 40€/kg（约够2人），午餐排队+不接受预约 <span class="food-tag">本地人最爱</span></li>
-              <li><span class="shop-name">Trattoria Marione</span> — 离旧宫很近，本地人常去的家常托斯卡纳菜，份量足价格实惠</li>
+              <li><span class="shop-name">Mercato Centrale Firenze</span> — 中央市场2楼美食街，牛肚包/松露帕尼尼/手工意面，人均10-15€ <span class="food-tag">必去</span></li>
+              <li><span class="shop-name">Trattoria Mario</span> — 1953年家族小馆，拼桌制，T骨牛排 40€/kg <span class="food-tag">本地人最爱</span></li>
+              <li><span class="shop-name">Trattoria Marione</span> — 离旧宫很近，家常托斯卡纳菜</li>
             </ul>
             <div class="hidden-gem">
-              <span class="gem-label">💎 隐藏推荐：</span> 维琪奥桥不只是看金店——桥中间有个半身像是 <b>本韦努托·切利尼</b>（文艺复兴金匠大师），很多人擦肩而过。从桥南端沿河往西走5分钟可到 <b>Santo Spirito 广场</b>，这是佛罗伦萨最有生活气息的地方，当地人傍晚聚在台阶上喝 Aperol Spritz，周围小店比游客区有趣得多。
+              <span class="gem-label">💎 隐藏推荐：</span> 维琪奥桥中间有 <b>切利尼半身像</b>（文艺复兴金匠大师）。桥南端走5分钟到 <b>Santo Spirito 广场</b>，当地人傍晚喝 Aperol Spritz 的地方。
             </div>
           </div>
           <div class="travel-tip tip-yellow">
-            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 中等</span></div>
+            <div class="tips-header">💡 行程贴士</div>
+            <ul class="tip-list">
+              <li>火车到佛罗伦萨后先放行李再出发</li>
+              <li>学院美术馆提前订票，大卫像值得慢慢看</li>
+              <li>维琪奥桥黄昏最美，安排在傍晚</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 5 -->
         <div class="day-block" data-day="5" onclick="flyTo(43.7696,11.2558,14)">
-          <h3>
-            <span class="day-title-text" style="color:var(--c-d5)">📍 D5 · 佛罗伦萨</span>
-            <span class="day-badges">
-              <span class="day-tag" style="background:var(--c-d5)">10/05 周六</span>
+          <div class="day-header">
+            <div class="day-row1">
+              <span class="day-title" style="color:var(--c-d5)">📍 D5 · 佛罗伦萨</span>
+              <span class="day-date" style="background:var(--c-d5)">10/05 周六</span>
+            </div>
+            <div class="day-row2">
               <span class="country-badge badge-italy">🇮🇹 意大利</span>
-            </span>
-          </h3>
-          <div class="hotel-info">🏨 B&B Lorenzo de' Medici | Via Sant'Antonino 34, 佛罗伦萨</div>
-          <ul>
-            <li>🍖 中央市场旁牛肚包 — 3.5€，必吃！</li>
-            <li>🎨 乌菲兹美术馆 Uffizi Gallery — 20€</li>
+              <span class="intensity-badge intense">⭐⭐⭐⭐ 很赶</span>
+            </div>
+          </div>
+          <div class="hotel-info">🏨 B&B Lorenzo de' Medici | 佛罗伦萨</div>
+          <ul class="poi-list">
+            <li>🍖 中央市场旁牛肚包 — 3.5€ 必吃！</li>
+            <li>🎨 乌菲兹美术馆 — 20€</li>
             <li>⛪ 圣母百花大教堂 — 教堂免费，联票18€</li>
-            <li>🔔 乔托钟楼 Giotto's Campanile — 414阶无电梯</li>
-            <li>🚪 天堂之门 Porta del Paradiso — 洗礼堂东门复制品</li>
+            <li>🔔 乔托钟楼 — 414阶无电梯</li>
+            <li>🚪 天堂之门（洗礼堂东门）</li>
             <li>⛪ 圣十字大教堂 — 8€</li>
-            <li>🌅 米开朗琪罗广场 — 俯瞰佛罗伦萨最佳点</li>
-            <li>⛪ 圣米尼亚托教堂 San Miniato al Monte — 免费</li>
+            <li>🌅 米开朗琪罗广场 — 俯瞰最佳点</li>
+            <li>⛪ 圣米尼亚托教堂 — 免费</li>
           </ul>
           <div class="food-reco">
             <div class="food-header">🍴 美食·推荐</div>
             <ul>
-              <li>🥩 <span class="shop-name">Trattoria dall'Oste</span> — 佛罗伦萨T骨牛排名店，多种牛肉产地可选（契安尼纳牛最正宗），1kg起切约45-55€ <span class="food-tag">必吃</span></li>
-              <li><span class="shop-name">Da Nerbone</span> — 中央市场内1872年老店，排长队的牛肚包（Lampredotto Panino）3.5€，加辣酱更过瘾</li>
-              <li><span class="shop-name">Vivoli</span> — 1930年冰淇淋老店，圣十字大教堂附近，Crema 和 Cioccolato 味经典</li>
-              <li>🍷 晚餐推荐去 <b>Enoteca Pitti Gola e Cantina</b>（皮蒂宫对面），小而精的酒吧+小食，托斯卡纳红酒配火腿奶酪拼盘绝配</li>
+              <li>🥩 <span class="shop-name">Trattoria dall'Oste</span> — T骨牛排名店，契安尼纳牛最正宗，1kg约45-55€ <span class="food-tag">必吃</span></li>
+              <li><span class="shop-name">Da Nerbone</span> — 中央市场内1872年老店，牛肚包3.5€</li>
+              <li><span class="shop-name">Vivoli</span> — 1930年冰淇淋老店，Crema 和 Cioccolato 经典</li>
+              <li>🍷 <b>Enoteca Pitti Gola e Cantina</b> — 皮蒂宫对面，托斯卡纳红酒配火腿拼盘</li>
             </ul>
             <div class="hidden-gem">
-              <span class="gem-label">💎 隐藏推荐：</span> 米开朗琪罗广场上面还有一个 <b>圣米尼亚托教堂 San Miniato al Monte</b>，比广场更高、人更少，黄昏时修道士的格里高利圣歌回荡在教堂里，是佛罗伦萨最动人的时刻之一。乌菲兹出来后沿河走到 <b>Lungarno（阿诺河沿岸步道）</b>，夕阳倒映在河面上非常出片。
+              <span class="gem-label">💎 隐藏推荐：</span> 米开朗琪罗广场上方 <b>圣米尼亚托教堂</b>，黄昏修道士的格里高利圣歌是佛罗伦萨最动人的时刻。乌菲兹出来沿 <b>Lungarno（阿诺河步道）</b> 看夕阳倒映。
             </div>
           </div>
           <div class="travel-tip tip-red">
-            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐ 很赶</span></div>
+            <div class="tips-header">💡 行程贴士</div>
+            <ul class="tip-list">
+              <li>乌菲兹提前网上订票，早上去人少</li>
+              <li>乔托钟楼414阶纯走路，注意体力</li>
+              <li>米开朗琪罗广场日落最美</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 6 -->
         <div class="day-block" data-day="6" onclick="flyTo(45.4408,12.3155,13)">
-          <h3>
-            <span class="day-title-text" style="color:var(--c-d6)">📍 D6 · 佛罗伦萨→威尼斯</span>
-            <span class="day-badges">
-              <span class="day-tag" style="background:var(--c-d6)">10/06 周日</span>
+          <div class="day-header">
+            <div class="day-row1">
+              <span class="day-title" style="color:var(--c-d6)">📍 D6 · 佛罗伦萨→威尼斯</span>
+              <span class="day-date" style="background:var(--c-d6)">10/06 周日</span>
+            </div>
+            <div class="day-row2">
               <span class="country-badge badge-italy">🇮🇹 意大利</span>
-            </span>
-          </h3>
+              <span class="intensity-badge intense">⭐⭐⭐⭐⭐ 最赶</span>
+            </div>
+          </div>
           <div class="transport-info">🚄 火车 8906 佛罗伦萨 → 威尼斯 Santa Lucia | 10:40–12:55</div>
           <div class="hotel-info">🏨 Hotel Gardena 伽丁纳酒店 | 威尼斯</div>
-          <ul>
-            <li>🌉 威尼斯里亚托桥 Ponte Rialto</li>
-            <li>📚 沉船书店 Libreria Acqua Alta — 09:00–20:00</li>
-            <li>⛪ 圣马可大教堂 — 免费，禁止短裤无袖，不可拍照</li>
-            <li>🏛️ 圣马可广场 Piazza San Marco — 免费</li>
+          <ul class="poi-list">
+            <li>🌉 里亚托桥 Ponte Rialto</li>
+            <li>📚 沉船书店 Libreria Acqua Alta</li>
+            <li>⛪ 圣马可大教堂 — 免费，禁短裤无袖</li>
+            <li>🏛️ 圣马可广场</li>
             <li>📚 圣马可国家图书馆 — 20€</li>
-            <li>🏰 总督府 Palazzo Ducale — 25€</li>
+            <li>🏰 总督府 — 25€</li>
             <li>⛪ 圣乔治马焦雷教堂 — 可登高</li>
-            <li>🌉 叹息桥 Ponte dei Sospiri — 免费</li>
-            <li>🚣 贡多拉游船 — 白天~80€/船，夜间~100€/船</li>
-            <li>🌉 学院桥 Ponte dell'Accademia</li>
+            <li>🌉 叹息桥</li>
+            <li>🚣 贡多拉 — 白天~80€/船</li>
+            <li>🌉 学院桥</li>
             <li>🎨 威尼斯美术学院画廊 — 15€</li>
             <li>🌅 大运河夕阳</li>
-            <li>⛪ 圣方济会荣耀圣母教堂 — 3€</li>
           </ul>
           <div class="food-reco">
             <div class="food-header">🍴 美食·推荐</div>
             <ul>
-              <li>🦑 <span class="shop-name">Alle Testiere</span> — 威尼斯最佳海鲜小馆（仅9张桌），必点墨鱼面 Spaghetti al Nero di Seppia，人均40-50€ <span class="food-tag">必吃</span></li>
-              <li><span class="shop-name">Cantina Do Spade</span> — 里亚托桥附近，1415年开业！Cicchetti（威尼斯版Tapas小食）种类最全，1-2€/个，配一杯 Spritz 绝配</li>
-              <li><span class="shop-name">Dal Moro's Fresh Pasta To Go</span> — 圣马可广场4分钟步行，现做意面外带，意面+酱6€，排队快、好吃便宜</li>
-              <li>🍦 <span class="shop-name">Suso Gelatoteca</span> — 圣马可附近手工冰淇淋，Pistachio + Salted Caramel 双球组合封神</li>
+              <li>🦑 <span class="shop-name">Alle Testiere</span> — 威尼斯最佳海鲜小馆，墨鱼面必点，人均40-50€ <span class="food-tag">必吃</span></li>
+              <li><span class="shop-name">Cantina Do Spade</span> — 1415年老店！Cicchetti 1-2€/个配 Spritz</li>
+              <li><span class="shop-name">Dal Moro's Fresh Pasta To Go</span> — 现做意面外带 6€</li>
+              <li>🍦 <span class="shop-name">Suso Gelatoteca</span> — Pistachio + Salted Caramel 双球封神</li>
             </ul>
             <div class="hidden-gem">
-              <span class="gem-label">💎 隐藏推荐：</span> <b>沉船书店 Libreria Acqua Alta</b> 不只是拍照——书店后面有个用旧书堆成的楼梯，爬上去可以看到运河。从圣马可广场坐水上巴士2号线到 <b>圣乔治马焦雷岛</b>，登钟楼8€能俯瞰整个威尼斯泻湖+圣马可广场全景，比圣马可钟楼人少太多。黄昏在 <b>扎特雷河滨（Fondamenta delle Zattere）</b>散步，面对朱代卡岛看夕阳，本地人遛狗喝酒的地方，完全没有游客区的喧嚣。
+              <span class="gem-label">💎 隐藏推荐：</span> <b>圣乔治马焦雷岛</b> 钟楼8€俯瞰全威尼斯，人少太多。黄昏在 <b>扎特雷河滨</b> 散步看朱代卡岛日落，本地人遛狗的地方。
             </div>
           </div>
           <div class="travel-tip tip-red">
-            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐⭐ 最赶</span></div>
+            <div class="tips-header">💡 行程贴士</div>
+            <ul class="tip-list">
+              <li>威尼斯没有车，全靠走路和水上巴士</li>
+              <li>圣马可教堂禁短裤/无袖/大包</li>
+              <li>贡多拉可拼船分摊费用</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 7 -->
         <div class="day-block" data-day="7" onclick="flyTo(46.6242,8.0413,12)">
-          <h3>
-            <span class="day-title-text" style="color:var(--c-d7)">📍 D7 · 威尼斯→格林德瓦</span>
-            <span class="day-badges">
-              <span class="day-tag" style="background:var(--c-d7)">10/07 周一</span>
+          <div class="day-header">
+            <div class="day-row1">
+              <span class="day-title" style="color:var(--c-d7)">📍 D7 · 威尼斯→格林德瓦</span>
+              <span class="day-date" style="background:var(--c-d7)">10/07 周一</span>
+            </div>
+            <div class="day-row2">
               <span class="country-badge badge-swiss">🇨🇭 瑞士</span>
-            </span>
-          </h3>
-          <div class="transport-info">✈️ Swiss LX1663 威尼斯Marco Polo → 苏黎世 | 14:55–16:05</div>
+              <span class="intensity-badge moderate">⭐⭐⭐ 中转日</span>
+            </div>
+          </div>
+          <div class="transport-info">✈️ Swiss LX1663 威尼斯 → 苏黎世 | 14:55–16:05</div>
           <div class="transport-info">🚄 IC81 苏黎世 → 因特拉肯东站 | 16:45–19:00</div>
           <div class="transport-info">🚄 因特拉肯东站 → 格林德瓦 | 19:34–20:10</div>
           <div class="hotel-info">🏨 Eiger Mountain & Soul Resort</div>
           <div class="food-reco">
             <div class="food-header">🍴 美食·推荐</div>
             <ul>
-              <li>🧀 到达格林德瓦后，超市买 <b>瑞士Raclette奶酪</b> 和 <b>Rivella（瑞士国民汽水）</b>尝尝鲜</li>
-              <li><span class="shop-name">Coop/Migros 超市</span> — 瑞士双大连锁超市，三明治+沙拉 8-12CHF，火车上解决晚餐的高性价比选择</li>
-              <li>💡 苏黎世转车如有时间，火车站大厅 <b>Sprüngli</b> 买盒 Luxemburgerli（迷你马卡龙），瑞士国宝级甜点</li>
+              <li>🧀 超市买 <b>Raclette奶酪</b> + <b>Rivella瑞士国民汽水</b> 尝鲜</li>
+              <li><span class="shop-name">Coop/Migros 超市</span> — 三明治+沙拉 8-12CHF</li>
+              <li>💡 苏黎世转车买 <b>Sprüngli</b> Luxemburgerli 迷你马卡龙</li>
             </ul>
             <div class="hidden-gem">
-              <span class="gem-label">💎 隐藏推荐：</span> 因特拉肯东站换乘等火车时，出站右转走3分钟到 <b>Höhematte 大草坪</b>，晴天能同时看到少女峰、僧侣峰、艾格峰三座雪山排成一排，绝佳打卡点。格林德瓦到达后如果天晴，酒店阳台就能看到 <b>艾格峰北壁</b> 的壮观日落金山。
+              <span class="gem-label">💎 隐藏推荐：</span> 因特拉肯东站出站右转3分钟到 <b>Höhematte 大草坪</b>，晴天可同时看少女峰、僧侣峰、艾格峰。
             </div>
           </div>
           <div class="travel-tip tip-yellow">
-            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 中转日</span></div>
+            <div class="tips-header">💡 行程贴士</div>
+            <ul class="tip-list">
+              <li>提前打印/下载登机牌，威尼斯机场不大</li>
+              <li>瑞士铁路可用 SBB app 买票</li>
+              <li>到达格林德瓦已晚，早点休息</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 8 -->
         <div class="day-block" data-day="8" onclick="flyTo(46.6242,8.0413,13)">
-          <h3>
-            <span class="day-title-text" style="color:var(--c-d8)">📍 D8 · 格林德瓦</span>
-            <span class="day-badges">
-              <span class="day-tag" style="background:var(--c-d8)">10/08 周二</span>
+          <div class="day-header">
+            <div class="day-row1">
+              <span class="day-title" style="color:var(--c-d8)">📍 D8 · 格林德瓦</span>
+              <span class="day-date" style="background:var(--c-d8)">10/08 周二</span>
+            </div>
+            <div class="day-row2">
               <span class="country-badge badge-swiss">🇨🇭 瑞士</span>
-            </span>
-          </h3>
+              <span class="intensity-badge easy">⭐⭐ 轻松</span>
+            </div>
+          </div>
           <div class="hotel-info">🏨 Eiger Mountain & Soul Resort</div>
-          <ul>
+          <ul class="poi-list">
             <li>📍 格林德瓦尔德游客中心</li>
             <li>🏔️ Grindelwald–First — 缆车+滑翔+徒步</li>
             <li>🏘️ 格林德瓦小镇漫步</li>
@@ -603,146 +738,201 @@
           <div class="food-reco">
             <div class="food-header">🍴 美食·推荐</div>
             <ul>
-              <li>🫕 <span class="shop-name">Hotel Kreuz & Post 餐厅</span> — 小镇中心，正宗瑞士奶酪火锅（Fondue）约25-30CHF/人，配面包块和小土豆 <span class="food-tag">必吃</span></li>
-              <li><span class="shop-name">Memory Restaurant</span> — First缆车站下方，窗景直面艾格峰北壁，Rösti（瑞士黄金土豆饼）配培根煎蛋 18CHF</li>
-              <li>🍫 <span class="shop-name">Coop 超市</span>买 <b>Cailler/Lindt 巧克力</b>，比国内便宜一半，瑞士本土 Frey 巧克力更小众更好吃</li>
-              <li>💡 First 山顶餐厅有 <b>Berghaus First</b>，在海拔2168m吃一碗瑞士大麦浓汤（Gerstensuppe），配阿尔卑斯全景</li>
+              <li>🫕 <span class="shop-name">Hotel Kreuz & Post 餐厅</span> — 奶酪火锅（Fondue）25-30CHF/人 <span class="food-tag">必吃</span></li>
+              <li><span class="shop-name">Memory Restaurant</span> — 窗景直面艾格峰，Rösti 土豆饼 18CHF</li>
+              <li>🍫 Coop买 <b>Cailler/Lindt 巧克力</b>，比国内便宜一半</li>
+              <li>💡 <b>Berghaus First</b> 山顶餐厅，海拔2168m吃大麦浓汤</li>
             </ul>
             <div class="hidden-gem">
-              <span class="gem-label">💎 隐藏推荐：</span> 梦幻山坡其实有两个角度——大多数人站在公路边拍，但走到 <b>山坡下方的小路</b>（往Grund方向），仰拍教堂+雪山背景更有纵深感。First 山顶的 <b>First Cliff Walk</b>（悬崖栈道）是免费的！走到尽头有个伸出悬崖的观景台，脚下就是悬崖和瀑布。晚上如果天气好，格林德瓦几乎没有光污染，在酒店阳台 <b>拍银河</b> 不需要任何交通。
+              <span class="gem-label">💎 隐藏推荐：</span> <b>First Cliff Walk</b>（悬崖栈道）免费！走到尽头有伸出悬崖的观景台。晚上酒店阳台几乎没有光污染，可以 <b>拍银河</b>。
             </div>
           </div>
           <div class="travel-tip tip-green">
-            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐ 轻松</span></div>
+            <div class="tips-header">💡 行程贴士</div>
+            <ul class="tip-list">
+              <li>First缆车往返约65CHF，值得体验</li>
+              <li>10月天气多变，带好防风外套</li>
+              <li>梦幻山坡去下方小路仰拍更有纵深感</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 9 -->
         <div class="day-block" data-day="9" onclick="flyTo(48.8566,2.3522,12)">
-          <h3>
-            <span class="day-title-text" style="color:var(--c-d9)">📍 D9 · 格林德瓦→巴黎</span>
-            <span class="day-badges">
-              <span class="day-tag" style="background:var(--c-d9)">10/09 周三</span>
+          <div class="day-header">
+            <div class="day-row1">
+              <span class="day-title" style="color:var(--c-d9)">📍 D9 · 格林德瓦→巴黎</span>
+              <span class="day-date" style="background:var(--c-d9)">10/09 周三</span>
+            </div>
+            <div class="day-row2">
               <span class="country-badge badge-france">🇫🇷 法国</span>
-            </span>
-          </h3>
+              <span class="intensity-badge moderate">⭐⭐⭐ 赶路日</span>
+            </div>
+          </div>
           <div class="transport-info">🚄 格林德瓦→因特拉肯 | 10:47–11:24</div>
           <div class="transport-info">🚄 因特拉肯→巴塞尔 | 12:00–14:06</div>
           <div class="transport-info">🚄 巴塞尔→巴黎 | 16:34–19:38</div>
           <div class="hotel-info">🏨 Maison Armance - Esprit de France</div>
-          <ul>
+          <ul class="poi-list">
             <li>🏛️ 协和广场 Place de la Concorde</li>
             <li>🌳 杜乐丽花园 Jardin des Tuileries</li>
           </ul>
           <div class="food-reco">
             <div class="food-header">🍴 美食·推荐</div>
             <ul>
-              <li>🥐 到达巴黎后直奔酒店附近找一家 <b>Boulangerie（面包房）</b>，买 Croissant（可颂）+ Pain au Chocolat（巧克力面包），法国的比瑞士/意大利好吃太多 <span class="food-tag">第一口法国</span></li>
-              <li><span class="shop-name">Angelina Paris</span> — 协和广场旁里沃利街，招牌非洲热巧克力（Chocolat Chaud l'Africain）浓稠如熔岩，8.5€ <span class="food-tag">必喝</span></li>
-              <li>💡 巴塞尔转车等候时，车站附近的 <b>Läckerli Huus</b> 可以买巴塞尔特产蜂蜜胡桃饼（Läckerli）</li>
+              <li>🥐 到达巴黎后直奔 <b>Boulangerie</b>，买 Croissant + Pain au Chocolat <span class="food-tag">第一口法国</span></li>
+              <li><span class="shop-name">Angelina Paris</span> — 协和广场旁，非洲热巧克力 8.5€ <span class="food-tag">必喝</span></li>
+              <li>💡 巴塞尔转车买 <b>Läckerli Huus</b> 蜂蜜胡桃饼</li>
             </ul>
             <div class="hidden-gem">
-              <span class="gem-label">💎 隐藏推荐：</span> 到巴黎虽已近晚8点，但10月的巴黎日落在7:30左右，<b>杜乐丽花园</b>夜间亮灯后有种独特的氛围——喷泉+远处卢浮宫金字塔的灯光倒影，比白天更有巴黎感。协和广场夜景的方尖碑+埃菲尔铁塔远景同框也很出片。
+              <span class="gem-label">💎 隐藏推荐：</span> <b>杜乐丽花园</b> 夜间亮灯后，喷泉+卢浮宫金字塔灯光倒影比白天更有巴黎感。
             </div>
           </div>
           <div class="travel-tip tip-yellow">
-            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐ 赶路日</span></div>
+            <div class="tips-header">💡 行程贴士</div>
+            <ul class="tip-list">
+              <li>赶路日三段火车，注意换乘时间</li>
+              <li>巴塞尔车站可买纪念品</li>
+              <li>到达巴黎已近8点，简单逛逛即可</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 10 -->
         <div class="day-block" data-day="10" onclick="flyTo(48.8566,2.3522,13)">
-          <h3>
-            <span class="day-title-text" style="color:var(--c-d10)">📍 D10 · 巴黎（精华日）</span>
-            <span class="day-badges">
-              <span class="day-tag" style="background:var(--c-d10)">10/10 周四</span>
+          <div class="day-header">
+            <div class="day-row1">
+              <span class="day-title" style="color:var(--c-d10)">📍 D10 · 巴黎（精华日）</span>
+              <span class="day-date" style="background:var(--c-d10)">10/10 周四</span>
+            </div>
+            <div class="day-row2">
               <span class="country-badge badge-france">🇫🇷 法国</span>
-            </span>
-          </h3>
+              <span class="intensity-badge intense">⭐⭐⭐⭐⭐ 最赶</span>
+            </div>
+          </div>
           <div class="hotel-info">🏨 Maison Armance - Esprit de France</div>
-          <ul>
-            <li>🌳 杜乐丽花园 Jardin des Tuileries</li>
+          <ul class="poi-list">
             <li>🎨 卢浮宫 Musée du Louvre</li>
             <li>🎭 巴黎歌剧院 Palais Garnier</li>
-            <li>🛍️ 香榭丽舍大街 Champs-Élysées</li>
+            <li>🛍️ 香榭丽舍大街</li>
             <li>🏛️ 凯旋门 Arc de Triomphe</li>
-            <li>🌳 特洛卡代罗花园</li>
-            <li>🗼 埃菲尔铁塔 Eiffel Tower</li>
-            <li>🌳 战神广场 Champ de Mars</li>
+            <li>🗼 埃菲尔铁塔</li>
             <li>🏛️ 荣军院 Les Invalides</li>
-            <li>🎨 罗丹博物馆 Musée Rodin</li>
-            <li>🌳 卢森堡公园 Jardin du Luxembourg</li>
-            <li>🏛️ 先贤祠 Panthéon</li>
-            <li>⛪ 巴黎圣母院 Notre-Dame</li>
-            <li>🎨 蓬皮杜中心 Centre Pompidou</li>
+            <li>🎨 罗丹博物馆</li>
+            <li>🌳 卢森堡公园</li>
+            <li>🏛️ 先贤祠</li>
+            <li>⛪ 巴黎圣母院</li>
+            <li>🎨 蓬皮杜中心</li>
           </ul>
           <div class="food-reco">
             <div class="food-header">🍴 美食·推荐</div>
             <ul>
-              <li>🥖 <span class="shop-name">Café de Flore</span> — 左岸双叟咖啡馆，萨特、波伏瓦常客，Croque Monsieur（法式火腿芝士三明治）14€ + 咖啡，吃的是氛围 <span class="food-tag">文青打卡</span></li>
-              <li><span class="shop-name">Breizh Café</span> — 玛黑区，巴黎最佳可丽饼（Galette），荞麦饼皮+火腿奶酪蛋 12€</li>
-              <li>🍰 <span class="shop-name">Pierre Hermé</span> — 法式甜点之神，马卡龙 Ispahan（荔枝玫瑰覆盆子）口味封神，2.5€/个</li>
-              <li><span class="shop-name">L'As du Fallafel</span> — 玛黑区犹太街，巴黎最佳法拉费三明治，7.5€，队伍长但值得</li>
+              <li>🥖 <span class="shop-name">Café de Flore</span> — 左岸双叟咖啡，Croque Monsieur 14€ <span class="food-tag">文青打卡</span></li>
+              <li><span class="shop-name">Breizh Café</span> — 玛黑区最佳可丽饼 12€</li>
+              <li>🍰 <span class="shop-name">Pierre Hermé</span> — Ispahan 马卡龙 2.5€/个</li>
+              <li><span class="shop-name">L'As du Fallafel</span> — 玛黑区最佳法拉费 7.5€</li>
             </ul>
             <div class="hidden-gem">
-              <span class="gem-label">💎 隐藏推荐：</span> 卢浮宫 <b>德农翼二楼</b>（蒙娜丽莎对面墙）的 <b>《加纳的婚宴》</b> 才是卢浮宫最大的画作，但99%的人只顾拍蒙娜丽莎背对着它。从凯旋门沿香街走回来时，拐进 <b>Avenue Montaigne</b>（蒙田大道），这里比香街安静，沿途是 Dior/Louis Vuitton 总部，建筑本身就是艺术品。埃菲尔铁塔最佳拍摄点不在正下方，而是 <b>特洛卡代罗广场</b>（对岸），或者 <b>Bir-Hakeim 桥</b>上（电影《盗梦空间》取景地）。
+              <span class="gem-label">💎 隐藏推荐：</span> 卢浮宫蒙娜丽莎对面墙的 <b>《加纳的婚宴》</b> 才是最大画作，99%的人背对着它。埃菲尔铁塔最佳拍摄点在 <b>Bir-Hakeim 桥</b>（盗梦空间取景地）。
             </div>
           </div>
           <div class="travel-tip tip-red">
-            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐⭐ 最赶</span></div>
+            <div class="tips-header">💡 行程贴士</div>
+            <ul class="tip-list">
+              <li>卢浮宫提前网上订票，至少留3小时</li>
+              <li>巴黎地铁注意防扒手</li>
+              <li>埃菲尔铁塔夜间整点闪灯5分钟</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 11 -->
         <div class="day-block" data-day="11" onclick="flyTo(48.8049,2.1204,12)">
-          <h3>
-            <span class="day-title-text" style="color:var(--c-d11)">📍 D11 · 巴黎（博物馆+凡尔赛）</span>
-            <span class="day-badges">
-              <span class="day-tag" style="background:var(--c-d11)">10/11 周五</span>
+          <div class="day-header">
+            <div class="day-row1">
+              <span class="day-title" style="color:var(--c-d11)">📍 D11 · 巴黎（博物馆+凡尔赛）</span>
+              <span class="day-date" style="background:var(--c-d11)">10/11 周五</span>
+            </div>
+            <div class="day-row2">
               <span class="country-badge badge-france">🇫🇷 法国</span>
-            </span>
-          </h3>
+              <span class="intensity-badge intense">⭐⭐⭐⭐ 很赶</span>
+            </div>
+          </div>
           <div class="hotel-info">🏨 Maison Armance - Esprit de France</div>
-          <ul>
+          <ul class="poi-list">
             <li>🎨 奥赛博物馆 Musée d'Orsay</li>
-            <li>⛪ 圣礼拜堂 La Sainte-Chapelle — 彩窗绝美</li>
-            <li>🏰 凡尔赛宫 Château de Versailles</li>
+            <li>⛪ 圣礼拜堂 — 彩窗绝美</li>
+            <li>🏰 凡尔赛宫</li>
             <li>🗼 埃菲尔铁塔（夜景补打卡）</li>
-            <li>🛍️ 香榭丽舍大街（购物扫尾）</li>
-            <li>🌳 杜乐丽花园（散步收尾）</li>
+            <li>🛍️ 香榭丽舍（购物扫尾）</li>
           </ul>
           <div class="food-reco">
             <div class="food-header">🍴 美食·推荐</div>
             <ul>
-              <li>🍽️ <span class="shop-name">Ore - Ducasse au Château de Versailles</span> — 凡尔赛宫内Alain Ducasse主理餐厅，午餐套餐38€，在宫殿里吃法餐这体验独一无二 <span class="food-tag">特别体验</span></li>
-              <li><span class="shop-name">Le Bouillon Chartier</span> — 巴黎最有名的平价法式食堂，1896年Art Nouveau内饰，牛排+薯条 12€，排队但值得 <span class="food-tag">性价比王</span></li>
-              <li>🍰 <span class="shop-name">Ladurée</span> — 香榭丽舍旗舰店，法式马卡龙发明者，买一盒做伴手礼（6个装约17€）</li>
-              <li>💡 最后一晚推荐去 <b>蒙马特高地</b> 吃晚餐 — <span class="shop-name">Le Consulat</span> 或 <span class="shop-name">La Maison Rose</span> 拍照+用餐，粉色小屋外景即使不吃也值得打卡</li>
+              <li>🍽️ <span class="shop-name">Ore - Ducasse</span> — 凡尔赛宫内 Ducasse 主理，午餐套餐38€ <span class="food-tag">特别体验</span></li>
+              <li><span class="shop-name">Le Bouillon Chartier</span> — 1896年 Art Nouveau 食堂，牛排+薯条 12€ <span class="food-tag">性价比王</span></li>
+              <li>🍰 <span class="shop-name">Ladurée</span> — 香榭丽舍旗舰店，6个装马卡龙约17€</li>
+              <li>💡 最后一晚推荐蒙马特 <b>La Maison Rose</b> 粉色小屋打卡+用餐</li>
             </ul>
             <div class="hidden-gem">
-              <span class="gem-label">💎 隐藏推荐：</span> 凡尔赛宫大家都看镜厅和花园，但 <b>大特里亚农宫 Grand Trianon</b> 和 <b>玛丽·安托瓦内特庄园</b>（含票内）人极少，有种穿越到18世纪法国乡村的感觉。奥赛博物馆5楼大钟后面有个 <b>巨大透明钟面</b>，透过钟面可以看到塞纳河+卢浮宫，是巴黎最浪漫的取景框之一。<b>圣礼拜堂</b>最佳体验：上午10-11点阳光透过1113块彩色玻璃的时刻，整个教堂像一个巨大的万花筒。
+              <span class="gem-label">💎 隐藏推荐：</span> 凡尔赛的 <b>大特里亚农宫</b> 和 <b>玛丽·安托瓦内特庄园</b> 人极少。奥赛5楼透明钟面可看塞纳河+卢浮宫。<b>圣礼拜堂</b> 上午10-11点阳光最佳。
             </div>
           </div>
           <div class="travel-tip tip-red">
-            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐⭐⭐⭐ 很赶</span></div>
+            <div class="tips-header">💡 行程贴士</div>
+            <ul class="tip-list">
+              <li>凡尔赛宫提前订票，RER C线前往</li>
+              <li>奥赛博物馆周四晚有夜场到21:45</li>
+              <li>最后一晚记得买伴手礼</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 12 -->
         <div class="day-block" data-day="12" onclick="flyTo(48.8566,2.3522,11)">
-          <h3>
-            <span class="day-title-text" style="color:var(--c-d12)">📍 D12 · 巴黎→重庆</span>
-            <span class="day-badges">
-              <span class="day-tag" style="background:var(--c-d12)">10/12 周六</span>
+          <div class="day-header">
+            <div class="day-row1">
+              <span class="day-title" style="color:var(--c-d12)">📍 D12 · 巴黎→重庆</span>
+              <span class="day-date" style="background:var(--c-d12)">10/12 周六</span>
+            </div>
+            <div class="day-row2">
               <span class="country-badge badge-transit">✈️ 回程</span>
-            </span>
-          </h3>
+              <span class="intensity-badge easy">⭐ 轻松</span>
+            </div>
+          </div>
           <div class="transport-info">✈️ 巴黎→重庆 | 11:55–04:35+1（次日到达）</div>
           <div class="food-reco">
             <div class="food-header">🍴 美食·推荐</div>
             <ul>
-              <li>🥐 最后的法国早餐：酒店附近任何 <b>Boulangerie</b> 买一个 Croissant au Beurre（黄油可颂）+ Café Crème，3-4€ 的完美告别</li>
-              <li>💡 戴高乐机场 T1 出发层有 <b>Ladurée 免税店</b>，最后机会补货马卡龙（比市区便宜约10%）</li>
-              <li>🧀 机场 <b>Buy Paris Duty Free</b> 可以买真空包装法国奶酪（Comté/Brie）带回国，比市内免税店选择更多</li>
+              <li>🥐 最后一餐：Boulangerie 买 Croissant au Beurre + Café Crème 3-4€</li>
+              <li>💡 戴高乐机场 <b>Ladurée 免税店</b>，比市区便宜约10%</li>
+              <li>🧀 <b>Buy Paris Duty Free</b> 买真空包装法国奶酪带回国</li>
             </ul>
           </div>
           <div class="travel-tip tip-green">
-            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐ 轻松</span></div>
+            <div class="tips-header">💡 行程贴士</div>
+            <ul class="tip-list">
+              <li>机场退税排队长，提前2-3小时到</li>
+              <li>免税店补货最后机会</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- DAY 13 -->
         <div class="day-block" data-day="13" onclick="flyTo(23.1291,113.2644,11)">
-          <h3>
-            <span class="day-title-text" style="color:var(--c-d13)">📍 D13 · 重庆→广州</span>
-            <span class="day-badges">
-              <span class="day-tag" style="background:var(--c-d13)">10/13 周日</span>
+          <div class="day-header">
+            <div class="day-row1">
+              <span class="day-title" style="color:var(--c-d13)">📍 D13 · 重庆→广州</span>
+              <span class="day-date" style="background:var(--c-d13)">10/13 周日</span>
+            </div>
+            <div class="day-row2">
               <span class="country-badge badge-china">🇨🇳 回家</span>
-            </span>
-          </h3>
+              <span class="intensity-badge easy">⭐ 轻松</span>
+            </div>
+          </div>
           <div class="transport-info">✈️ 重庆→广州 | 11:40–14:00</div>
           <div class="travel-tip tip-green">
-            <div class="tips-header">💡 行程贴士 <span class="tips-stars">⭐ 轻松</span></div>
+            <div class="tips-header">💡 行程贴士</div>
             <ul class="tip-list">
               <li>经停重庆转机回广州</li>
               <li>倒时差，好好休息！</li>
@@ -753,13 +943,13 @@
 
         <!-- 底部备注 -->
         <div class="note">
-          <strong>💰 费用参考：</strong> 多数景点需提前网上预约可免排队。罗马斗兽场套票16€含三个景点；梵蒂冈博物馆20€+5€预订费；乌菲兹美术馆20€；凡尔赛宫建议提前订票。贡多拉可拼船分摊。<br><br>
+          <strong>💰 费用参考：</strong> 多数景点需提前网上预约。罗马斗兽场套票16€含三景点；梵蒂冈博物馆20€+5€预订费；乌菲兹20€；凡尔赛宫建议提前订票。贡多拉可拼船。<br><br>
           <strong>📋 实用提示：</strong>
           <ul style="margin:4px 0 0;padding-left:1.2em;">
-            <li>意大利餐厅类型：Ristorante（正式）> Trattoria（家常）> Osteria（酒吧+小菜，最实惠）</li>
-            <li>圣马可教堂禁止短裤/无袖/大包入内</li>
+            <li>意大利餐厅：Ristorante（正式）> Trattoria（家常）> Osteria（最实惠）</li>
+            <li>圣马可教堂禁短裤/无袖/大包</li>
             <li>西班牙广场、罗马地铁注意防扒手</li>
-            <li>瑞士可用小程序买交通票</li>
+            <li>瑞士可用 SBB app 买交通票</li>
             <li>巴黎机场退税排队长，提前预留时间</li>
           </ul>
         </div>
@@ -792,29 +982,13 @@
       subdomains: 'abcd'
     }).addTo(map);
 
-    // ===== 路线点 =====
-    const route = [
-      { name: "罗马", lat: 41.9028, lng: 12.4964, day: 1, color: "#dc2626" },
-      { name: "梵蒂冈", lat: 41.9029, lng: 12.4534, day: 2, color: "#7c3aed" },
-      { name: "罗马(D3)", lat: 41.8902, lng: 12.4922, day: 3, color: "#2563eb" },
-      { name: "佛罗伦萨", lat: 43.7696, lng: 11.2558, day: 4, color: "#059669" },
-      { name: "佛罗伦萨(D5)", lat: 43.7730, lng: 11.2560, day: 5, color: "#d97706" },
-      { name: "威尼斯", lat: 45.4408, lng: 12.3155, day: 6, color: "#0891b2" },
-      { name: "格林德瓦", lat: 46.6242, lng: 8.0413, day: 7, color: "#e11d48" },
-      { name: "格林德瓦(D8)", lat: 46.6260, lng: 8.0430, day: 8, color: "#4f46e5" },
-      { name: "巴黎", lat: 48.8566, lng: 2.3522, day: 9, color: "#0d9488" },
-      { name: "巴黎(D10)", lat: 48.8580, lng: 2.3500, day: 10, color: "#b45309" },
-      { name: "凡尔赛+巴黎", lat: 48.8049, lng: 2.1204, day: 11, color: "#7c3aed" },
-      { name: "巴黎(D12)", lat: 48.8566, lng: 2.3522, day: 12, color: "#64748b" }
-    ];
-
     // ===== 城市间路线 =====
     const cityRoute = [
-      [41.9028, 12.4964],   // 罗马
-      [43.7696, 11.2558],   // 佛罗伦萨
-      [45.4408, 12.3155],   // 威尼斯
-      [46.6242, 8.0413],    // 格林德瓦
-      [48.8566, 2.3522]     // 巴黎
+      [41.9028, 12.4964],
+      [43.7696, 11.2558],
+      [45.4408, 12.3155],
+      [46.6242, 8.0413],
+      [48.8566, 2.3522]
     ];
 
     L.polyline(cityRoute, {
@@ -824,7 +998,7 @@
       dashArray: '8, 6'
     }).addTo(map);
 
-    // ===== 标记点 =====
+    // ===== 城市标记 =====
     const mainCities = [
       { name: "罗马", lat: 41.9028, lng: 12.4964, emoji: "🏛️", color: "#dc2626" },
       { name: "梵蒂冈", lat: 41.9029, lng: 12.4534, emoji: "⛪", color: "#7c3aed" },
@@ -847,20 +1021,17 @@
 
     // ===== 景点标记 =====
     const pois = [
-      // D1 罗马
       { name: "特莱维喷泉", lat: 41.9009, lng: 12.4833, day: 1, emoji: "🏛️" },
       { name: "万神殿", lat: 41.8986, lng: 12.4769, day: 1, emoji: "🏛️" },
       { name: "圣依纳爵堂", lat: 41.8990, lng: 12.4799, day: 1, emoji: "⛪" },
       { name: "纳沃纳广场", lat: 41.8992, lng: 12.4731, day: 1, emoji: "🏛️" },
       { name: "人民广场", lat: 41.9107, lng: 12.4765, day: 1, emoji: "🏛️" },
       { name: "西班牙广场", lat: 41.9060, lng: 12.4822, day: 1, emoji: "🏛️" },
-      // D2 梵蒂冈
       { name: "梵蒂冈博物馆", lat: 41.9065, lng: 12.4536, day: 2, emoji: "🏛️" },
       { name: "西斯廷礼拜堂", lat: 41.9030, lng: 12.4545, day: 2, emoji: "🎨" },
       { name: "圣彼得大教堂", lat: 41.9022, lng: 12.4539, day: 2, emoji: "⛪" },
       { name: "圣彼得广场", lat: 41.9022, lng: 12.4567, day: 2, emoji: "🏛️" },
       { name: "圣天使城堡", lat: 41.9031, lng: 12.4663, day: 2, emoji: "🏰" },
-      // D3 罗马
       { name: "圣伯多禄锁链堂", lat: 41.8940, lng: 12.4933, day: 3, emoji: "⛪" },
       { name: "罗马斗兽场", lat: 41.8902, lng: 12.4922, day: 3, emoji: "🏟️" },
       { name: "君士坦丁凯旋门", lat: 41.8898, lng: 12.4905, day: 3, emoji: "🏛️" },
@@ -869,20 +1040,17 @@
       { name: "真理之口", lat: 41.8881, lng: 12.4815, day: 3, emoji: "👄" },
       { name: "威尼斯广场", lat: 41.8958, lng: 12.4823, day: 3, emoji: "🏛️" },
       { name: "博尔盖塞美术馆", lat: 41.9142, lng: 12.4921, day: 3, emoji: "🎨" },
-      // D4 佛罗伦萨
       { name: "美第奇宫", lat: 43.7753, lng: 11.2542, day: 4, emoji: "🏛️" },
-      { name: "学院美术馆(大卫像)", lat: 43.7769, lng: 11.2586, day: 4, emoji: "🎨" },
+      { name: "学院美术馆", lat: 43.7769, lng: 11.2586, day: 4, emoji: "🎨" },
       { name: "佛罗伦萨旧宫", lat: 43.7694, lng: 11.2563, day: 4, emoji: "🏰" },
       { name: "市政广场", lat: 43.7696, lng: 11.2558, day: 4, emoji: "🏛️" },
       { name: "维琪奥桥", lat: 43.7680, lng: 11.2531, day: 4, emoji: "🌉" },
       { name: "皮蒂宫", lat: 43.7653, lng: 11.2500, day: 4, emoji: "🏰" },
-      // D5 佛罗伦萨
       { name: "乌菲兹美术馆", lat: 43.7677, lng: 11.2553, day: 5, emoji: "🎨" },
       { name: "圣母百花大教堂", lat: 43.7731, lng: 11.2560, day: 5, emoji: "⛪" },
       { name: "乔托钟楼", lat: 43.7726, lng: 11.2555, day: 5, emoji: "🔔" },
       { name: "圣十字大教堂", lat: 43.7685, lng: 11.2625, day: 5, emoji: "⛪" },
       { name: "米开朗琪罗广场", lat: 43.7629, lng: 11.2650, day: 5, emoji: "🌅" },
-      // D6 威尼斯
       { name: "里亚托桥", lat: 45.4380, lng: 12.3359, day: 6, emoji: "🌉" },
       { name: "沉船书店", lat: 45.4344, lng: 12.3420, day: 6, emoji: "📚" },
       { name: "圣马可大教堂", lat: 45.4345, lng: 12.3396, day: 6, emoji: "⛪" },
@@ -890,13 +1058,10 @@
       { name: "总督府", lat: 45.4337, lng: 12.3405, day: 6, emoji: "🏰" },
       { name: "叹息桥", lat: 45.4340, lng: 12.3410, day: 6, emoji: "🌉" },
       { name: "学院桥", lat: 45.4312, lng: 12.3287, day: 6, emoji: "🌉" },
-      // D8 格林德瓦
       { name: "First缆车站", lat: 46.6592, lng: 8.0568, day: 8, emoji: "🏔️" },
       { name: "梦幻山坡", lat: 46.6195, lng: 8.0355, day: 8, emoji: "🌄" },
-      // D9 巴黎
       { name: "协和广场", lat: 48.8656, lng: 2.3212, day: 9, emoji: "🏛️" },
       { name: "杜乐丽花园", lat: 48.8634, lng: 2.3275, day: 9, emoji: "🌳" },
-      // D10 巴黎
       { name: "卢浮宫", lat: 48.8606, lng: 2.3376, day: 10, emoji: "🎨" },
       { name: "巴黎歌剧院", lat: 48.8720, lng: 2.3316, day: 10, emoji: "🎭" },
       { name: "凯旋门", lat: 48.8738, lng: 2.2950, day: 10, emoji: "🏛️" },
@@ -906,13 +1071,11 @@
       { name: "先贤祠", lat: 48.8462, lng: 2.3464, day: 10, emoji: "🏛️" },
       { name: "巴黎圣母院", lat: 48.8530, lng: 2.3499, day: 10, emoji: "⛪" },
       { name: "蓬皮杜中心", lat: 48.8607, lng: 2.3522, day: 10, emoji: "🎨" },
-      // D11 凡尔赛+巴黎
       { name: "奥赛博物馆", lat: 48.8600, lng: 2.3266, day: 11, emoji: "🎨" },
       { name: "圣礼拜堂", lat: 48.8554, lng: 2.3451, day: 11, emoji: "⛪" },
       { name: "凡尔赛宫", lat: 48.8049, lng: 2.1204, day: 11, emoji: "🏰" }
     ];
 
-    // 按天着色
     const dayColors = {
       1:'#dc2626',2:'#7c3aed',3:'#2563eb',4:'#059669',5:'#d97706',
       6:'#0891b2',7:'#e11d48',8:'#4f46e5',9:'#0d9488',10:'#b45309',
@@ -931,7 +1094,6 @@
       }).addTo(poiLayer);
     });
 
-    // 缩放级别 < 8 时隐藏景点标记，避免大比例尺下太密
     map.on('zoomend', function() {
       if (map.getZoom() < 8) {
         map.removeLayer(poiLayer);
@@ -940,12 +1102,23 @@
       }
     });
 
-    // 延迟触发 invalidateSize，确保 flex 容器布局完成后地图瓦片正确加载
     setTimeout(() => { map.invalidateSize(); }, 300);
 
     // ===== 飞到指定位置 =====
     function flyTo(lat, lng, zoom) {
-      map.flyTo([lat, lng], zoom || 13, { duration: 1.2 });
+      // 移动端点击卡片自动切到地图
+      if (window.innerWidth <= 768) {
+        const layout = document.getElementById('layout');
+        layout.className = 'view-map';
+        document.querySelectorAll('#tab-bar .tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('#tab-bar .tab')[1].classList.add('active');
+        setTimeout(() => {
+          map.invalidateSize();
+          map.flyTo([lat, lng], zoom || 13, { duration: 1.2 });
+        }, 150);
+      } else {
+        map.flyTo([lat, lng], zoom || 13, { duration: 1.2 });
+      }
     }
 
     // ===== 移动端切换 =====
